@@ -1,3 +1,23 @@
-<h1>
-  {{title}}
-</h1>
+<md-tab-group>
+  <h1>
+    {{title}}
+  </h1>
+  <md-tab label="Music">
+    <p>
+      {{dummyText1}}
+  </md-tab>
+  <md-tab label="Video">
+    <p>
+      {{dummyText2}}
+    </p>
+  </md-tab>
+  <button md-button>
+    Jumble
+  </button>
+</md-tab-group>
+<app-footer-player></app-footer-player>
+<div class="fullscreen-bg">
+  <video loop muted autoplay poster="assets/img/ws_background.jpg" class="fullscreen-bg__video">
+    <source src="assets/video/background.webm" type="video/webm">
+  </video>
+</div>
