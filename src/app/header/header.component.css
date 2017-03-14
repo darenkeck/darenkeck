@@ -1,0 +1,10 @@
+.header-container {
+    width: 100%;
+    height: 70px;
+    margin-top: -0.5em;
+}
+
+.sig {
+    float: right;
+    margin-right: 1em;
+}

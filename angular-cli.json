@@ -21,7 +21,6 @@
         "styles.css"
       ],
       "scripts": [
-        "https://connect.soundcloud.com/sdk/sdk-3.1.2.js"
       ],
       "environments": {
         "source": "environments/environment.ts",

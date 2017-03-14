@@ -7,12 +7,14 @@ import { MaterialModule } from '@angular/material';
 import { AppComponent } from './app.component';
 import { JumbleComponent } from './jumble/jumble.component';
 import { FooterPlayerComponent } from './footer-player/footer-player.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     JumbleComponent,
-    FooterPlayerComponent
+    FooterPlayerComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
