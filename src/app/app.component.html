@@ -2,8 +2,9 @@
 </app-header>
 <md-tab-group class="main-container">
   <md-tab label="Music">
-    <p>
-      {{dummyText1}}
+    <p *ngFor="let entry of entryList | async">
+      {{entry}}
+    </p>
   </md-tab>
   <md-tab label="Video">
     <p>
