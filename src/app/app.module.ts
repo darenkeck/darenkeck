@@ -3,11 +3,23 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
+import { AngularFireModule } from 'angularfire2';
+
+import { FbaseService } from 'app/services/fbase.service';
 
 import { AppComponent } from './app.component';
 import { JumbleComponent } from './jumble/jumble.component';
 import { FooterPlayerComponent } from './footer-player/footer-player.component';
 import { HeaderComponent } from './header/header.component';
+
+// Initialize Firebase
+export const firebaseConfig = {
+  apiKey: "AIzaSyAbDAyNC9CnwHpKDJDoixWywn1RR37Ib8c",
+  authDomain: "darenkeck-adb27.firebaseapp.com",
+  databaseURL: "https://darenkeck-adb27.firebaseio.com",
+  storageBucket: "darenkeck-adb27.appspot.com",
+  messagingSenderId: "326721354959"
+};
 
 @NgModule({
   declarations: [
@@ -19,10 +31,13 @@ import { HeaderComponent } from './header/header.component';
   imports: [
     BrowserModule,
     FormsModule,
+    AngularFireModule.initializeApp(firebaseConfig),
     MaterialModule.forRoot(),
     HttpModule
   ],
-  providers: [],
+  providers: [
+    FbaseService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
