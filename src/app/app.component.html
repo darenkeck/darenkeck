@@ -1,12 +1,10 @@
 <app-header>
 </app-header>
 <md-tab-group class="main-container">
-  <md-tab label="Music">
-    <p *ngFor="let entry of entryList | async">
-      {{entry}}
-    </p>
+  <md-tab label="Home">
+    <app-home></app-home>
   </md-tab>
-  <md-tab label="Video">
+  <md-tab label="Bio">
     <p>
       {{dummyText2}}
     </p>

@@ -11,6 +11,9 @@ import { AppComponent } from './app.component';
 import { JumbleComponent } from './jumble/jumble.component';
 import { FooterPlayerComponent } from './footer-player/footer-player.component';
 import { HeaderComponent } from './header/header.component';
+import { BlogEntryListComponent } from './blog-entry-list/blog-entry-list.component';
+import { BlogEntryComponent } from './blog-entry/blog-entry.component';
+import { HomeComponent } from './home/home.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -26,7 +29,10 @@ export const firebaseConfig = {
     AppComponent,
     JumbleComponent,
     FooterPlayerComponent,
-    HeaderComponent
+    HeaderComponent,
+    BlogEntryListComponent,
+    BlogEntryComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
