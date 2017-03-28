@@ -14,6 +14,7 @@ import { HeaderComponent } from './header/header.component';
 import { BlogEntryListComponent } from './blog-entry-list/blog-entry-list.component';
 import { BlogEntryComponent } from './blog-entry/blog-entry.component';
 import { HomeComponent } from './home/home.component';
+import { BioComponent } from './bio/bio.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -32,7 +33,8 @@ export const firebaseConfig = {
     HeaderComponent,
     BlogEntryListComponent,
     BlogEntryComponent,
-    HomeComponent
+    HomeComponent,
+    BioComponent
   ],
   imports: [
     BrowserModule,
