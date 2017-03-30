@@ -8,12 +8,10 @@ import { FbaseService }      from 'app/services/fbase.service';
 })
 export class HomeComponent implements OnInit {
   entryList: any;
-  
+
   constructor(private fbase: FbaseService) {
     this.entryList = this.fbase.fetchList('blog-entries');
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() { }
 }

@@ -15,6 +15,7 @@ import { BlogEntryListComponent } from './blog-entry-list/blog-entry-list.compon
 import { BlogEntryComponent } from './blog-entry/blog-entry.component';
 import { HomeComponent } from './home/home.component';
 import { BioComponent } from './bio/bio.component';
+import { FooterComponent } from './footer/footer.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -34,7 +35,8 @@ export const firebaseConfig = {
     BlogEntryListComponent,
     BlogEntryComponent,
     HomeComponent,
-    BioComponent
+    BioComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,17 @@
+div {
+    display: flex;
+    justify-content: space-around;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.footer {
+   position:fixed;
+   width: 100%;
+   left:0px;
+   bottom:0px;
+   height:30px;
+}
