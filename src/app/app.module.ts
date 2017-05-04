@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
 import { AngularFireModule } from 'angularfire2';
 
+import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
 
 import { AppComponent } from './app.component';
@@ -46,6 +47,7 @@ export const firebaseConfig = {
     HttpModule
   ],
   providers: [
+    AudioService,
     FbaseService,
   ],
   bootstrap: [AppComponent]
