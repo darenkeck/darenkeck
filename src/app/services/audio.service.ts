@@ -2,73 +2,47 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-export enum AudioState {
-  INIT,
-  LOADING,
-  PAUSED,
-  PLAYING
-}
+import { MediaPlayerService } from 'app/services/media-player.service';
 
-// This is a hard coded value. 
-const MAX_TRACKS = 1;
+const DEFAULT_TRACK  = '1';
+const MAX_TRACKS     = 1;
+const BASE_AUDIO_URL = 'audio/loop';
+
 /**
- * Audio AudioService
+ * AudioService
  * 
- * Description: manages the html5 audio object. Assumes 
- * there is only ever one track playing
+ * Description: manages the html5 audio object. extends
+ * the media player service, with the included behavior of selecting
+ * a random track
  */
 @Injectable()
-export class AudioService {
-  canPlay: boolean;
-  player: HTMLAudioElement;
+export class AudioService extends MediaPlayerService {
+  baseUrl:  string;
   trackNum: number;
-  state: BehaviorSubject<AudioState>;
 
   constructor() { 
-    this.player = new Audio();
-    this.state  = new BehaviorSubject<AudioState>(AudioState.INIT); 
-
-    // set up event handlers
-    this.player.onloadstart = this.onLoadStart;
-    this.player.oncanplay = this.onCanPlay; 
+    const audioPlayer = new Audio();
+    super(audioPlayer); 
   }
 
-  // Event Handlers
+  createUrl(num: number): string {
+    let trackNum = DEFAULT_TRACK; //
 
-  onLoadStart(ev: Event) {
-    this.canPlay = false;
-    this.state.next(AudioState.LOADING);
-  }
-
-  onCanPlay(ev: Event) {
-    this.canPlay = true;
-    this.state.next(AudioState.PAUSED);
-  }
-
-  // 'Public' Methods
-
-  getRandomTrackUrl() {
-    this.trackNum = Math.floor(Math.random() * MAX_TRACKS);
-    const url = `audio/loop/${this.trackNum}.mp3`
-    return url;
-  }
-
-  initTrack() {
-    this.player.src = this.getRandomTrackUrl();
-    this.player.load();
-  }
-
-  play() {
-    if (this.canPlay) {
-      this.player.play();
-      this.state.next(AudioState.PLAYING);
+    if (num < MAX_TRACKS) {
+      trackNum = num.toString();
     }
+
+    return `${BASE_AUDIO_URL}/${this.trackNum}.mp3`;
   }
 
-  pause() {
-    if (this.state.value === AudioState.PLAYING) {
-      this.player.pause();
-      this.state.next(AudioState.PAUSED);
-    }
+  setTrack(num: number) {
+    this.player.src = this.createUrl(num);
+  }
+
+  setRandomTrack() {
+    const trackNum = Math.floor(Math.random() * MAX_TRACKS);
+
+    this.setTrack(trackNum);
+    this.initMedia();
   }
 }
