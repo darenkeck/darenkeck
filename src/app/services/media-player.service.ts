@@ -17,11 +17,11 @@ export enum PlayerState {
 @Injectable()
 export class MediaPlayerService {
   player: HTMLMediaElement;
-  state: BehaviorSubject<PlayerState>;
+  _state: BehaviorSubject<PlayerState>;
 
   constructor(player: HTMLMediaElement) {
     this.player = player;
-    this.state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
+    this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
 
     // set up player event handlers
     this.player.onloadstart = this.onLoadStart;
@@ -30,11 +30,11 @@ export class MediaPlayerService {
 
   // Event Handlers
   onLoadStart(ev: Event) {
-    this.state.next(PlayerState.LOADING);
+    this._state.next(PlayerState.LOADING);
   }
 
   onCanPlay(ev: Event) {
-    this.state.next(PlayerState.PAUSED);
+    this._state.next(PlayerState.PAUSED);
   }
 
   // public methods
@@ -44,16 +44,20 @@ export class MediaPlayerService {
 
   play(ev: Event) {
     // a paused player means a 'play' is possible
-    if (this.state.value === PlayerState.PAUSED) {
+    if (this._state.value === PlayerState.PAUSED) {
       this.player.play();
-      this.state.next(PlayerState.PLAYING);
+      this._state.next(PlayerState.PLAYING);
     }
   }
 
   pause(ev: Event) {
-    if (this.state.value === PlayerState.PLAYING) {
+    if (this._state.value === PlayerState.PLAYING) {
       this.player.pause();
-      this.state.next(PlayerState.PAUSED);
+      this._state.next(PlayerState.PAUSED);
     }
+  }
+
+  get state() {
+    return this._state.asObservable();
   }
 }
