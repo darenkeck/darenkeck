@@ -1,7 +1,7 @@
-import { Component, OnDestory, OnInit }  from '@angular/core';
+import { Component, OnDestroy, OnInit }  from '@angular/core';
 
-import { Observable }   from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable }   from 'rxjs/observable';
+import { Subscription } from 'rxjs/subscription';
 
 import { PlayerState }  from 'app/services/media-player.service';
 import { AudioService } from 'app/services/audio.service';
@@ -12,28 +12,50 @@ import { AudioService } from 'app/services/audio.service';
   styleUrls: ['./footer-player.component.css']
 })
 export class FooterPlayerComponent implements OnDestroy, OnInit {
-  playerState:  Observable<PlayerState>;
-  playerSub:    Subscription;
+  playerState:    Observable<PlayerState>;
+  playerStateVal: PlayerState;
+  playerSub:      Subscription;
   tempPlayerText: string = 'paused';
 
   constructor(private audioService: AudioService) {
     this.playerState = this.audioService.state;
     this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state) );
   }
-
-
   ngOnInit() {
   }
 
   onPlayerStateChange(state: PlayerState) {
+    this.playerStateVal = state;
+
     switch(state) {
       case PlayerState.INIT:
       case PlayerState.LOADING:
+        this.tempPlayerText = 'loading';
       case PlayerState.PAUSED:
         this.tempPlayerText = 'paused';
         break;
       case PlayerState.PLAYING:
         this.tempPlayerText = 'playing';
+        break;
+      default:
+        break;
+    }
+  }
+
+  onClick() {
+    switch(this.playerStateVal) {
+      case PlayerState.INIT:
+        // set random track url and start load
+        this.audioService.setRandomTrack();
+        this.audioService.initMedia();
+        break;
+      case PlayerState.LOADING:
+        break;
+      case PlayerState.PAUSED:
+        this.audioService.play();
+        break;
+      case PlayerState.PLAYING:
+        this.audioService.pause();
         break;
       default:
         break;

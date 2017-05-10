@@ -48,9 +48,9 @@ export const firebaseConfig = {
     HttpModule
   ],
   providers: [
+    MediaPlayerService,
     AudioService,
     FbaseService,
-    MediaPlayerService
   ],
   bootstrap: [AppComponent]
 })

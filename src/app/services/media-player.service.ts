@@ -14,6 +14,7 @@ export enum PlayerState {
  * 
  * General service for managing an HTML5 HTMLMediaElement
  */
+
 @Injectable()
 export class MediaPlayerService {
   player: HTMLMediaElement;
@@ -42,7 +43,7 @@ export class MediaPlayerService {
     this.player.load();
   }
 
-  play(ev: Event) {
+  play() {
     // a paused player means a 'play' is possible
     if (this._state.value === PlayerState.PAUSED) {
       this.player.play();
@@ -50,7 +51,7 @@ export class MediaPlayerService {
     }
   }
 
-  pause(ev: Event) {
+  pause() {
     if (this._state.value === PlayerState.PLAYING) {
       this.player.pause();
       this._state.next(PlayerState.PAUSED);
