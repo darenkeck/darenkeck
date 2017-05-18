@@ -5,7 +5,6 @@ import { HttpModule }         from '@angular/http';
 import { MaterialModule }     from '@angular/material';
 import { AngularFireModule }  from 'angularfire2';
 
-import { MediaPlayerService } from 'app/services/media-player.service';
 import { AudioService }       from 'app/services/audio.service';
 import { FbaseService }       from 'app/services/fbase.service';
 
@@ -48,7 +47,6 @@ export const firebaseConfig = {
     HttpModule
   ],
   providers: [
-    MediaPlayerService,
     AudioService,
     FbaseService,
   ],

@@ -15,7 +15,7 @@ export class FooterPlayerComponent implements OnDestroy, OnInit {
   playerState:    Observable<PlayerState>;
   playerStateVal: PlayerState;
   playerSub:      Subscription;
-  tempPlayerText: string = 'paused';
+  tempPlayerText: string = 'Load';
 
   constructor(private audioService: AudioService) {
     this.playerState = this.audioService.state;
@@ -30,12 +30,12 @@ export class FooterPlayerComponent implements OnDestroy, OnInit {
     switch(state) {
       case PlayerState.INIT:
       case PlayerState.LOADING:
-        this.tempPlayerText = 'loading';
+        this.tempPlayerText = 'Loading';
       case PlayerState.PAUSED:
-        this.tempPlayerText = 'paused';
+        this.tempPlayerText = 'Paused';
         break;
       case PlayerState.PLAYING:
-        this.tempPlayerText = 'playing';
+        this.tempPlayerText = 'Playing';
         break;
       default:
         break;

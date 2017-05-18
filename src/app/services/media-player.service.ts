@@ -25,8 +25,8 @@ export class MediaPlayerService {
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
 
     // set up player event handlers
-    this.player.onloadstart = this.onLoadStart;
-    this.player.oncanplay   = this.onCanPlay;
+    this.player.onloadstart = this.onLoadStart.bind(this);
+    this.player.oncanplay   = this.onCanPlay.bind(this);
   }
 
   // Event Handlers
