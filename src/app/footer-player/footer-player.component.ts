@@ -29,8 +29,11 @@ export class FooterPlayerComponent implements OnDestroy, OnInit {
 
     switch(state) {
       case PlayerState.INIT:
+        this.tempPlayerText = 'Load';
+        break;
       case PlayerState.LOADING:
         this.tempPlayerText = 'Loading';
+        break;
       case PlayerState.PAUSED:
         this.tempPlayerText = 'Paused';
         break;
