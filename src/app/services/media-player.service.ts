@@ -6,7 +6,8 @@ export enum PlayerState {
   INIT,
   LOADING,
   PAUSED,
-  PLAYING
+  PLAYING,
+  ENDED
 }
 
 /**
@@ -27,6 +28,7 @@ export class MediaPlayerService {
     // set up player event handlers
     this.player.onloadstart = this.onLoadStart.bind(this);
     this.player.oncanplay   = this.onCanPlay.bind(this);
+    this.player.onended     = this.onEnded.bind(this);
   }
 
   // Event Handlers
@@ -36,6 +38,10 @@ export class MediaPlayerService {
 
   onCanPlay(ev: Event) {
     this._state.next(PlayerState.PAUSED);
+  }
+
+  onEnded(ev: Event) {
+    this._state.next(PlayerState.ENDED);
   }
 
   // public methods

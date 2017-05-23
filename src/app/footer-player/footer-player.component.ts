@@ -13,32 +13,40 @@ import { AudioService } from 'app/services/audio.service';
 })
 export class FooterPlayerComponent implements OnDestroy, OnInit {
   playerState:    Observable<PlayerState>;
-  playerStateVal: PlayerState;
   playerSub:      Subscription;
-  tempPlayerText: string = 'Load';
+  showLoad = false;
+  showLoading = false;
+  showPaused = false;
+  showPlaying = false;
 
   constructor(private audioService: AudioService) {
     this.playerState = this.audioService.state;
-    this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state) );
+    this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state));
   }
   ngOnInit() {
   }
 
   onPlayerStateChange(state: PlayerState) {
-    this.playerStateVal = state;
+    this.showLoad     = false;
+    this.showLoading  = false;
+    this.showPaused   = false;
+    this.showPlaying  = false;
 
     switch(state) {
       case PlayerState.INIT:
-        this.tempPlayerText = 'Load';
+        this.showLoad = true;
         break;
       case PlayerState.LOADING:
-        this.tempPlayerText = 'Loading';
+        this.showLoading = true;
         break;
       case PlayerState.PAUSED:
-        this.tempPlayerText = 'Paused';
+        this.showPaused = true;
         break;
       case PlayerState.PLAYING:
-        this.tempPlayerText = 'Playing';
+        this.showPlaying = true;
+        break;
+      case PlayerState.ENDED:
+        this.showPaused = true;
         break;
       default:
         break;
@@ -46,23 +54,7 @@ export class FooterPlayerComponent implements OnDestroy, OnInit {
   }
 
   onClick() {
-    switch(this.playerStateVal) {
-      case PlayerState.INIT:
-        // set random track url and start load
-        this.audioService.setRandomTrack();
-        this.audioService.initMedia();
-        break;
-      case PlayerState.LOADING:
-        break;
-      case PlayerState.PAUSED:
-        this.audioService.play();
-        break;
-      case PlayerState.PLAYING:
-        this.audioService.pause();
-        break;
-      default:
-        break;
-    }
+    this.audioService.toggleState();
   }
 
   ngOnDestroy() {

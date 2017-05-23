@@ -36,6 +36,8 @@ export class AudioService {
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
     this.player.onloadstart = this.onLoadStart.bind(this);
     this.player.oncanplay   = this.onCanPlay.bind(this);
+    this.player.onended     = this.onEnded.bind(this);
+
     // --- end generic constructor settings --
   }
 
@@ -46,7 +48,14 @@ export class AudioService {
   }
 
   onCanPlay(ev: Event) {
-    this._state.next(PlayerState.PAUSED);
+    // only if previous event is loading fire this event
+    if(this._state.value === PlayerState.LOADING) {
+      this._state.next(PlayerState.PAUSED);
+    }
+  }
+
+  onEnded(ev: Event) {
+    this._state.next(PlayerState.ENDED);
   }
 
   initMedia() {
@@ -55,14 +64,16 @@ export class AudioService {
 
   play() {
     // a paused player means a 'play' is possible
-    if (this._state.value === PlayerState.PAUSED) {
+    if (this._state.value === PlayerState.PAUSED 
+        || this._state.value === PlayerState.ENDED) {
       this.player.play();
       this._state.next(PlayerState.PLAYING);
     }
   }
 
   pause() {
-    if (this._state.value === PlayerState.PLAYING) {
+    if (this._state.value === PlayerState.PLAYING
+        || this._state.value === PlayerState.ENDED) {
       this.player.pause();
       this._state.next(PlayerState.PAUSED);
     }
@@ -70,6 +81,32 @@ export class AudioService {
 
   get state() {
     return this._state.asObservable();
+  }
+
+  /**
+   * Given a previous media player state, move to the next logical one
+   */
+  toggleState() {
+    switch(this._state.value) {
+      case PlayerState.INIT:
+        // set random track url and start load
+        this.setRandomTrack();
+        this.initMedia();
+        break;
+      case PlayerState.LOADING:
+        break;
+      case PlayerState.PAUSED:
+        this.play();
+        break;
+      case PlayerState.PLAYING:
+        this.pause();
+        break;
+      case PlayerState.ENDED:
+        this.play();
+        break;
+      default:
+        break;
+    }
   }
   // -------- end generic methods -----------
 

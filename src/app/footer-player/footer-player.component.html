@@ -1,1 +1,6 @@
-<button (click)="onClick()">{{tempPlayerText}}</button>
+<div (click)="onClick()">
+    <i class="material-icons md-48" mode="indeterminate" style="opacity: 0.2;" *ngIf="showLoad">play_arrow</i>    
+    <md-progress-spinner class="md-48" *ngIf="showLoading"></md-progress-spinner>
+    <i class="material-icons md-48" *ngIf="showPaused">play_arrow</i>
+    <i class="material-icons md-48" *ngIf="showPlaying">pause</i>
+</div>
