@@ -1,21 +1,22 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
-import { AngularFireModule } from 'angularfire2';
+import { BrowserModule }      from '@angular/platform-browser';
+import { NgModule }           from '@angular/core';
+import { FormsModule }        from '@angular/forms';
+import { HttpModule }         from '@angular/http';
+import { MaterialModule }     from '@angular/material';
+import { AngularFireModule }  from 'angularfire2';
 
-import { FbaseService } from 'app/services/fbase.service';
+import { AudioService }       from 'app/services/audio.service';
+import { FbaseService }       from 'app/services/fbase.service';
 
-import { AppComponent } from './app.component';
-import { JumbleComponent } from './jumble/jumble.component';
-import { FooterPlayerComponent } from './footer-player/footer-player.component';
-import { HeaderComponent } from './header/header.component';
+import { AppComponent }           from './app.component';
+import { JumbleComponent }        from './jumble/jumble.component';
+import { FooterPlayerComponent }  from './footer-player/footer-player.component';
+import { HeaderComponent }        from './header/header.component';
 import { BlogEntryListComponent } from './blog-entry-list/blog-entry-list.component';
 import { BlogEntryComponent } from './blog-entry/blog-entry.component';
-import { HomeComponent } from './home/home.component';
-import { BioComponent } from './bio/bio.component';
-import { FooterComponent } from './footer/footer.component';
+import { HomeComponent }      from './home/home.component';
+import { BioComponent }       from './bio/bio.component';
+import { FooterComponent }    from './footer/footer.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -46,6 +47,7 @@ export const firebaseConfig = {
     HttpModule
   ],
   providers: [
+    AudioService,
     FbaseService,
   ],
   bootstrap: [AppComponent]
