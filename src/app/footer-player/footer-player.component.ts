@@ -47,6 +47,7 @@ export class FooterPlayerComponent implements OnDestroy, OnInit {
         break;
       case PlayerState.ENDED:
         this.showPaused = true;
+        this.audioService.setRandomTrack();
         break;
       default:
         break;

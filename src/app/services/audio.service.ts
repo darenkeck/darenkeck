@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { PlayerState } from 'app/services/media-player.service';
 
 const DEFAULT_TRACK  = '1';
-const MAX_TRACKS     = 1;
+const MAX_TRACKS     = 2;
 const BASE_AUDIO_URL = 'assets/audio/loop';
 
 // TODO: refactor generic methods into media-player service
