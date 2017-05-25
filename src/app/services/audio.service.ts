@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { FbaseService } from 'app/services/fbase.service';
 import { PlayerState } from 'app/services/media-player.service';
 
 const DEFAULT_TRACK  = '1';
 const MAX_TRACKS     = 2;
+const MAX_AUDIO_TRACK_STR = 'NUM_AUDIO_LOOPS'
 const BASE_AUDIO_URL = 'assets/audio/loop';
 
 // TODO: refactor generic methods into media-player service
@@ -22,15 +24,22 @@ const BASE_AUDIO_URL = 'assets/audio/loop';
 export class AudioService {
   baseUrl:  string;
   trackNum: number;
+  maxTracks: number;
 
   // ---- generic members ------
   player: HTMLMediaElement;
   _state: BehaviorSubject<PlayerState>;
   // ---- end generic members ---
 
-  constructor() { 
+  constructor(private fb: FbaseService) { 
     this.player = new Audio();
-
+    // TODO: this is not working... check FB usage
+    // this.fb.fetchList(MAX_AUDIO_TRACK_STR).subscribe(val => {
+    //   if (val) {
+    //     this.maxTracks = val;
+    //   }
+    // });
+    this.maxTracks = 2;
     // --- generic constructor settings ----
     // set up player event handlers
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
@@ -125,8 +134,10 @@ export class AudioService {
   }
 
   setRandomTrack() {
-    const trackNum = Math.floor(Math.random() * MAX_TRACKS);
-    this.setTrack(trackNum);
-    this.initMedia();
+    if (this.maxTracks) {
+      const trackNum = Math.floor(Math.random() * MAX_TRACKS);
+      this.setTrack(trackNum);
+      this.initMedia();
+    }
   }
 }
