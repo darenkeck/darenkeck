@@ -35,7 +35,6 @@ export class AudioService {
     // setting default value of 1
     this.maxTracks = 1;
 
-    // TODO: this is not working... check FB usage
     this.fb.fetchItem(MAX_AUDIO_TRACK_STR).subscribe(val => {
       if (val) {
         this.maxTracks = val;
@@ -47,7 +46,6 @@ export class AudioService {
     this.player.onloadstart = this.onLoadStart.bind(this);
     this.player.oncanplay   = this.onCanPlay.bind(this);
     this.player.onended     = this.onEnded.bind(this);
-
     // --- end generic constructor settings --
   }
 
@@ -120,10 +118,10 @@ export class AudioService {
   }
   // -------- end generic methods -----------
 
-  createUrl(num: number): string {
+  createUrlString(num: number): string {
     let trackNum = DEFAULT_TRACK; //
 
-    if (num < MAX_TRACKS) {
+    if (num < this.maxTracks) {
       trackNum = num.toString();
     }
 
@@ -131,12 +129,12 @@ export class AudioService {
   }
 
   setTrack(num: number) {
-    this.player.src = this.createUrl(num);
+    this.player.src = this.createUrlString(num);
   }
 
   setRandomTrack() {
     if (this.maxTracks) {
-      const trackNum = Math.floor(Math.random() * MAX_TRACKS);
+      const trackNum = Math.floor(Math.random() * this.maxTracks);
       this.setTrack(trackNum);
       this.initMedia();
     }
