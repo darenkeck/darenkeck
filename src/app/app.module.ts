@@ -17,6 +17,7 @@ import { BlogEntryComponent } from './blog-entry/blog-entry.component';
 import { HomeComponent }      from './home/home.component';
 import { BioComponent }       from './bio/bio.component';
 import { FooterComponent }    from './footer/footer.component';
+import { VideoPlayerComponent } from './video-player/video-player.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -37,7 +38,8 @@ export const firebaseConfig = {
     BlogEntryComponent,
     HomeComponent,
     BioComponent,
-    FooterComponent
+    FooterComponent,
+    VideoPlayerComponent
   ],
   imports: [
     BrowserModule,
