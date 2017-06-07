@@ -2,11 +2,19 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { PlayerState } from 'app/services/media-player.service';
 
 export class VideoController {
+    static vcID = 0;
+
     player: HTMLMediaElement;
     _url: string;
     _state: BehaviorSubject<PlayerState>;
+    _id: number;
+
+    static getID() {
+        return VideoController.vcID += 1;
+    }
 
     constructor(private htmlElement: HTMLMediaElement) {
+        this._id = VideoController.getID();
         this.player = htmlElement;
         this.player.onloadstart = this.onLoadStart.bind(this);
         this.player.oncanplay   = this.onCanPlay.bind(this);
@@ -16,7 +24,7 @@ export class VideoController {
     // -------- start generic methods -----------
     // Event Handlers
     onLoadStart(ev: Event) {
-    this._state.next(PlayerState.LOADING);
+        this._state.next(PlayerState.LOADING);
     }
 
     onCanPlay(ev: Event) {
@@ -53,7 +61,11 @@ export class VideoController {
     }
 
     get state() {
-    return this._state.asObservable();
+        return this._state.asObservable();
+    }
+
+    get id() {
+        return this._id;
     }
 
     /**
@@ -82,10 +94,14 @@ export class VideoController {
     }
     // -------- end generic methods -----------
     get url() {
-        return this._url;
+        return (this.player) ? this.player.src : undefined;
     }
 
     set url(url: string) {
-        this._url = url;
+        if (this.player) {
+            this.player.src = url;
+        } else {
+            throw Error('Video player undefined');
+        }
     }
 }

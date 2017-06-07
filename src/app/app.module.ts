@@ -7,6 +7,8 @@ import { AngularFireModule }  from 'angularfire2';
 
 import { AudioService }       from 'app/services/audio.service';
 import { FbaseService }       from 'app/services/fbase.service';
+import { JumbleService }      from 'app/services/jumble.service';
+import { VideoService }       from 'app/services/video.service';
 
 import { AppComponent }           from './app.component';
 import { JumbleComponent }        from './jumble/jumble.component';
@@ -51,6 +53,8 @@ export const firebaseConfig = {
   providers: [
     AudioService,
     FbaseService,
+    JumbleService,
+    VideoService
   ],
   bootstrap: [AppComponent]
 })
