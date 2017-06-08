@@ -13,8 +13,8 @@ import { PlayerState } from 'app/services/media-player.service';
 import { VideoController } from 'app/classes/video-controller';
 
 const DEFAULT_TRACK  = '1';
-const MAX_VIDEO_TRACK_STR = 'num-audio-loops'
-const BASE_VIDEO_URL = 'assets/audio/loop';
+const MAX_VIDEO_TRACK_STR = 'num-video-loops'
+const BASE_VIDEO_URL = 'assets/video/loop';
 
 // Video Service to be instantiated
 export class VideoService {
@@ -35,30 +35,19 @@ export class VideoService {
   createVideoController(videoElement: HTMLMediaElement) {
     const vC = new VideoController(videoElement);
     this._vcList = [...this._vcList, vC];
+    this.updateStateObservable();
 
-    
     return vC;
+  }
+
+  initMedia() {
+    this._vcList.map(vc => {
+      vc.initMedia();
+    });
   }
 
   removeVideoController(vc: VideoController) {
     this._vcList = this._vcList.filter(vc => vc.id !== vc.id);
-  }
-
-  createUrlString(num: number): string {
-    let trackNum = DEFAULT_TRACK; //
-
-    if (num < this.maxTracks) {
-      trackNum = num.toString();
-    }
-
-    return `${BASE_VIDEO_URL}/${trackNum}.mp3`;
-  }
-
-  setRandomTrack(vc: VideoController) {
-    if (this.maxTracks) {
-      const trackNum = Math.floor(Math.random() * this.maxTracks);
-      vc.url = this.createUrlString(trackNum);
-    }
   }
 
   updateStateObservable() {
@@ -66,14 +55,22 @@ export class VideoService {
       this._accStateSub.unsubscribe();
     }
 
-    // get state of each player
+    // set up subscription to state of each player, return the 'least prepared' state
     this._accState = combineLatest(
       this._vcList.map(vc => vc.state), 
-    ).map(stateList => stateList.reduce((acc, state) => (acc >= state) ? acc : state));
+    ).map(stateList => stateList.reduce((acc, state) => (acc <= state) ? acc : state));
 
     // update subscription for overal video state
     this._accStateSub = this._accState.subscribe(state => {
       this._state.next(state);
     })
+  }
+
+  get state() {
+    return this._state.asObservable();
+  }
+
+  set url(path: string) {
+    this._vcList.map(vc => vc.url = path);
   }
 }

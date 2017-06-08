@@ -5,10 +5,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FbaseService } from 'app/services/fbase.service';
 import { PlayerState } from 'app/services/media-player.service';
 
-const DEFAULT_TRACK  = '1';
-const MAX_AUDIO_TRACK_STR = 'num-audio-loops'
-const BASE_AUDIO_URL = 'assets/audio/loop';
-
 // TODO: refactor generic methods into media-player service
 
 /**
@@ -21,10 +17,6 @@ const BASE_AUDIO_URL = 'assets/audio/loop';
 
 @Injectable()
 export class AudioService {
-  baseUrl:  string;
-  trackNum: number;
-  maxTracks: number;
-
   // ---- generic members ------
   player: HTMLMediaElement;
   _state: BehaviorSubject<PlayerState>;
@@ -32,14 +24,6 @@ export class AudioService {
 
   constructor(private fb: FbaseService) { 
     this.player = new Audio();
-    // setting default value of 1
-    this.maxTracks = 1;
-
-    this.fb.fetchItem(MAX_AUDIO_TRACK_STR).subscribe(val => {
-      if (val) {
-        this.maxTracks = val;
-      }
-    });
     // --- generic constructor settings ----
     // set up player event handlers
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
@@ -67,7 +51,11 @@ export class AudioService {
   }
 
   initMedia() {
-    this.player.load();
+    if (this.player && this.player.src) {
+      this.player.load();
+    } else {
+      throw Error('Player or player src not set')
+    }
   }
 
   play() {
@@ -98,7 +86,6 @@ export class AudioService {
     switch(this._state.value) {
       case PlayerState.INIT:
         // set random track url and start load
-        this.setRandomTrack();
         this.initMedia();
         break;
       case PlayerState.LOADING:
@@ -118,25 +105,7 @@ export class AudioService {
   }
   // -------- end generic methods -----------
 
-  createUrlString(num: number): string {
-    let trackNum = DEFAULT_TRACK; //
-
-    if (num < this.maxTracks) {
-      trackNum = num.toString();
-    }
-
-    return `${BASE_AUDIO_URL}/${trackNum}.mp3`;
-  }
-
-  setTrack(num: number) {
-    this.player.src = this.createUrlString(num);
-  }
-
-  setRandomTrack() {
-    if (this.maxTracks) {
-      const trackNum = Math.floor(Math.random() * this.maxTracks);
-      this.setTrack(trackNum);
-      this.initMedia();
-    }
+  set url(path: string) {
+    this.player.src = path;
   }
 }
