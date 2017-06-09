@@ -51,10 +51,10 @@ export const firebaseConfig = {
     HttpModule
   ],
   providers: [
-    AudioService,
     FbaseService,
-    JumbleService,
-    VideoService
+    AudioService,
+    VideoService,
+    JumbleService
   ],
   bootstrap: [AppComponent]
 })

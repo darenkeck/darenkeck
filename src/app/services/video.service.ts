@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { combineLatest }   from 'rxjs/Observable/combineLatest';
+import { BehaviorSubject } from 'rxjs/behaviorsubject';
+import { Observable } from 'rxjs/observable';
+import { Subscription } from 'rxjs/subscription';
+import { combineLatest }   from 'rxjs/observable/combinelatest';
 import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/mergemap';
 
@@ -17,6 +17,7 @@ const MAX_VIDEO_TRACK_STR = 'num-video-loops'
 const BASE_VIDEO_URL = 'assets/video/loop';
 
 // Video Service to be instantiated
+@Injectable()
 export class VideoService {
   baseUrl: string;
   maxTracks: number;

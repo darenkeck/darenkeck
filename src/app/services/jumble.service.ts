@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { combineLatest }   from 'rxjs/Observable/combineLatest';
+import { Observable } from 'rxjs/observable';
+import { Subscription } from 'rxjs/subscription';
+import { combineLatest }   from 'rxjs/observable/combinelatest';
 
 import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
