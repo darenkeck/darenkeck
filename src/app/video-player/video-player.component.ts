@@ -10,11 +10,10 @@ import { VideoService } from 'app/services/video.service';
   styleUrls: ['./video-player.component.css']
 })
 export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('videoPlayer') videoElement: any;
+  @ViewChild('videoPlayer') videoElement;
   videoController: VideoController;
 
   constructor(private videoService: VideoService) {
-
   }
 
   ngAfterViewInit() {

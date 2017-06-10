@@ -21,7 +21,7 @@ const BASE_VIDEO_URL = 'assets/video/loop';
 export class VideoService {
   baseUrl: string;
   maxTracks: number;
-  _vcList: VideoController[];
+  _vcList: VideoController[] = [];
   _vcId: number;
   // ---- generic members ------
   _accState: Observable<PlayerState>;

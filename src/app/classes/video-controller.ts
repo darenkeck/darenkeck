@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { PlayerState } from 'app/services/media-player.service';
 
 export class VideoController {
@@ -19,6 +19,7 @@ export class VideoController {
         this.player.onloadstart = this.onLoadStart.bind(this);
         this.player.oncanplay   = this.onCanPlay.bind(this);
         this.player.onended     = this.onEnded.bind(this);
+        this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
     }
 
     // -------- start generic methods -----------
