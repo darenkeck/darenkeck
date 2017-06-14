@@ -61,7 +61,7 @@ export class JumbleService {
       trackNum = num.toString();
     }
 
-    return `${BASE_VIDEO_URL}/${trackNum}.mp3`;
+    return `${BASE_VIDEO_URL}/${trackNum}`;
   }
 
   createAudioUrlString(num: number): string {

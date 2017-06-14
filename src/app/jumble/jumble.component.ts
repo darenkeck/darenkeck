@@ -15,9 +15,9 @@ import { AudioService } from 'app/services/audio.service';
 export class JumbleComponent implements OnInit {
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
-  showLoad = false;
+  showLoad    = false;
   showLoading = false;
-  showPaused = false;
+  showPaused  = false;
   showPlaying = false;
 
   constructor(private jumbleService: JumbleService) {

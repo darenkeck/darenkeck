@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { Observable } from 'rxjs/observable';
@@ -21,6 +21,7 @@ const BASE_VIDEO_URL = 'assets/video/loop';
 export class VideoService {
   baseUrl: string;
   maxTracks: number;
+  _vc: VideoController;
   _vcList: VideoController[] = [];
   _vcId: number;
   // ---- generic members ------
@@ -33,7 +34,7 @@ export class VideoService {
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
   }
 
-  createVideoController(videoElement: HTMLMediaElement) {
+  createVideoController(videoElement: ElementRef) {
     const vC = new VideoController(videoElement);
     this._vcList = [...this._vcList, vC];
     this.updateStateObservable();

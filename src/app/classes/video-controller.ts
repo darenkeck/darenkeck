@@ -1,21 +1,25 @@
+import { ElementRef }      from '@angular/core';
+
 import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { PlayerState } from 'app/services/media-player.service';
 
 export class VideoController {
     static vcID = 0;
 
-    player: HTMLMediaElement;
-    _url: string;
+    player: HTMLVideoElement;
+    mp4:    string;
+    webm:   string;
+    _url:   string;
     _state: BehaviorSubject<PlayerState>;
-    _id: number;
+    _id:    number;
 
     static getID() {
         return VideoController.vcID += 1;
     }
 
-    constructor(private htmlElement: HTMLMediaElement) {
-        this._id = VideoController.getID();
-        this.player = htmlElement;
+    constructor(private elementRef: ElementRef) {
+        this._id                = VideoController.getID();
+        this.player             = elementRef.nativeElement;
         this.player.onloadstart = this.onLoadStart.bind(this);
         this.player.oncanplay   = this.onCanPlay.bind(this);
         this.player.onended     = this.onEnded.bind(this);
@@ -40,17 +44,17 @@ export class VideoController {
     }
 
     initMedia() {
-    this.player.load();
+        this.player.load();
     }
 
 
     play() {
-    // a paused player means a 'play' is possible
-    if (this._state.value === PlayerState.PAUSED 
-        || this._state.value === PlayerState.ENDED) {
-        this.player.play();
-        this._state.next(PlayerState.PLAYING);
-    }
+        // a paused player means a 'play' is possible
+        if (this._state.value === PlayerState.PAUSED 
+            || this._state.value === PlayerState.ENDED) {
+            this.player.play();
+            this._state.next(PlayerState.PLAYING);
+        }
     }
 
     pause() {
@@ -100,7 +104,9 @@ export class VideoController {
 
     set url(url: string) {
         if (this.player) {
-            this.player.src = url;
+            this._url = url;
+            this.mp4  = `${url}.mp4`;
+            this.webm = `${url}.webm`; 
         } else {
             throw Error('Video player undefined');
         }
