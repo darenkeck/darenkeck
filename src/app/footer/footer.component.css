@@ -3,7 +3,6 @@ a {
     color: white;
 }
 
-.center {
-    display: flex;
-    justify-content: space-around;
+.jumble {
+    z-index: 0;
 }

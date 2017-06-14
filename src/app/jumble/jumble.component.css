@@ -5,6 +5,7 @@
 }
 
 .player-container {
-    padding-top: 4em;
-    padding-bottom: 4em;
+    margin-top: 4em;
+    margin-bottom: 4em;
+    background-color: #494979;
 }

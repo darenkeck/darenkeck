@@ -3,6 +3,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
+import { Subject }      from 'rxjs/subject';
 import { combineLatest }   from 'rxjs/observable/combinelatest';
 import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/mergemap';
@@ -22,12 +23,12 @@ export class VideoService {
   baseUrl: string;
   maxTracks: number;
   _vc: VideoController;
-  _vcList: VideoController[] = [];
   _vcId: number;
   // ---- generic members ------
   _accState: Observable<PlayerState>;
   _accStateSub: Subscription;
   _state: BehaviorSubject<PlayerState>;
+  _loadFinished: Subject<boolean>;
   // ---- end generic members ---
 
   constructor(private fb: FbaseService) {
@@ -35,32 +36,39 @@ export class VideoService {
   }
 
   createVideoController(videoElement: ElementRef) {
-    const vC = new VideoController(videoElement);
-    this._vcList = [...this._vcList, vC];
+    const vc = new VideoController(videoElement);
+    this._vc = vc;
     this.updateStateObservable();
 
-    return vC;
+    return this._vc;
   }
 
   initMedia() {
-    this._vcList.map(vc => {
-      vc.initMedia();
-    });
+    return this._vc.initMedia();
+  }
+
+  play() {
+    this._vc.play();
+  }
+
+  pause() {
+    this._vc.pause();
   }
 
   removeVideoController(vc: VideoController) {
-    this._vcList = this._vcList.filter(vc => vc.id !== vc.id);
+    this._vc = undefined;
   }
 
+  /**
+   * Resets the video subscription
+   */
   updateStateObservable() {
     if (this._accStateSub) {
       this._accStateSub.unsubscribe();
     }
 
     // set up subscription to state of each player, return the 'least prepared' state
-    this._accState = combineLatest(
-      this._vcList.map(vc => vc.state), 
-    ).map(stateList => stateList.reduce((acc, state) => (acc <= state) ? acc : state));
+    this._accState = this._vc.state;
 
     // update subscription for overal video state
     this._accStateSub = this._accState.subscribe(state => {
@@ -72,7 +80,7 @@ export class VideoService {
     return this._state.asObservable();
   }
 
-  set url(path: string) {
-    this._vcList.map(vc => vc.url = path);
+  set url(url: string) {
+    this._vc.url = url;
   }
 }

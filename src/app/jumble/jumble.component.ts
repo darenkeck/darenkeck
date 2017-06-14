@@ -41,7 +41,7 @@ export class JumbleComponent implements OnInit {
         this.showLoading = true;
         break;
       case PlayerState.PAUSED:
-        this.showLoading = true;
+        this.showPaused = true;
         break;
       case PlayerState.PLAYING:
         this.showPlaying = true;

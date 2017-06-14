@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/behaviorsubject';
+import { Subject }      from 'rxjs/Subject';
+import 'rxjs/add/operator/take';
+
 
 import { FbaseService } from 'app/services/fbase.service';
 import { PlayerState } from 'app/services/media-player.service';
@@ -20,12 +23,15 @@ export class AudioService {
   // ---- generic members ------
   player: HTMLMediaElement;
   _state: BehaviorSubject<PlayerState>;
+  _loadFinished: Subject<boolean>;
+
   // ---- end generic members ---
 
   constructor(private fb: FbaseService) { 
     this.player = new Audio();
     // --- generic constructor settings ----
     // set up player event handlers
+    this._loadFinished = new Subject();
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
     this.player.onloadstart = this.onLoadStart.bind(this);
     this.player.oncanplay   = this.onCanPlay.bind(this);
@@ -41,8 +47,9 @@ export class AudioService {
 
   onCanPlay(ev: Event) {
     // only if previous event is loading fire this event
-    if(this._state.value === PlayerState.LOADING) {
+    if (this._state.value === PlayerState.LOADING) {
       this._state.next(PlayerState.PAUSED);
+      this._loadFinished.next(true);
     }
   }
 
@@ -53,6 +60,8 @@ export class AudioService {
   initMedia() {
     if (this.player && this.player.src) {
       this.player.load();
+
+      return this._loadFinished.asObservable().take(1);
     } else {
       throw Error('Player or player src not set')
     }

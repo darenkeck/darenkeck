@@ -31,7 +31,10 @@ export class JumbleService {
       this.audioService.state,
       this.videoService.state,
       (aState, vState) => {
-        const state = (aState <= vState) ? aState : vState;
+        let state = (aState <= vState) ? aState : vState;
+        // if audio state finishes, set state as finished.
+        // video loops and will never emit a 'finish' event
+        state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
         this._state = state;
         
         return state;
@@ -49,7 +52,6 @@ export class JumbleService {
       if (val) {
         this.maxVideoTracks = val;
       }
-
       sub2.unsubscribe();
     });
   }
@@ -75,11 +77,13 @@ export class JumbleService {
   }
 
   play() {
-
+    this.videoService.play();
+    this.audioService.play();
   }
 
   pause() {
-
+    this.videoService.pause();
+    this.audioService.pause();
   }
 
   /**
@@ -95,8 +99,11 @@ export class JumbleService {
       this.videoService.url = this.createVideoUrlString(videoTrackNum);
 
       // start load
-      this.audioService.initMedia();
-      this.videoService.initMedia();
+      this.audioService.initMedia().subscribe( didFinish => {
+        if (didFinish) {
+          this.videoService.initMedia();
+        }
+      });
     }
   }
 
@@ -115,7 +122,7 @@ export class JumbleService {
         this.pause();
         break;
       case PlayerState.ENDED:
-        this.play();
+        this.setJumble();
         break;
       default:
         break;

@@ -17,3 +17,13 @@ a:hover {
     -webkit-transition: background-color 1s;
     background-color: #000;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.center-multiple {
+    display: flex;
+    justify-content: space-around;
+}

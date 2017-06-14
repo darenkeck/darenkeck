@@ -1,5 +1,7 @@
-<video #videoPlayer>
-  <source [src]="videoController?.webm" class="fullscreen-bg_video" muted type="video/webm">
-  <source [src]="videoController?.mp4" class="fullscreen-bg_video" muted type="video/mp4">
-  Browser not supported
-</video>
+<div class="fullscreen-bg">
+  <video #videoPlayer class="fullscreen-bg_video" muted loop>
+    <source [src]="videoController?.webm" type="video/webm">
+    <source [src]="videoController?.mp4" type="video/mp4">
+    Browser not supported
+  </video>
+</div>
