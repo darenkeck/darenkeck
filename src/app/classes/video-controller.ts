@@ -88,9 +88,9 @@ export class VideoController {
     switch(this._state.value) {
         case PlayerState.INIT:
             // set random track url and start load
-            this.initMedia();
             break;
         case PlayerState.LOADING:
+            this.initMedia();
             break;
         case PlayerState.PAUSED:
             this.play();
@@ -99,7 +99,7 @@ export class VideoController {
             this.pause();
             break;
         case PlayerState.ENDED:
-            this.play();
+            this.initMedia();
             break;
         default:
             break;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
@@ -24,7 +24,11 @@ export class JumbleComponent implements OnInit {
     this.playerState = this.jumbleService.state;
     this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state));
   }
-  ngOnInit() {
+  ngOnInit() { }
+
+  ngAfterContentinit() {
+    // on init set initial jumble
+    this.jumbleService.setJumble();
   }
 
   onPlayerStateChange(state: PlayerState) {

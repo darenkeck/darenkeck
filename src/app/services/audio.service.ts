@@ -94,10 +94,10 @@ export class AudioService {
   toggleState() {
     switch(this._state.value) {
       case PlayerState.INIT:
-        // set random track url and start load
-        this.initMedia();
         break;
       case PlayerState.LOADING:
+        // set random track url and start load
+        this.initMedia();        
         break;
       case PlayerState.PAUSED:
         this.play();

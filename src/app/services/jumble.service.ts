@@ -94,11 +94,12 @@ export class JumbleService {
       const videoTrackNum = Math.floor(Math.random() * this.maxVideoTracks);
       const audioTrackNum = Math.floor(Math.random() * this.maxAudioTracks);
       
+      console.log(`Video: ${videoTrackNum} Audio: ${audioTrackNum}`);
       // set urls for both video and audio
       this.audioService.url = this.createAudioUrlString(audioTrackNum);
       this.videoService.url = this.createVideoUrlString(videoTrackNum);
 
-      // start load
+      // start load, after audio finishes load video
       this.audioService.initMedia().subscribe( didFinish => {
         if (didFinish) {
           this.videoService.initMedia();
