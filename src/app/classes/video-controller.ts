@@ -28,7 +28,6 @@ export class VideoController {
         this.player.oncanplay   = this.onCanPlay.bind(this);
         this.player.onended     = this.onEnded.bind(this);
         this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
-        this.player.style.zIndex = "-100";
     }
 
     // -------- start generic methods -----------
