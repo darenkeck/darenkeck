@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+@import '~@angular/material/core/theming/prebuilt/purple-green.css';
+
+/* When ready make a custom theme as based on info from this link
+   https://material.angular.io/guide/theming
+*/
 
 div, p, a {
     font-family: "Courier New", Courier, monospace;
@@ -16,4 +20,14 @@ a:hover {
     transition: background-color 1s;
     -webkit-transition: background-color 1s;
     background-color: #000;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.center-multiple {
+    display: flex;
+    justify-content: space-around;
 }
