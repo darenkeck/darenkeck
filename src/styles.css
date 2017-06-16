@@ -23,11 +23,13 @@ a:hover {
 }
 
 .center {
+    display: -webkit-flex;
     display: flex;
     justify-content: center;
 }
 
 .center-multiple {
+    display: -webkit-flex;
     display: flex;
     justify-content: space-around;
 }
