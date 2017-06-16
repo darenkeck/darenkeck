@@ -8,6 +8,7 @@
 div, p, a {
     font-family: "Courier New", Courier, monospace;
     font-weight: lighter;
+    color: white;
 }
 
 /* The animation code */
