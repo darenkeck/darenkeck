@@ -10,7 +10,7 @@ import { AudioService } from 'app/services/audio.service';
 @Component({
   selector: 'app-jumble',
   templateUrl: './jumble.component.html',
-  styleUrls: ['./jumble.component.css']
+  styleUrls: ['./jumble.component.scss']
 })
 export class JumbleComponent implements OnInit {
   playerState:    Observable<PlayerState>;
