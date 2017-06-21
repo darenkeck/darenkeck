@@ -84,6 +84,15 @@ export class AudioService {
     }
   }
 
+  /**
+   * Sets audio volume - min value: 0 max value: 100
+   */
+  setVolume(volume: number) {
+    // incoming value is between 0 - 100
+    // player takes a value between 0 - 1.0
+    this.player.volume = volume * 0.01;
+  }
+
   get state() {
     return this._state.asObservable();
   }

@@ -13,6 +13,7 @@ import { AudioService } from 'app/services/audio.service';
   styleUrls: ['./jumble.component.scss']
 })
 export class JumbleComponent implements OnInit {
+  disableSlider: boolean;
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
   showLoad    = false;
@@ -21,6 +22,7 @@ export class JumbleComponent implements OnInit {
   showPlaying = false;
 
   constructor(private jumbleService: JumbleService) {
+    this.disableSlider = true;
     this.playerState = this.jumbleService.state;
     this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state));
   }
@@ -39,18 +41,23 @@ export class JumbleComponent implements OnInit {
 
     switch(state) {
       case PlayerState.INIT:
+        this.disableSlider = true;
         this.showLoad = true;
         break;
       case PlayerState.LOADING:
+        this.disableSlider = true;
         this.showLoading = true;
         break;
       case PlayerState.PAUSED:
+        this.disableSlider = false;
         this.showPaused = true;
         break;
       case PlayerState.PLAYING:
+        this.disableSlider = false;
         this.showPlaying = true;
         break;
       case PlayerState.ENDED:
+        this.disableSlider = false;
         this.showPaused = true;
         // this.audioService.setRandomTrack();
         break;
@@ -61,6 +68,10 @@ export class JumbleComponent implements OnInit {
 
   onClick() {
     this.jumbleService.toggleState();
+  }
+
+  onVolumeChange(volume: number) {
+    this.jumbleService.setVolume(volume);
   }
 
   ngOnDestroy() {

@@ -108,6 +108,10 @@ export class JumbleService {
     }
   }
 
+  setVolume(volume: number) {
+    this.audioService.setVolume(volume);
+  }
+
   toggleState() {
     switch(this._state) {
       case PlayerState.INIT:

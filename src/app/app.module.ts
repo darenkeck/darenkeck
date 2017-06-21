@@ -20,6 +20,7 @@ import { HomeComponent }      from './home/home.component';
 import { BioComponent }       from './bio/bio.component';
 import { FooterComponent }    from './footer/footer.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
+import { TabContainerComponent } from './tab-container/tab-container.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -41,7 +42,8 @@ export const firebaseConfig = {
     HomeComponent,
     BioComponent,
     FooterComponent,
-    VideoPlayerComponent
+    VideoPlayerComponent,
+    TabContainerComponent
   ],
   imports: [
     BrowserModule,
