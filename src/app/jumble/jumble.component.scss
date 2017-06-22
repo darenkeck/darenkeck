@@ -5,14 +5,18 @@
 }
 
 .play-container {
-    margin-top: 4em;
-    margin-bottom: 4em;
     background-color: #211;
     opacity: 0.6;
+    align-self: center;
+    height: 4em;
+    width: 4em;
 }
 
 .player-container {
     width: 6em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .spinner {
@@ -21,5 +25,6 @@
 }
 
 .slider {
-    width: 4em;
+    align-self: center;
+    color: #AAA;
 }

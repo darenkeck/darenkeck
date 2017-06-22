@@ -7,5 +7,5 @@
         <i class="material-icons player-control" *ngIf="showPaused">play_arrow</i>
         <i class="material-icons player-control" *ngIf="showPlaying">pause</i>
     </div>
-    <md-slider min="0" max="100" value="100" class="slider" [disabled]="disableSlider" (change)="onVolumeChange($event.value)"></md-slider>
+    <md-slider min="0" max="100" value="100" class="slider" (change)="onVolumeChange($event.value)"></md-slider>
 </div>

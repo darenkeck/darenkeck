@@ -7,6 +7,9 @@ import { PlayerState }  from 'app/services/media-player.service';
 import { JumbleService } from 'app/services/jumble.service';
 import { AudioService } from 'app/services/audio.service';
 
+const _SLIDER_DISABLED_COLOR = '#78909C'; // Blue Gray 200
+const _SLIDER_ENABLED_COLOR = '#BF360C';
+
 @Component({
   selector: 'app-jumble',
   templateUrl: './jumble.component.html',
@@ -20,6 +23,7 @@ export class JumbleComponent implements OnInit {
   showLoading = false;
   showPaused  = false;
   showPlaying = false;
+  sliderColor = _SLIDER_DISABLED_COLOR;
 
   constructor(private jumbleService: JumbleService) {
     this.disableSlider = true;
@@ -64,6 +68,9 @@ export class JumbleComponent implements OnInit {
       default:
         break;
     }
+
+    this.sliderColor = (this.disableSlider) ? _SLIDER_DISABLED_COLOR
+                                            : _SLIDER_ENABLED_COLOR;
   }
 
   onClick() {
