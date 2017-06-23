@@ -7,6 +7,17 @@
 .sig {
     height: 70px;
     position: absolute;
-    right: 0.5em;
+    left: 855px;
+    right: auto;
     z-index: 101;
+}
+
+@media only screen and (max-width: 1080px) {
+    .sig {
+        height: 70px;
+        position: absolute;
+        left: auto;
+        right: 20px;
+        z-index: 101;
+    }
 }
