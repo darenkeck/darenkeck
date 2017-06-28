@@ -6,10 +6,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
+  helpVisible = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  showHelp() {
+    this.helpVisible = true;
+  }
+
+  hideHelp() {
+    this.helpVisible = false;
   }
 
 }
