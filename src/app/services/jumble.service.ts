@@ -13,6 +13,7 @@ import { VideoController } from 'app/classes/video-controller';
 
 const MAX_AUDIO_TRACK_STR = 'num-audio-loops';
 const MAX_VIDEO_TRACK_STR = 'num-video-loops'
+const MAX_RANDOM_ATTEMPTS = 3;
 const BASE_VIDEO_URL = 'assets/video/loop';
 const BASE_AUDIO_URL = 'assets/audio/loop';
 
@@ -24,6 +25,9 @@ export class JumbleService {
   _state: PlayerState;
   maxAudioTracks: number;
   maxVideoTracks: number;
+  _prevVideo: number[] = [];
+  _prevAudio: number[] = [];
+
   constructor(private audioService: AudioService,
               private fb: FbaseService,
               private videoService: VideoService) {
@@ -87,14 +91,58 @@ export class JumbleService {
   }
 
   /**
+   * Make a weak attempt to not play the same thing
+   */
+  getRandomVideoTrack() {
+    let videoTrackNum = 0;
+    for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
+      videoTrackNum = Math.floor(Math.random() * this.maxVideoTracks);
+
+      if(this._prevVideo.indexOf(videoTrackNum) < 0) {
+        break;
+      }
+    }
+    // update previous buffer
+    this._prevVideo.pop();
+    this._prevVideo.push(videoTrackNum);
+
+    return videoTrackNum;
+  }
+
+    /**
+   * Make a weak attempt to not play the same thing
+   */
+  getRandomAudioTrack() {
+    let audioTrackNum = 0;
+    for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
+      audioTrackNum = Math.floor(Math.random() * this.maxAudioTracks);
+
+      if(this._prevAudio.indexOf(audioTrackNum) < 0) {
+        break;
+      }
+    }
+    this.updatePrevBuffer(this._prevAudio, audioTrackNum);
+    return audioTrackNum;
+  }
+
+  /**
+   * Maintain correct length and add new value to buffer holding prev values
+   */
+  updatePrevBuffer(buffer: number[], newVal: number) {
+    if (buffer.length > 3) {
+      buffer.shift();
+    }
+    buffer.push(newVal);
+  }
+
+  /**
    * @description Sets a random track number and starts download for both video and audio
    */
   setJumble() {
     if (this.maxAudioTracks && this.maxVideoTracks) {
-      const videoTrackNum = Math.floor(Math.random() * this.maxVideoTracks);
-      const audioTrackNum = Math.floor(Math.random() * this.maxAudioTracks);
+      const videoTrackNum = this.getRandomVideoTrack();
+      const audioTrackNum = this.getRandomAudioTrack();
       
-      console.log(`Video: ${videoTrackNum} Audio: ${audioTrackNum}`);
       // set urls for both video and audio
       this.audioService.url = this.createAudioUrlString(audioTrackNum);
       this.videoService.url = this.createVideoUrlString(videoTrackNum);
