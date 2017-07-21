@@ -5,9 +5,19 @@
 }
 
 .footer {
-   position:fixed;
+   position:auto;
    width: 100%;
    left:0px;
    bottom:0px;
    z-index: -100;
+}
+
+@media only screen and (min-height: 550px) {
+    .footer {
+        position:fixed;
+        width: 100%;
+        left:0px;
+        bottom:0px;
+        z-index: -100;
+    }
 }
