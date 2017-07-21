@@ -1,0 +1,46 @@
+/* You can add global styles to this file, and also import other style files */
+// @import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+// notes from here: https://stackoverflow.com/questions/40915277/change-build-in-colors-angular-2-material
+// works 
+@import '~@angular/material/core/theming/all-theme';
+
+@include md-core();
+
+$dk-app-primary: md-palette($md-blue-grey, 400);       // #78909C
+$dk-app-accent:  md-palette($md-deep-orange, 900);      // #BF360C
+
+$dk-app-warn:    md-palette($md-orange, 400); // #FFA726
+
+$dk-app-theme: md-light-theme($dk-app-primary, $dk-app-accent, $dk-app-warn);
+
+@include angular-material-theme($dk-app-theme);
+div, p, a {
+    font-family: "Courier New", Courier, monospace;
+    font-weight: lighter;
+    color: #edd;;
+}
+
+/* The animation code */
+@keyframes on-hover {
+    from {background-color: none;}
+    to {background-color: #333; color: black;}
+}
+
+a:hover {
+    transition: background-color 1s;
+    -webkit-transition: background-color 1s;
+    background-color: #000;
+}
+
+.center {
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+}
+
+.center-multiple {
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}

@@ -9,7 +9,5 @@ export class BlogEntryComponent implements OnInit {
   @Input() entry: any;
   constructor() { }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() { }
 }

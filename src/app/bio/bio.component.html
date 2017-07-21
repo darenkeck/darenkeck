@@ -1,8 +1,27 @@
-<md-grid-list class="container" cols="4">
-  <md-grid-tile [colspan]="3">
-    I am a software engineer, musician, and digital artist. I release music through Wayfarer Records.
-  </md-grid-tile>
-  <md-grid-tile [colspan]="1">
-    <img width="220px" src="assets/img/aboutmepic.jpg">
-  </md-grid-tile>
-</md-grid-list>
+<app-tab-container>
+  <div class="center-multiple">
+    <div class="bio-pic">
+      <img width="140px" src="assets/img/aboutmepic.jpg">
+    </div>
+    <div class="bio-description">
+      <p>
+        I am a software engineer, musician, and digital artist. 
+        I write code at Planar Systems and I compose and release music through 
+        <a href="http://wayfarerrecords.com">Wayfarer Records</a>.
+      </p>
+      <p>
+        I will use this site as a personal landing page, and a place to experiment 
+        with original audio and video.
+      </p>
+      <p>
+        My music is available for download on 
+        <a href="https://itunes.apple.com/us/artist/daren-keck/id387899580">iTunes</a>, 
+        <a href="https://www.amazon.com/Daren-Keck/e/B0067D59U0/">Amazon</a>, 
+        and <a href="https://wayfarerrecords.bandcamp.com">Bandcamp</a>.
+      </p>
+      <p>
+        This page was made with @angular. The source can be found <a href="https://github.com/darenkeck/darenkeck">here</a>.
+      </p>
+    </div>
+  </div>
+</app-tab-container>

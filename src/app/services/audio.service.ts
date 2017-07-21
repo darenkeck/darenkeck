@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs/behaviorsubject';
+import { Subject }      from 'rxjs/Subject';
+import 'rxjs/add/operator/take';
+
 
 import { FbaseService } from 'app/services/fbase.service';
 import { PlayerState } from 'app/services/media-player.service';
-
-const DEFAULT_TRACK  = '1';
-const MAX_TRACKS     = 2;
-const MAX_AUDIO_TRACK_STR = 'NUM_AUDIO_LOOPS'
-const BASE_AUDIO_URL = 'assets/audio/loop';
 
 // TODO: refactor generic methods into media-player service
 
@@ -22,31 +20,22 @@ const BASE_AUDIO_URL = 'assets/audio/loop';
 
 @Injectable()
 export class AudioService {
-  baseUrl:  string;
-  trackNum: number;
-  maxTracks: number;
-
   // ---- generic members ------
   player: HTMLMediaElement;
   _state: BehaviorSubject<PlayerState>;
+  _loadFinished: Subject<boolean>;
+
   // ---- end generic members ---
 
   constructor(private fb: FbaseService) { 
     this.player = new Audio();
-    // TODO: this is not working... check FB usage
-    // this.fb.fetchList(MAX_AUDIO_TRACK_STR).subscribe(val => {
-    //   if (val) {
-    //     this.maxTracks = val;
-    //   }
-    // });
-    this.maxTracks = 2;
     // --- generic constructor settings ----
     // set up player event handlers
+    this._loadFinished = new Subject();
     this._state = new BehaviorSubject<PlayerState>(PlayerState.INIT);
     this.player.onloadstart = this.onLoadStart.bind(this);
     this.player.oncanplay   = this.onCanPlay.bind(this);
     this.player.onended     = this.onEnded.bind(this);
-
     // --- end generic constructor settings --
   }
 
@@ -58,8 +47,9 @@ export class AudioService {
 
   onCanPlay(ev: Event) {
     // only if previous event is loading fire this event
-    if(this._state.value === PlayerState.LOADING) {
+    if (this._state.value === PlayerState.LOADING) {
       this._state.next(PlayerState.PAUSED);
+      this._loadFinished.next(true);
     }
   }
 
@@ -68,7 +58,13 @@ export class AudioService {
   }
 
   initMedia() {
-    this.player.load();
+    if (this.player && this.player.src) {
+      this.player.load();
+
+      return this._loadFinished.asObservable().take(1);
+    } else {
+      throw Error('Player or player src not set')
+    }
   }
 
   play() {
@@ -88,6 +84,15 @@ export class AudioService {
     }
   }
 
+  /**
+   * Sets audio volume - min value: 0 max value: 100
+   */
+  setVolume(volume: number) {
+    // incoming value is between 0 - 100
+    // player takes a value between 0 - 1.0
+    this.player.volume = volume * 0.01;
+  }
+
   get state() {
     return this._state.asObservable();
   }
@@ -98,11 +103,10 @@ export class AudioService {
   toggleState() {
     switch(this._state.value) {
       case PlayerState.INIT:
-        // set random track url and start load
-        this.setRandomTrack();
-        this.initMedia();
         break;
       case PlayerState.LOADING:
+        // set random track url and start load
+        this.initMedia();        
         break;
       case PlayerState.PAUSED:
         this.play();
@@ -119,25 +123,7 @@ export class AudioService {
   }
   // -------- end generic methods -----------
 
-  createUrl(num: number): string {
-    let trackNum = DEFAULT_TRACK; //
-
-    if (num < MAX_TRACKS) {
-      trackNum = num.toString();
-    }
-
-    return `${BASE_AUDIO_URL}/${trackNum}.mp3`;
-  }
-
-  setTrack(num: number) {
-    this.player.src = this.createUrl(num);
-  }
-
-  setRandomTrack() {
-    if (this.maxTracks) {
-      const trackNum = Math.floor(Math.random() * MAX_TRACKS);
-      this.setTrack(trackNum);
-      this.initMedia();
-    }
+  set url(path: string) {
+    this.player.src = path;
   }
 }

@@ -1,0 +1,15 @@
+@import '../../global';
+ // http://www.colorzilla.com/gradient-editor/
+
+.container {
+    padding: $gl_padding;
+    background: -webkit-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
+    background: -moz-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
+    background: -o-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
+    background: linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ 
+}
+
+.outer-container {
+    height: 330px;
+    max-height: 330px;
+}

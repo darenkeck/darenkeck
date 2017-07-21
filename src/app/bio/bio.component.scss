@@ -1,5 +1,11 @@
-@import '../../global';
+.bio-description {
+    padding: 5px;
+    width: 440px;
+    float: left;
+}
 
-.container {
-    padding: $gl_padding 
+.bio-pic {
+    padding: 5px;
+    width: 140px;
+    float: left;
 }

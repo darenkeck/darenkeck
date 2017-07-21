@@ -1,9 +1,16 @@
 a {
     text-decoration: none;
     color: white;
+    font: arial;
 }
 
-.center {
-    display: flex;
-    justify-content: space-around;
+.jumble {
+    z-index: 0;
+}
+
+.jumble-description {
+    color: #fff;
+    background-color: #000;
+    text-align: center;
+    font-size: 12px;
 }

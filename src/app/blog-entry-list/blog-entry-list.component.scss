@@ -1,0 +1,9 @@
+@import '../../global';
+
+.blog-container {
+    padding: $gl_padding;
+    background: -webkit-linear-gradient(rgba(32,16,16,0.15) 0%, rgba(16,32,16,0.1) 100%);
+    background: -moz-linear-gradient(rgba(32,16,16,0.2) 0%, rgba(16,32,16,0.1) 100%);
+    background: -o-linear-gradient(rgba(32,16,16,0.2) 0%, rgba(16,32,16,0.1) 100%);
+    background: linear-gradient(rgba(32,16,16,0.2) 0%, rgba(16,32,16,0.1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}

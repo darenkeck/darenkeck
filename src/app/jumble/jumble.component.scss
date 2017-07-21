@@ -1,0 +1,29 @@
+.player-control {
+    opacity: 0.7;
+    font-size: 4em;
+    cursor:  pointer;
+}
+
+.play-container {
+    background-color: #211;
+    opacity: 0.6;
+    align-self: center;
+    height: 4em;
+    width: 4em;
+}
+
+.player-container {
+    width: 6em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.spinner {
+    height: 4em;
+    width: 4em;
+}
+
+.slider {
+    align-self: center;
+}

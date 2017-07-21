@@ -11,4 +11,10 @@ export class FbaseService {
   fetchList(itemType: string): Observable<any> {
     return this.af.database.list(`/${itemType}`).map(itemList => itemList.map(item => item.$value)); 
   }
+
+  fetchItem(itemType: string): Observable<any> {
+    return this.af.database.object(`/${itemType}`).map(item => {
+      return item.$value;
+    });
+  }
 }

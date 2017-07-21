@@ -7,6 +7,8 @@ import { AngularFireModule }  from 'angularfire2';
 
 import { AudioService }       from 'app/services/audio.service';
 import { FbaseService }       from 'app/services/fbase.service';
+import { JumbleService }      from 'app/services/jumble.service';
+import { VideoService }       from 'app/services/video.service';
 
 import { AppComponent }           from './app.component';
 import { JumbleComponent }        from './jumble/jumble.component';
@@ -17,6 +19,8 @@ import { BlogEntryComponent } from './blog-entry/blog-entry.component';
 import { HomeComponent }      from './home/home.component';
 import { BioComponent }       from './bio/bio.component';
 import { FooterComponent }    from './footer/footer.component';
+import { VideoPlayerComponent } from './video-player/video-player.component';
+import { TabContainerComponent } from './tab-container/tab-container.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -37,7 +41,9 @@ export const firebaseConfig = {
     BlogEntryComponent,
     HomeComponent,
     BioComponent,
-    FooterComponent
+    FooterComponent,
+    VideoPlayerComponent,
+    TabContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -47,8 +53,10 @@ export const firebaseConfig = {
     HttpModule
   ],
   providers: [
-    AudioService,
     FbaseService,
+    AudioService,
+    VideoService,
+    JumbleService
   ],
   bootstrap: [AppComponent]
 })
