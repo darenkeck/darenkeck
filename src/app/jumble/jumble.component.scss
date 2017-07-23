@@ -1,5 +1,7 @@
+$opacity: 0.7;
+
 .player-control {
-    opacity: 0.7;
+    opacity: $opacity;
     font-size: 4em;
     cursor:  pointer;
 }
@@ -7,9 +9,17 @@
 .play-container {
     background-color: #211;
     opacity: 0.6;
-    align-self: center;
     height: 4em;
     width: 4em;
+}
+
+.play-row {
+    align-items: center;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 12em;
 }
 
 .player-container {
@@ -26,4 +36,9 @@
 
 .slider {
     align-self: center;
+}
+
+.thumb {
+    opacity: $opacity;
+    font-size: 2em;
 }
