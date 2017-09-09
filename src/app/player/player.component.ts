@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
@@ -10,25 +11,48 @@ import { AudioService } from 'app/services/audio.service';
 const _SLIDER_DISABLED_COLOR = '#78909C'; // Blue Gray 200
 const _SLIDER_ENABLED_COLOR = '#BF360C';
 
+export enum PlayerMode {
+  'Jumble',
+  'Normal'
+}
+
+const VOTE_TIMER_LENGTH = 5; // in seconds
+
 @Component({
-  selector: 'app-jumble',
-  templateUrl: './jumble.component.html',
-  styleUrls: ['./jumble.component.scss']
+  selector: 'app-player',
+  templateUrl: './player.component.html',
+  styleUrls: ['./player.component.scss']
 })
-export class JumbleComponent implements OnInit {
+export class PlayerComponent implements OnInit {
   disableSlider: boolean;
+  playerMode: PlayerMode;
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
+  // TODO: switch these booleans to an enum
+  // need to wait until I can use a switch in the template...
   showLoad    = false;
   showLoading = false;
   showPaused  = false;
   showPlaying = false;
+  _showVoting  = false;
   sliderColor = _SLIDER_DISABLED_COLOR;
+  voteTimer: number;
 
-  constructor(private jumbleService: JumbleService) {
+  constructor(private jumbleService: JumbleService, private router: Router) {
     this.disableSlider = true;
     this.playerState = this.jumbleService.state;
     this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state));
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === 'home') {
+          this.playerMode = PlayerMode.Jumble;
+        } else {
+          this.playerMode = PlayerMode.Normal;
+          this._showVoting = false;
+        }
+      }
+    });
   }
   ngOnInit() { }
 
@@ -47,6 +71,7 @@ export class JumbleComponent implements OnInit {
       case PlayerState.INIT:
         this.disableSlider = true;
         this.showLoad = true;
+        this.showVoting = false;
         break;
       case PlayerState.LOADING:
         this.disableSlider = true;
@@ -59,11 +84,11 @@ export class JumbleComponent implements OnInit {
       case PlayerState.PLAYING:
         this.disableSlider = false;
         this.showPlaying = true;
+        this.startVoteTimer();
         break;
       case PlayerState.ENDED:
         this.disableSlider = false;
         this.showPaused = true;
-        // this.audioService.setRandomTrack();
         break;
       default:
         break;
@@ -77,6 +102,10 @@ export class JumbleComponent implements OnInit {
     this.jumbleService.toggleState();
   }
 
+  onVote(good: boolean) {
+    this.jumbleService.onVote(good);
+  }
+
   onVolumeChange(volume: number) {
     this.jumbleService.setVolume(volume);
   }
@@ -86,4 +115,26 @@ export class JumbleComponent implements OnInit {
       this.playerSub.unsubscribe();
     }
   }
+
+  get showVoting() {
+    return this._showVoting;
+  }
+
+  set showVoting(show: boolean) {
+    this._showVoting = (this.playerMode === PlayerMode.Jumble) ? show : false;
+  }
+
+  /**
+   * Small timer to wait a certain amount of time and then
+   * make voting visible.
+   */
+  startVoteTimer() {
+    if (!this.voteTimer) {
+      this.voteTimer = window.setTimeout(() => {
+        this.showVoting = true;
+        this.voteTimer  = null;
+      }, VOTE_TIMER_LENGTH * 60 * 1000); // in milliseconds
+    }
+  }
 }
+

@@ -11,7 +11,7 @@ import { JumbleService }      from 'app/services/jumble.service';
 import { VideoService }       from 'app/services/video.service';
 
 import { AppComponent }           from './app.component';
-import { JumbleComponent }        from './jumble/jumble.component';
+import { PlayerComponent }        from './player/player.component';
 import { FooterPlayerComponent }  from './footer-player/footer-player.component';
 import { HeaderComponent }        from './header/header.component';
 import { BlogEntryListComponent } from './blog-entry-list/blog-entry-list.component';
@@ -34,7 +34,6 @@ export const firebaseConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    JumbleComponent,
     FooterPlayerComponent,
     HeaderComponent,
     BlogEntryListComponent,
@@ -42,8 +41,9 @@ export const firebaseConfig = {
     HomeComponent,
     BioComponent,
     FooterComponent,
+    PlayerComponent,
     VideoPlayerComponent,
-    TabContainerComponent
+    TabContainerComponent,
   ],
   imports: [
     BrowserModule,

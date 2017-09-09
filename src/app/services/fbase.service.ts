@@ -17,4 +17,7 @@ export class FbaseService {
       return item.$value;
     });
   }
+
+  // need to define schema, need to clean up this interaction
+  setValue(path: string) { }
 }

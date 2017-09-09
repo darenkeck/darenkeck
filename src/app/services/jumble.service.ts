@@ -27,6 +27,7 @@ export class JumbleService {
   maxVideoTracks: number;
   _prevVideo: number[] = [];
   _prevAudio: number[] = [];
+  _voteTimer: number;
 
   constructor(private audioService: AudioService,
               private fb: FbaseService,
@@ -135,8 +136,15 @@ export class JumbleService {
     buffer.push(newVal);
   }
 
+  onVote(good: boolean) {
+    /**
+     * TODO: send vote here
+     */
+    console.log(`Vote: ${good}`);
+  }
+
   /**
-   * @description Sets a random track number and starts download for both video and audio
+   * Sets a random track number and starts download for both video and audio
    */
   setJumble() {
     if (this.maxAudioTracks && this.maxVideoTracks) {
@@ -165,6 +173,7 @@ export class JumbleService {
       case PlayerState.INIT:
         // set random track url and start load
         this.setJumble();
+        // on load of a new track make sure vote is hidden
         break;
       case PlayerState.LOADING:
         break;
@@ -172,6 +181,7 @@ export class JumbleService {
         this.play();
         break;
       case PlayerState.PLAYING:
+        // after first play, start vote timer
         this.pause();
         break;
       case PlayerState.ENDED:
