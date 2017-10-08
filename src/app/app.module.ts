@@ -21,6 +21,7 @@ import { BioComponent }       from './bio/bio.component';
 import { FooterComponent }    from './footer/footer.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { TabContainerComponent } from './tab-container/tab-container.component';
+import { MusicComponent } from './music/music.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -44,6 +45,7 @@ export const firebaseConfig = {
     PlayerComponent,
     VideoPlayerComponent,
     TabContainerComponent,
+    MusicComponent,
   ],
   imports: [
     BrowserModule,

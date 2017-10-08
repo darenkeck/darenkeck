@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { TabPage } from '../app.component';
+
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
