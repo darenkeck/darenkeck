@@ -1,5 +1,4 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, OnChanges, OnInit, Input, AfterContentInit } from '@angular/core';
 
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
@@ -7,6 +6,8 @@ import { Subscription } from 'rxjs/subscription';
 import { PlayerState }  from 'app/services/media-player.service';
 import { JumbleService } from 'app/services/jumble.service';
 import { AudioService } from 'app/services/audio.service';
+
+import { TabPage } from 'app/app.component';
 
 const _SLIDER_DISABLED_COLOR = '#78909C'; // Blue Gray 200
 const _SLIDER_ENABLED_COLOR = '#BF360C';
@@ -24,36 +25,38 @@ const VOTE_TIMER_LENGTH = 5; // in seconds
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
+  @Input() tab = TabPage.HOME;
+  
   disableSlider: boolean;
   playerMode: PlayerMode;
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
   // TODO: switch these booleans to an enum
   // need to wait until I can use a switch in the template...
-  showLoad    = false;
-  showLoading = false;
-  showPaused  = false;
-  showPlaying = false;
-  _showVoting  = false;
-  sliderColor = _SLIDER_DISABLED_COLOR;
+  _showJumbleInit = false;
+  showLoad        = false;
+  showLoading     = false;
+  showPaused      = false;
+  showPlaying     = false;
+  _showVoting     = false;
+  sliderColor     = _SLIDER_DISABLED_COLOR;
   voteTimer: number;
 
-  constructor(private jumbleService: JumbleService, private router: Router) {
+  constructor(private jumbleService: JumbleService) {
     this.disableSlider = true;
     this.playerState = this.jumbleService.state;
-    this.playerSub = this.playerState.subscribe( state => this.onPlayerStateChange(state));
-
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        if (event.url === 'home') {
-          this.playerMode = PlayerMode.Jumble;
-        } else {
-          this.playerMode = PlayerMode.Normal;
-          this._showVoting = false;
-        }
-      }
-    });
+    this.playerSub = this.playerState.subscribe(state => this.onPlayerStateChange(state));
   }
+
+  ngOnChanges() {
+    // player mode is based on last set active track
+    const navToHome = this.tab === TabPage.HOME;
+    this.playerMode = navToHome ? PlayerMode.Jumble : PlayerMode.Normal;
+    // use the es6 setter/getter...
+    this.showJumbleInit = navToHome;
+    this.showVoting = this._showVoting;
+  }
+
   ngOnInit() { }
 
   ngAfterContentinit() {
@@ -62,10 +65,11 @@ export class PlayerComponent implements OnInit {
   }
 
   onPlayerStateChange(state: PlayerState) {
-    this.showLoad     = false;
-    this.showLoading  = false;
-    this.showPaused   = false;
-    this.showPlaying  = false;
+    this.showJumbleInit = false;
+    this.showLoad       = false;
+    this.showLoading    = false;
+    this.showPaused     = false;
+    this.showPlaying    = false;
 
     switch(state) {
       case PlayerState.INIT:
@@ -116,12 +120,20 @@ export class PlayerComponent implements OnInit {
     }
   }
 
+  get showJumbleInit() {
+    return this._showJumbleInit;
+  }
+
+  set showJumbleInit(show: boolean) {
+    this._showJumbleInit = (this.playerMode === PlayerMode.Jumble) ? show : false;
+  }
+
   get showVoting() {
     return this._showVoting;
   }
 
   set showVoting(show: boolean) {
-    this._showVoting = (this.playerMode === PlayerMode.Jumble) ? show : false;
+    this._showVoting = (this.playerMode === PlayerMode.Jumble) ? show : false;      
   }
 
   /**

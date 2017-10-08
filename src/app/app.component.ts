@@ -3,6 +3,13 @@ import { Http }      from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { FbaseService } from 'app/services/fbase.service';
 
+// enum to help track current tab
+export const TabPage = {
+  HOME: 'Home',
+  MUSIC: 'Music',
+  BIO: 'Bio'
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,8 +18,14 @@ import { FbaseService } from 'app/services/fbase.service';
 export class AppComponent {
   entryList: Observable<string[]>;
   title = 'Daren Keck';
+  tab = TabPage.HOME;
 
   constructor(private fbase: FbaseService) {
     this.entryList = this.fbase.fetchList('blog-entries');
+  }
+
+  onTabSelect(event: Event) {
+    // set local reference to current tab
+    console.log(event);
   }
 }

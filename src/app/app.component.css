@@ -12,6 +12,11 @@
    z-index: -100;
 }
 
+
+.jumble {
+    z-index: 0;
+}
+
 @media only screen and (min-height: 550px) {
     .footer {
         position:fixed;

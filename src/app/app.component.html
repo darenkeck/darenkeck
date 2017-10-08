@@ -1,12 +1,18 @@
 <app-header></app-header>
-<md-tab-group class="main-container" style="z-index: 0;">
-  <md-tab label="Home">
+<md-tab-group (selectChange)="onTabSelect($event)" class="main-container" style="z-index: 0;">
+  <md-tab label="HOME">
     <app-home></app-home>
   </md-tab>
-  <md-tab label="Bio">
+  <md-tab label="MUSIC">
+    <app-music></app-music>
+  </md-tab>
+  <md-tab label="BIO">
     <app-bio>
     </app-bio>
   </md-tab>
 </md-tab-group>
-<app-footer class="footer">
-</app-footer>
+<div class="footer">
+  <app-player [tab]="tab" class="jumble center"></app-player>
+  <app-footer>
+  </app-footer>
+</div>
