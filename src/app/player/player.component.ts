@@ -45,16 +45,22 @@ export class PlayerComponent implements OnInit {
   constructor(private jumbleService: JumbleService) {
     this.disableSlider = true;
     this.playerState = this.jumbleService.state;
+    // if a jumble state comes through, this means we do jumble mode stuff meaning:
+    // set both video and audio
+    // potentially show or hide voting
+    // this.jumbleState = this.jumbleService.state;
+    // if an audio state comes through, this was set directly to the audio service
+    // hide voting, do not change video
+    // and means we are not doing a jumble
+    // this.audioState = this.audioService.state;
     this.playerSub = this.playerState.subscribe(state => this.onPlayerStateChange(state));
   }
 
   ngOnChanges() {
     // player mode is based on last set active track
-    const navToHome = this.tab === TabPage.HOME;
-    this.playerMode = navToHome ? PlayerMode.Jumble : PlayerMode.Normal;
-    // use the es6 setter/getter...
-    this.showJumbleInit = navToHome;
-    this.showVoting = this._showVoting;
+    const isNavToHome = this.tab === TabPage.HOME;
+    this.playerMode = isNavToHome ? PlayerMode.Jumble : PlayerMode.Normal;
+    // // use the es6 setter/getter...
   }
 
   ngOnInit() { }
@@ -80,6 +86,7 @@ export class PlayerComponent implements OnInit {
       case PlayerState.LOADING:
         this.disableSlider = true;
         this.showLoading = true;
+        this.showVoting = false;
         break;
       case PlayerState.PAUSED:
         this.disableSlider = false;
@@ -145,7 +152,7 @@ export class PlayerComponent implements OnInit {
       this.voteTimer = window.setTimeout(() => {
         this.showVoting = true;
         this.voteTimer  = null;
-      }, VOTE_TIMER_LENGTH * 60 * 1000); // in milliseconds
+      }, VOTE_TIMER_LENGTH  * 1000); // in milliseconds
     }
   }
 }
