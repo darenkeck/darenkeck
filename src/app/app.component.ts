@@ -23,9 +23,4 @@ export class AppComponent {
   constructor(private fbase: FbaseService) {
     this.entryList = this.fbase.fetchList('blog-entries');
   }
-
-  onTabSelect(event: Event) {
-    // set local reference to current tab
-    console.log(event);
-  }
 }

@@ -1,3 +1,8 @@
-<p>
-  music works!
-</p>
+<app-tab-container>    
+  <app-track-group 
+    groupName="Test"
+    imgUrl="assets/img/aboutmepic.jpg"
+    [trackList]="testTrackList"
+    (trackSelected)="onTrackSelected($event)">
+  </app-track-group>
+</app-tab-container>

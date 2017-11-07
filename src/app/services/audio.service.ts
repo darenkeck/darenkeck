@@ -57,7 +57,12 @@ export class AudioService {
     this._state.next(PlayerState.ENDED);
   }
 
-  initMedia() {
+  initMedia(url = null) {
+    if (url) {
+      // if a url is provided, set it
+      this.url = url;
+    }
+
     if (this.player && this.player.src) {
       this.player.load();
 

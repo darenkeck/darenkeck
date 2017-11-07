@@ -44,3 +44,20 @@ a:hover {
     justify-content: space-around;
     flex-wrap: wrap;
 }
+
+.column-left {
+    padding: 5px;
+    width: 140px;
+    float: left;
+}
+
+.column-right {
+    padding: 5px;
+    width: 440px;
+    float: left;
+}
+
+.dk-row {
+    padding-top: 10px;
+    padding-bottom: 10x;
+}
