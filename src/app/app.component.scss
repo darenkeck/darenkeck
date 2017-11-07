@@ -1,3 +1,5 @@
+@import '../global';
+
 .main-container {
     /*margin-top: -4em;*/
     padding: 5px;
@@ -15,6 +17,18 @@
 
 .jumble {
     z-index: 0;
+}
+
+.jumble-content {
+    position: relative;
+}
+
+.new-jumble {
+    position: absolute;
+    cursor: pointer;
+    right: 2em;
+    bottom: 3em;
+    color: $alert-color;
 }
 
 @media only screen and (min-height: 550px) {

@@ -1,7 +1,7 @@
 <app-video-player>
 </app-video-player>
-<div class="player-container">
-    <div class="play-row">
+<div class="player-container">     
+    <div class="play-row">  
         <i class ="material-icons thumb" *ngIf="showVoting" (click)="onVote(false)">thumb_down</i>
         <div class="play-container" (click)="onClick()">
             <i class="material-icons player-control" mode="indeterminate" style="opacity: 0.2;" *ngIf="showLoad">play_arrow</i>    
@@ -11,6 +11,5 @@
         </div>
         <i class="material-icons thumb" *ngIf="showVoting" (click)="onVote(true)">thumb_up</i>
     </div>
-    <div *ngIf="showJumbleInit">Next Jumble</div>
     <md-slider min="0" max="100" value="100" class="slider" (change)="onVolumeChange($event.value)"></md-slider>
 </div>
