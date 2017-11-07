@@ -1,0 +1,13 @@
+<div>
+  {{groupName}}
+</div>
+<div class="center-multiple">
+  <div class="column-left">
+    <img width="140px" src="{{imgUrl}}">            
+  </div>
+  <div class="column-right">
+    <div *ngFor="let track of trackList" class="dk-row track-item" (click)="onTrackSelect(track?.url)">
+      {{track?.title}}
+    </div>
+  </div>
+</div>
