@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
-import { combineLatest }   from 'rxjs/observable/combinelatest';
+import { combineLatest } from 'rxjs/observable/combinelatest';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/withLatestFrom';
 
 import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
@@ -19,10 +22,14 @@ const BASE_AUDIO_URL = 'assets/audio/loop';
 
 // This class is designed to coordinate the video and audio player
 // and help load random tracks for each
+// This contains knowledge of how to interact with the 'loop' video and audio tracks
+// This manages the state between both video and audio player
 @Injectable()
 export class JumbleService {
   state: Observable<PlayerState>;
   _state: PlayerState;
+  _isJumble: BehaviorSubject<boolean>;
+  isJumble: Observable<boolean>;
   maxAudioTracks: number;
   maxVideoTracks: number;
   _prevVideo: number[] = [];
@@ -32,18 +39,35 @@ export class JumbleService {
   constructor(private audioService: AudioService,
               private fb: FbaseService,
               private videoService: VideoService) {
+    // only emit event when a _isJumble event is emitted
+    this._isJumble = new BehaviorSubject(false);
+
     this.state = combineLatest(
       this.audioService.state,
       this.videoService.state,
       (aState, vState) => {
         let state = (aState <= vState) ? aState : vState;
+        // audio state is more important and takes precedence in a few situations
+        // if audio is being init, set jumbleReady to false
+        if (aState === PlayerState.INIT) {
+          this._isJumble.next(false);
+        }
         // if audio state finishes, set state as finished.
         // video loops and will never emit a 'finish' event
         state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
         this._state = state;
         
-        return state;
-    });
+        return state
+      }
+    );
+
+    // only emits an event with the current state when _jumbleReady
+    this.isJumble = this._isJumble.asObservable().withLatestFrom(
+      this.state,
+      (jumbleReady, state) => {
+        return jumbleReady
+      }
+    );
 
     // fetch max values - do only once during lifetime of website visit
     const sub1 = this.fb.fetchItem(MAX_AUDIO_TRACK_STR).subscribe(val => {
@@ -154,11 +178,12 @@ export class JumbleService {
       // set urls for both video and audio
       this.audioService.url = this.createAudioUrlString(audioTrackNum);
       this.videoService.url = this.createVideoUrlString(videoTrackNum);
-
       // start load, after audio finishes load video
       this.audioService.initMedia().subscribe( didFinish => {
         if (didFinish) {
-          this.videoService.initMedia();
+          this.videoService.initMedia().subscribe( didFinish => {
+            this._isJumble.next(true);
+          })
         }
       });
     }

@@ -3,9 +3,11 @@ import { Component, OnChanges, OnInit, Input, AfterContentInit } from '@angular/
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
 
+import { combineLatest } from 'rxjs/observable/combinelatest';
 import { PlayerState }  from 'app/services/media-player.service';
-import { JumbleService } from 'app/services/jumble.service';
 import { AudioService } from 'app/services/audio.service';
+import { JumbleService } from 'app/services/jumble.service';
+import { VideoService }   from 'app/services/video.service';
 
 import { TabPage } from 'app/app.component';
 
@@ -28,6 +30,7 @@ export class PlayerComponent implements OnInit {
   @Input() tab = TabPage.HOME;
   
   disableSlider: boolean;
+  isJumble: boolean;
   playerMode: PlayerMode;
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
@@ -42,18 +45,24 @@ export class PlayerComponent implements OnInit {
   sliderColor     = _SLIDER_DISABLED_COLOR;
   voteTimer: number;
 
-  constructor(private jumbleService: JumbleService) {
+  constructor(private jumbleService: JumbleService,
+              private audioService: AudioService,
+              private videoService: VideoService) {
     this.disableSlider = true;
-    this.playerState = this.jumbleService.state;
-    // if a jumble state comes through, this means we do jumble mode stuff meaning:
-    // set both video and audio
-    // potentially show or hide voting
-    // this.jumbleState = this.jumbleService.state;
-    // if an audio state comes through, this was set directly to the audio service
-    // hide voting, do not change video
-    // and means we are not doing a jumble
-    // this.audioState = this.audioService.state;
-    this.playerSub = this.playerState.subscribe(state => this.onPlayerStateChange(state));
+    this.playerSub = combineLatest(
+      this.audioService.state,
+      this.videoService.state,
+      this.jumbleService.isJumble
+    ).subscribe( ([aState, vState, isJumble]) =>
+      {
+        let state = (aState <= vState) ? aState : vState;
+        // if audio state finishes, set state as finished.
+        // video loops and will never emit a 'finish' event
+        state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
+        this.isJumble = isJumble;
+        this.onPlayerStateChange(state);
+      }
+    )
   }
 
   ngOnChanges() {
@@ -150,7 +159,9 @@ export class PlayerComponent implements OnInit {
   startVoteTimer() {
     if (!this.voteTimer) {
       this.voteTimer = window.setTimeout(() => {
-        this.showVoting = true;
+        if (this.isJumble) {
+          this.showVoting = true;          
+        }
         this.voteTimer  = null;
       }, VOTE_TIMER_LENGTH  * 1000); // in milliseconds
     }
