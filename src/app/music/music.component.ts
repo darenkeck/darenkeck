@@ -7,9 +7,9 @@ import { AudioService }      from '../services/audio.service';
 const BASE_AUDIO_URL = 'assets/audio/loop';
 
 const TEST_TRACK_LIST = [
-  { title: '00', url: BASE_AUDIO_URL + '/00.mp3'},
-  { title: '01', url: BASE_AUDIO_URL + '/01.mp3'},
-  { title: '02', url: BASE_AUDIO_URL + '/02.mp3'},
+  { title: '0', url: BASE_AUDIO_URL + '/0.mp3'},
+  { title: '1', url: BASE_AUDIO_URL + '/1.mp3'},
+  { title: '2', url: BASE_AUDIO_URL + '/2.mp3'},
 ];
 
 @Component({
