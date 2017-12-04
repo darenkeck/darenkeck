@@ -28,6 +28,7 @@ const BASE_AUDIO_URL = 'assets/audio/loop';
 export class JumbleService {
   state: Observable<PlayerState>;
   _state: PlayerState;
+  _jumbleInitiated: boolean;
   _isJumble: BehaviorSubject<boolean>;
   isJumble: Observable<boolean>;
   maxAudioTracks: number;
@@ -48,9 +49,10 @@ export class JumbleService {
       (aState, vState) => {
         let state = (aState <= vState) ? aState : vState;
         // audio state is more important and takes precedence in a few situations
-        // if audio is being init, set jumbleReady to false
-        if (aState === PlayerState.INIT) {
-          this._isJumble.next(false);
+        // on audio initialization, see if the _jumbleInitiated flag is set
+        if (aState === PlayerState.LOADING) {
+          this._isJumble.next(this._jumbleInitiated);
+          this._jumbleInitiated = false;
         }
         // if audio state finishes, set state as finished.
         // video loops and will never emit a 'finish' event
@@ -181,11 +183,10 @@ export class JumbleService {
       // start load, after audio finishes load video
       this.audioService.initMedia().subscribe( didFinish => {
         if (didFinish) {
-          this.videoService.initMedia().subscribe( didFinish => {
-            this._isJumble.next(true);
-          })
+          this.videoService.initMedia();
         }
       });
+      this._jumbleInitiated = true;
     }
   }
 
