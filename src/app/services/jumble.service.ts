@@ -215,7 +215,9 @@ export class JumbleService {
         this.pause();
         break;
       case PlayerState.ENDED:
-        this.setJumble();
+        if (this._isJumble) {
+          this.setJumble();          
+        }
         break;
       default:
         break;

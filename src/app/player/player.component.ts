@@ -55,7 +55,11 @@ export class PlayerComponent implements OnInit {
       this.jumbleService.isJumble
     ).subscribe( ([aState, vState, isJumble]) =>
       {
-        let state = (aState <= vState) ? aState : vState;
+        // if not a jumble, just use audio, or if audio is less than video
+        // If audio state is ended, let that also dic
+        let state = (!isJumble || aState <= vState || aState === PlayerState.ENDED) 
+          ? aState : vState;
+
         // if audio state finishes, set state as finished.
         // video loops and will never emit a 'finish' event
         state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
