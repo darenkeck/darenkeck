@@ -63,7 +63,7 @@ export class JumbleService {
       }
     );
 
-    // only emits an event with the current state when _jumbleReady
+    // emits current state when _jumbleReady
     this.isJumble = this._isJumble.asObservable().withLatestFrom(
       this.state,
       (jumbleReady, state) => {
@@ -183,7 +183,11 @@ export class JumbleService {
       // start load, after audio finishes load video
       this.audioService.initMedia().subscribe( didFinish => {
         if (didFinish) {
-          this.videoService.initMedia();
+          this.videoService.initMedia().subscribe( (didFinish) => {
+              this.audioService.play();
+              this.videoService.play();        
+            }
+          );
         }
       });
       this._jumbleInitiated = true;
