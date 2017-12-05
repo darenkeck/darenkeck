@@ -6,6 +6,7 @@ import { MaterialModule }     from '@angular/material';
 import { AngularFireModule }  from 'angularfire2';
 
 import { AudioService }       from 'app/services/audio.service';
+import { AudioStoreService }  from 'app/services/audio-store.service';
 import { FbaseService }       from 'app/services/fbase.service';
 import { JumbleService }      from 'app/services/jumble.service';
 import { VideoService }       from 'app/services/video.service';
@@ -59,6 +60,7 @@ export const firebaseConfig = {
   providers: [
     FbaseService,
     AudioService,
+    AudioStoreService,
     VideoService,
     JumbleService
   ],
