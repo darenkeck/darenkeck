@@ -60,9 +60,9 @@ export const firebaseConfig = {
   providers: [
     FbaseService,
     AudioService,
-    AudioStoreService,
     VideoService,
-    JumbleService
+    JumbleService,
+    AudioStoreService,
   ],
   bootstrap: [AppComponent]
 })

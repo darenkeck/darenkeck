@@ -9,13 +9,19 @@ export class FbaseService {
   constructor(private af: AngularFire) { }
 
   fetchList(itemType: string): Observable<any> {
-    return this.af.database.list(`/${itemType}`).map(itemList => itemList.map(item => item.$value)); 
+    return this.af.database.list(`/${itemType}`).map(itemList => {
+      return itemList.map(item => item.$value)
+    }); 
   }
 
   fetchItem(itemType: string): Observable<any> {
     return this.af.database.object(`/${itemType}`).map(item => {
       return item.$value;
     });
+  }
+
+  fetchFBList(itemType: string): FirebaseListObservable<any> {
+    return this.af.database.list(itemType);
   }
 
   // need to define schema, need to clean up this interaction
