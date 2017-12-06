@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
+
+import { Album, Track } from '../services/audio-store.service';
 
 interface TrackItem {
   title: string;
@@ -11,14 +13,18 @@ interface TrackItem {
   styleUrls: ['./track-group.component.css']
 })
 export class TrackGroupComponent {
-  @Input()  imgUrl:         string;
-  @Input()  groupName:      string;
-  @Input()  trackList:      TrackItem[];
-  @Output() trackSelected = new EventEmitter<string>();
+  @Input() album: Album;
+  @Output() trackSelected = new EventEmitter<Track>();
 
   constructor() { }
 
-  onTrackSelect(trackUrl: string) {
-    this.trackSelected.emit(trackUrl);
+  ngOnChanges() {
+    if (this.album) {
+      console.log(this.album);
+    }
+  }
+
+  onTrackSelect(track: Track) {
+    this.trackSelected.emit(track);
   }
 }

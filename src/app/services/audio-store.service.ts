@@ -5,12 +5,6 @@ import { combineLatest } from 'rxjs/observable/combinelatest';
 
 import { FbaseService } from 'app/services/fbase.service';
 
-interface _Album {
-  title: string;
-  image_url: string;
-  track_list: number[];
-}
-
 // unflattened Album reference
 export interface Album {
   title: string;
@@ -24,6 +18,12 @@ export interface Track {
   track_num: number;
   url: string;
   $key: string;
+}
+
+interface _Album {
+  title: string;
+  image_url: string;
+  track_list: number[];
 }
 
 /**
@@ -70,12 +70,6 @@ export class AudioStoreService {
       });
 
       this._albumList$.next(newAlbumList);
-    });
-
-    // fetch max values - do only once during lifetime of website visit
-    const sub1 = this.fb.fetchItem('num-audio-loop').subscribe(val => {
-      console.log(val);
-      sub1.unsubscribe();
     });
   }
 

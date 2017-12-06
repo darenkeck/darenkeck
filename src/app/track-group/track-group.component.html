@@ -1,13 +1,13 @@
 <div>
-  {{groupName}}
+  {{album?.title}}
 </div>
 <div class="center-multiple">
   <div class="column-left">
-    <img width="140px" src="{{imgUrl}}">            
+    <img width="140px" src="{{album?.image_url}}">            
   </div>
   <div class="column-right">
-    <div *ngFor="let track of trackList" class="dk-row track-item" (click)="onTrackSelect(track?.url)">
-      {{track?.title}}
+    <div *ngFor="let track of album?.track_list" class="dk-row track-item" (click)="onTrackSelect(track)">
+      {{track?.name}}
     </div>
   </div>
 </div>
