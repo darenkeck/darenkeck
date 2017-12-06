@@ -32,6 +32,6 @@ export class MusicComponent implements OnInit {
   }
 
   onTrackSelected(track: Track) {
-    this.audioService.initMedia(track.url).subscribe( didFinish => this.audioService.play() );
+    this.audioService.initMediaWithURL(track.url).subscribe( didFinish => this.audioService.play() );
   }
 }
