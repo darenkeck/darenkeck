@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/subscription';
 import { combineLatest } from 'rxjs/observable/combinelatest';
 import { PlayerState }  from 'app/services/media-player.service';
 import { AudioService } from 'app/services/audio.service';
+import { AudioStoreService, Track } from 'app/services/audio-store.service';
 import { JumbleService } from 'app/services/jumble.service';
 import { VideoService }   from 'app/services/video.service';
 
@@ -29,6 +30,7 @@ const VOTE_TIMER_LENGTH = 5; // in seconds
 export class PlayerComponent implements OnInit {
   @Input() tab = TabPage.HOME;
   
+  currentTrack: Observable<Track>;
   disableSlider: boolean;
   isJumble: boolean;
   playerMode: PlayerMode;
@@ -47,7 +49,9 @@ export class PlayerComponent implements OnInit {
 
   constructor(private jumbleService: JumbleService,
               private audioService: AudioService,
+              private audioStoreService: AudioStoreService,
               private videoService: VideoService) {
+    this.currentTrack = this.audioStoreService.currentTrack;
     this.disableSlider = true;
     this.playerSub = combineLatest(
       this.audioService.state,

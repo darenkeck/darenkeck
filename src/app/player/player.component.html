@@ -1,9 +1,10 @@
 <app-video-player>
 </app-video-player>
-<div class="player-container">     
+<div>
+    <div class="track-title">{{(currentTrack | async)?.name}}</div>           
     <div class="play-row">  
         <i class ="material-icons thumb" *ngIf="showVoting" (click)="onVote(false)">thumb_down</i>
-        <div class="play-container" (click)="onClick()">
+        <div class="player-button" (click)="onClick()">
             <i class="material-icons player-control" mode="indeterminate" style="opacity: 0.2;" *ngIf="showLoad">play_arrow</i>    
             <md-progress-spinner mode="indeterminate" class="spinner" *ngIf="showLoading"></md-progress-spinner>
             <i class="material-icons player-control" *ngIf="showPaused">play_arrow</i>
@@ -11,5 +12,5 @@
         </div>
         <i class="material-icons thumb" *ngIf="showVoting" (click)="onVote(true)">thumb_up</i>
     </div>
-    <md-slider min="0" max="100" value="100" class="slider" (change)="onVolumeChange($event.value)"></md-slider>
+    <md-slider class="slider" min="0" max="100" value="100" class="slider" (change)="onVolumeChange($event.value)"></md-slider>
 </div>
