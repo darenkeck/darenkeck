@@ -181,7 +181,7 @@ export class JumbleService {
       this.audioService.url = this.createAudioUrlString(audioTrackNum);
       this.videoService.url = this.createVideoUrlString(videoTrackNum);
       // start load, after audio finishes load video
-      this.audioService.initMediaWithURL().subscribe( didFinish => {
+      this.audioService.initMedia().subscribe( didFinish => {
         if (didFinish) {
           this.videoService.initMedia().subscribe( (didFinish) => {
               this.audioService.play();

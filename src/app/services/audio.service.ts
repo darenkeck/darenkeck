@@ -6,8 +6,7 @@ import 'rxjs/add/operator/take';
 
 
 import { FbaseService } from 'app/services/fbase.service';
-import { PlayerState }  from 'app/services/media-player.service';
-import { Track }        from 'app/services/audio-store.service';
+import { PlayerState } from 'app/services/media-player.service';
 
 // TODO: refactor generic methods into media-player service
 
@@ -22,9 +21,8 @@ import { Track }        from 'app/services/audio-store.service';
 @Injectable()
 export class AudioService {
   // ---- generic members ------
-  currentTrack:  BehaviorSubject<Track>;
-  player:        HTMLMediaElement;
-  _state:        BehaviorSubject<PlayerState>;
+  player: HTMLMediaElement;
+  _state: BehaviorSubject<PlayerState>;
   _loadFinished: Subject<boolean>;
 
   // ---- end generic members ---
@@ -59,27 +57,13 @@ export class AudioService {
     this._state.next(PlayerState.ENDED);
   }
 
-  initMedia(track: Track) {
-    if (track) {
-      this.currentTrack.next(track);
-      this._loadMedia(track.url);
-    }
-  }
-
-  initMediaWithURL(url = null) {
+  initMedia(url = null) {
     if (url) {
       // if a url is provided, set it
       this.url = url;
-      this._loadMedia(url);
     }
-  }
 
-  /**
-   * Internal method to prep the player object and call load
-   */
-  _loadMedia(url: string) {
     if (this.player && this.player.src) {
-      this.player.src = url;
       this.player.load();
 
       return this._loadFinished.asObservable().take(1);
@@ -127,7 +111,7 @@ export class AudioService {
         break;
       case PlayerState.LOADING:
         // set random track url and start load
-        this.initMediaWithURL();        
+        this.initMedia();        
         break;
       case PlayerState.PAUSED:
         this.play();
