@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, Input, AfterContentInit } from '@angular/core';
+import { Component, OnChanges, OnInit, Input } from '@angular/core';
 
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
@@ -30,10 +30,17 @@ const VOTE_TIMER_LENGTH = 5; // in seconds
 export class PlayerComponent implements OnInit {
   @Input() tab = TabPage.HOME;
   
-  currentTrack: Observable<Track>;
-  disableSlider: boolean;
-  isJumble: boolean;
-  playerMode: PlayerMode;
+  currentTrack:   Observable<Track>;
+  disableSlider:  boolean;
+  isJumble:       boolean;
+  // TODO: 'firstClick' and 'forceVideo' are unnecessary once
+  // I can figure out why the videoplayer 'onLoad' is immediately 
+  // called. 'firstClick' allows the first click to set a jumble with the play button
+  firstClick      = true;
+  // flag to indicate we should force a video playing (not inited by jumble)
+  forceVideo      = false;
+  // used to indicate if jumble voting should show
+  playerMode:     PlayerMode;
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
   // TODO: switch these booleans to an enum
@@ -59,18 +66,33 @@ export class PlayerComponent implements OnInit {
       this.jumbleService.isJumble
     ).subscribe( ([aState, vState, isJumble]) =>
       {
-        // if not a jumble, just use audio, or if audio is less than video
-        // If audio state is ended, let that also dic
-        let state = (!isJumble || aState <= vState || aState === PlayerState.ENDED) 
+        // If audio is playing, we want video playing as well
+        if (!isJumble && aState === PlayerState.LOADING) {
+          this.firstClick = false;
+          // we want video playing anytime audio is playing, so
+          // even though this is not a jumble, go ahead an load a random
+          // video
+          // Only do this once by checking if the vStat is init
+          if (vState === PlayerState.LOADING) {
+            this.forceVideo = true;
+          }
+        }
+
+        if (aState === PlayerState.PAUSED && this.forceVideo) {
+          this.jumbleService.initRandomVideo();
+          this.forceVideo = false;
+        }
+
+        let state = (aState <= vState || aState === PlayerState.ENDED) 
           ? aState : vState;
 
-        // if audio state finishes, set state as finished.
-        // video loops and will never emit a 'finish' event
-        state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
         this.isJumble = isJumble;
         this.onPlayerStateChange(state);
       }
-    )
+    );
+    // by default, jumble is true for the player. This allows a first click
+    // of the player to set a jumble
+    this.isJumble = true;
   }
 
   ngOnChanges() {
@@ -81,11 +103,6 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit() { }
-
-  ngAfterContentinit() {
-    // on init set initial jumble
-    this.jumbleService.setJumble();
-  }
 
   onPlayerStateChange(state: PlayerState) {
     this.showJumbleInit = false;
@@ -127,7 +144,12 @@ export class PlayerComponent implements OnInit {
   }
 
   onClick() {
-    this.jumbleService.toggleState();
+    if (this.isJumble || this.firstClick) {
+      this.jumbleService.toggleState();
+      this.firstClick = false;     
+    } else {
+      this.audioService.toggleState();
+    }
   }
 
   onVote(good: boolean) {

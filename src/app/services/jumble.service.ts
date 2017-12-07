@@ -170,6 +170,18 @@ export class JumbleService {
   }
 
   /**
+   * Helper method if just initializing a random video
+   */
+  initRandomVideo() {
+    const videoTrackNum = this.getRandomVideoTrack();
+    this.videoService.url = this.createVideoUrlString(videoTrackNum);
+
+    this.videoService.initMedia().subscribe( didFinish => {
+      this.videoService.play();
+    });
+  }
+
+  /**
    * Sets a random track number and starts download for both video and audio
    */
   setJumble() {
