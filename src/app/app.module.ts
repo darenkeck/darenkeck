@@ -9,6 +9,7 @@ import { AudioService }       from 'app/services/audio.service';
 import { AudioStoreService }  from 'app/services/audio-store.service';
 import { FbaseService }       from 'app/services/fbase.service';
 import { JumbleService }      from 'app/services/jumble.service';
+import { JumbleStoreService } from 'app/services/jumble-store.service';
 import { VideoService }       from 'app/services/video.service';
 
 import { AppComponent }           from './app.component';
@@ -61,6 +62,7 @@ export const firebaseConfig = {
     FbaseService,
     AudioService,
     VideoService,
+    JumbleStoreService,
     JumbleService,
     AudioStoreService,
   ],

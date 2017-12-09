@@ -24,6 +24,13 @@ export class FbaseService {
     return this.af.database.list(itemType);
   }
 
-  // need to define schema, need to clean up this interaction
-  setValue(path: string) { }
+  updateItem<T>(path: string, key: string, value: T) {
+    const listRef = this.af.database.list(path);
+    listRef.update(key, value);
+  }
+
+  createItem<T>(path: string, value: T) {
+    const listRef = this.af.database.list(path);
+    listRef.push(value);
+  }
 }
