@@ -16,26 +16,42 @@ export interface Jumble {
   $key?: string;
 }
 
-export interface Video {
+export interface VideoLoop {
+  url: string;
+  $key: string;
+}
+
+export interface AudioLoop {
   url: string;
   $key: string;
 }
 
 const FB_JUMBLE_PATH = 'jumble';
 const FB_VIDEO_LIST  = 'video';
+const FB_AUDIO_LOOPS = 'audio_loop';
+const FB_VIDEO_LOOPS = 'video_loop';
 
 @Injectable()
 export class JumbleStoreService {
   _jumbleList$: BehaviorSubject<Jumble[]>;
-  _videoList$: BehaviorSubject<Video[]>;
+  _audioLoopList$: BehaviorSubject<AudioLoop[]>;
+  _videoLoopList$: BehaviorSubject<VideoLoop[]>;
 
   constructor(private fb: FbaseService) {
+    this._jumbleList$ = new BehaviorSubject<Jumble[]>([]);
+    this._videoLoopList$ = new BehaviorSubject<VideoLoop[]>([]);
+    this._audioLoopList$ = new BehaviorSubject<AudioLoop[]>([]);
+
     this.fb.fetchFBList(FB_JUMBLE_PATH).subscribe( (jumbleList: Jumble[]) => {
       this._jumbleList$.next(jumbleList);
     });
 
-    this.fb.fetchFBList(FB_VIDEO_LIST).subscribe( (videoList: Video[]) => {
-      this._videoList$.next(videoList);
+    this.fb.fetchFBList(FB_VIDEO_LOOPS).subscribe( (videoList: VideoLoop[]) => {
+      this._videoLoopList$.next(videoList);
+    });
+
+    this.fb.fetchFBList(FB_AUDIO_LOOPS).subscribe( (audioLoopList: AudioLoop[]) => {
+      this._audioLoopList$.next(audioLoopList)
     });
   }
 
@@ -46,6 +62,14 @@ export class JumbleStoreService {
 
    // increment by 1 to go one past the greatest value
    return highestJumble.$key + 1;
+  }
+
+  get audioLoopList() {
+    return this._audioLoopList$.asObservable();
+  }
+
+  get videoLoopList() {
+    return this._videoLoopList$.asObservable();
   }
 
   // add a lookup by video and audio key

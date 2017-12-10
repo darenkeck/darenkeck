@@ -9,13 +9,16 @@ import 'rxjs/add/operator/withLatestFrom';
 
 import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
+import { JumbleStoreService,
+         AudioLoop,
+         VideoLoop }    from 'app/services/jumble-store.service';
 import { VideoService } from 'app/services/video.service';
-import { PlayerState } from 'app/services/media-player.service';
+import { PlayerState }  from 'app/services/media-player.service';
 
 import { VideoController } from 'app/classes/video-controller';
 
 const MAX_AUDIO_TRACK_STR = 'num-audio-loops';
-const MAX_VIDEO_TRACK_STR = 'num-video-loops'
+const MAX_VIDEO_TRACK_STR = 'num-video-loops';
 const MAX_RANDOM_ATTEMPTS = 3;
 const BASE_VIDEO_URL = 'assets/video/loop';
 const BASE_AUDIO_URL = 'assets/audio/loop';
@@ -31,18 +34,21 @@ export class JumbleService {
   _jumbleInitiated: boolean;
   _isJumble: BehaviorSubject<boolean>;
   isJumble: Observable<boolean>;
-  maxAudioTracks: number;
-  maxVideoTracks: number;
+  audioLoopList: AudioLoop[] = [];
+  videoLoopList: VideoLoop[] = [];
+  // buffers to attempt to not play the same thing...
   _prevVideo: number[] = [];
   _prevAudio: number[] = [];
   _voteTimer: number;
 
   constructor(private audioService: AudioService,
               private fb: FbaseService,
+              private jumbleStoreService: JumbleStoreService,
               private videoService: VideoService) {
     // only emit event when a _isJumble event is emitted
     this._isJumble = new BehaviorSubject(false);
 
+    // set up how PlayerState is generated from audio and video service
     this.state = combineLatest(
       this.audioService.state,
       this.videoService.state,
@@ -62,8 +68,8 @@ export class JumbleService {
         return state
       }
     );
-
-    // emits current state when _jumbleReady
+    // A combined observable that uses _jumbleReady as the primary
+    // trigger
     this.isJumble = this._isJumble.asObservable().withLatestFrom(
       this.state,
       (jumbleReady, state) => {
@@ -71,40 +77,13 @@ export class JumbleService {
       }
     );
 
-    // fetch max values - do only once during lifetime of website visit
-    const sub1 = this.fb.fetchItem(MAX_AUDIO_TRACK_STR).subscribe(val => {
-      if (val) {
-        this.maxAudioTracks = val;
-      }
-      sub1.unsubscribe();
-    });
-
-    const sub2 = this.fb.fetchItem(MAX_VIDEO_TRACK_STR).subscribe(val => {
-      if (val) {
-        this.maxVideoTracks = val;
-      }
-      sub2.unsubscribe();
-    });
-  }
-
-  createVideoUrlString(num: number): string {
-    let trackNum = '0'; //
-
-    if (num < this.maxVideoTracks) {
-      trackNum = num.toString();
-    }
-
-    return `${BASE_VIDEO_URL}/${trackNum}`;
-  }
-
-  createAudioUrlString(num: number): string {
-    let trackNum = '0'; //
-
-    if (num < this.maxAudioTracks) {
-      trackNum = num.toString();
-    }
-
-    return `${BASE_AUDIO_URL}/${trackNum}.mp3`;
+    // fetch audioLoopList and videoLoopList
+    this.jumbleStoreService.audioLoopList.subscribe( 
+      audioLoopList => this.audioLoopList = audioLoopList
+    );
+    this.jumbleStoreService.videoLoopList.subscribe(
+      videoLoopList => this.videoLoopList = videoLoopList
+    );
   }
 
   play() {
@@ -119,37 +98,47 @@ export class JumbleService {
 
   /**
    * Make a weak attempt to not play the same thing
+   * 
+   * Returns a video loop instance or null;
    */
-  getRandomVideoTrack() {
-    let videoTrackNum = 0;
+  getRandomVideoLoop() {
+    let videoLoop = null;
+    let videoTrackIndex = 0;
     for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
-      videoTrackNum = Math.floor(Math.random() * this.maxVideoTracks);
+      videoTrackIndex = Math.floor(Math.random() * this.videoLoopList.length);
 
-      if(this._prevVideo.indexOf(videoTrackNum) < 0) {
+      if(this._prevVideo.indexOf(videoTrackIndex) < 0) {
         break;
       }
     }
     // update previous buffer
     this._prevVideo.pop();
-    this._prevVideo.push(videoTrackNum);
+    this._prevVideo.push(videoTrackIndex);
 
-    return videoTrackNum;
+    videoLoop = this.videoLoopList[videoTrackIndex];
+
+    return videoLoop;
   }
 
     /**
    * Make a weak attempt to not play the same thing
+   * 
+   * returns an audioLoop
    */
-  getRandomAudioTrack() {
-    let audioTrackNum = 0;
+  getRandomAudioLoop() {
+    let audioLoop = null;
+    let audioLoopIndex = 0;
     for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
-      audioTrackNum = Math.floor(Math.random() * this.maxAudioTracks);
+      audioLoopIndex = Math.floor(Math.random() * this.audioLoopList.length);
 
-      if(this._prevAudio.indexOf(audioTrackNum) < 0) {
+      if(this._prevAudio.indexOf(audioLoopIndex) < 0) {
         break;
       }
     }
-    this.updatePrevBuffer(this._prevAudio, audioTrackNum);
-    return audioTrackNum;
+    this.updatePrevBuffer(this._prevAudio, audioLoopIndex);
+
+    audioLoop = this.audioLoopList[audioLoopIndex];
+    return audioLoop;
   }
 
   /**
@@ -173,25 +162,26 @@ export class JumbleService {
    * Helper method if just initializing a random video
    */
   initRandomVideo() {
-    const videoTrackNum = this.getRandomVideoTrack();
-    this.videoService.url = this.createVideoUrlString(videoTrackNum);
-
-    this.videoService.initMedia().subscribe( didFinish => {
-      this.videoService.play();
-    });
+    const videoLoop = this.getRandomVideoLoop();
+    if (videoLoop) {
+      this.videoService.url = videoLoop.url;
+      this.videoService.initMedia().subscribe( didFinish => {
+        this.videoService.play();
+      });
+    }
   }
 
   /**
    * Sets a random track number and starts download for both video and audio
    */
   setJumble() {
-    if (this.maxAudioTracks && this.maxVideoTracks) {
-      const videoTrackNum = this.getRandomVideoTrack();
-      const audioTrackNum = this.getRandomAudioTrack();
-      
-      // set urls for both video and audio
-      this.audioService.url = this.createAudioUrlString(audioTrackNum);
-      this.videoService.url = this.createVideoUrlString(videoTrackNum);
+    const videoLoop  = this.getRandomVideoLoop();
+    const audioLoop  = this.getRandomAudioLoop();
+
+    if (videoLoop && audioLoop) {
+        // set urls for both video and audio
+      this.audioService.url = audioLoop.url;
+      this.videoService.url = videoLoop.url;
       // start load, after audio finishes load video
       this.audioService.initMedia().subscribe( didFinish => {
         if (didFinish) {
@@ -202,7 +192,10 @@ export class JumbleService {
           );
         }
       });
-      this._jumbleInitiated = true;
+      this._jumbleInitiated = true;      
+        
+    } else {
+      // error condition! invalid index lookup or something else
     }
   }
 
