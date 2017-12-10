@@ -11,8 +11,8 @@ import { FbaseService } from 'app/services/fbase.service';
  // score can be a negative or positive
 export interface Jumble {
   score: number;
-  video_loop_key: number;
-  audio_loop_key: number;
+  video_loop_key: string;
+  audio_loop_key: string;
   $key?: string;
 }
 
@@ -73,6 +73,7 @@ export class JumbleStoreService {
   }
 
   // add a lookup by video and audio key
+  // returns either the jumble or null if not found
   lookupJumble(jumbleVote: Jumble) {
     let jumble = null;
 
@@ -83,22 +84,18 @@ export class JumbleStoreService {
           }
     });
 
-    if (!jumble) {
-      // the Jumble vote is itself a jumble - it will just not have an assigned key
-      jumble = jumbleVote;
-      // set the $key by finding the current highest key and incrementing
-    }
-
     return jumble;
   }
 
   // method to increment/decrement jumble combo
-  updateJumble(jumble: Jumble) {
-    if (!jumble.$key) {
-      // let firebase generate the key
-      this.fb.createItem(FB_JUMBLE_PATH, jumble);
+  updateJumble(jumbleVote: Jumble) {
+    const foundJumble = this.lookupJumble(jumbleVote);
+    // if we have a previous jumble, update score, otherwise create new jumble
+    if (foundJumble) {
+      foundJumble.score += jumbleVote.score;
+      this.fb.updateItem(FB_JUMBLE_PATH, foundJumble.$key, foundJumble);
     } else {
-      this.fb.updateItem(FB_JUMBLE_PATH, jumble.$key, jumble);
+      this.fb.createItem(FB_JUMBLE_PATH, jumbleVote);
     }
   }
 }

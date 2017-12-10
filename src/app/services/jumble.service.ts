@@ -11,6 +11,7 @@ import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
 import { JumbleStoreService,
          AudioLoop,
+         Jumble,
          VideoLoop }    from 'app/services/jumble-store.service';
 import { VideoService } from 'app/services/video.service';
 import { PlayerState }  from 'app/services/media-player.service';
@@ -34,8 +35,10 @@ export class JumbleService {
   _jumbleInitiated: boolean;
   _isJumble: BehaviorSubject<boolean>;
   isJumble: Observable<boolean>;
+  allowVote: boolean;
   audioLoopList: AudioLoop[] = [];
   videoLoopList: VideoLoop[] = [];
+  currentJumble: Jumble;
   // buffers to attempt to not play the same thing...
   _prevVideo: number[] = [];
   _prevAudio: number[] = [];
@@ -103,19 +106,19 @@ export class JumbleService {
    */
   getRandomVideoLoop() {
     let videoLoop = null;
-    let videoTrackIndex = 0;
+    let videoLoopIndex = 0;
     for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
-      videoTrackIndex = Math.floor(Math.random() * this.videoLoopList.length);
+      videoLoopIndex = Math.floor(Math.random() * this.videoLoopList.length);
 
-      if(this._prevVideo.indexOf(videoTrackIndex) < 0) {
+      if(this._prevVideo.indexOf(videoLoopIndex) < 0) {
         break;
       }
     }
     // update previous buffer
     this._prevVideo.pop();
-    this._prevVideo.push(videoTrackIndex);
+    this._prevVideo.push(videoLoopIndex);
 
-    videoLoop = this.videoLoopList[videoTrackIndex];
+    videoLoop = this.videoLoopList[videoLoopIndex];
 
     return videoLoop;
   }
@@ -152,10 +155,14 @@ export class JumbleService {
   }
 
   onVote(good: boolean) {
-    /**
-     * TODO: send vote here
-     */
-    console.log(`Vote: ${good}`);
+    if (this.allowVote) {
+      this.currentJumble.score = (good) ? 1 : -1;
+      this.jumbleStoreService.updateJumble(this.currentJumble);
+      
+      // this gets set to true when setJumble is called
+      this.allowVote = false;
+    }
+    // TODO: prevent voting until new jumble
   }
 
   /**
@@ -192,10 +199,24 @@ export class JumbleService {
           );
         }
       });
-      this._jumbleInitiated = true;      
-        
+      this._jumbleInitiated = true;    
+      this.currentJumble = this.initJumble(audioLoop, videoLoop);
+      this.allowVote = true;
     } else {
       // error condition! invalid index lookup or something else
+    }
+  }
+
+  /**
+   * We do not bother looking for the a previous jumble as it may or may not exist
+   * 
+   * The jumble store deals with updating or creating a new instance
+   */
+  initJumble(audioLoop: AudioLoop, videoLoop: VideoLoop) {
+    return {
+      audio_loop_key: audioLoop.$key,
+      video_loop_key: videoLoop.$key,
+      score: 0 
     }
   }
 
