@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Http }       from '@angular/http';
 
 import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { Observable } from 'rxjs/observable';
@@ -18,11 +19,11 @@ import { PlayerState }  from 'app/services/media-player.service';
 
 import { VideoController } from 'app/classes/video-controller';
 
-const MAX_AUDIO_TRACK_STR = 'num-audio-loops';
-const MAX_VIDEO_TRACK_STR = 'num-video-loops';
 const MAX_RANDOM_ATTEMPTS = 3;
 const BASE_VIDEO_URL = 'assets/video/loop';
 const BASE_AUDIO_URL = 'assets/audio/loop';
+const CORS_PROXY_URL = 'https://cors-anywhere.herokuapp.com/'
+const CAPTCHA_VERIFY_URL = 'https://us-central1-darenkeck-adb27.cloudfunctions.net/checkRecaptcha'
 
 // This class is designed to coordinate the video and audio player
 // and help load random tracks for each
@@ -46,6 +47,7 @@ export class JumbleService {
 
   constructor(private audioService: AudioService,
               private fb: FbaseService,
+              private http: Http,
               private jumbleStoreService: JumbleStoreService,
               private videoService: VideoService) {
     // only emit event when a _isJumble event is emitted
@@ -157,6 +159,7 @@ export class JumbleService {
   onVote(good: boolean) {
     if (this.allowVote) {
       this.currentJumble.score = (good) ? 1 : -1;
+      console.log(this.currentJumble);
       this.jumbleStoreService.updateJumble(this.currentJumble);
       
       // this gets set to true when setJumble is called
@@ -248,5 +251,16 @@ export class JumbleService {
       default:
         break;
     }
+  }
+
+  /**
+   * 
+   * @param token: the captcha token
+   */
+  verifyCaptcha(token): Observable<boolean> {
+    const query = '?response=' + token;
+    const captcha_url = CORS_PROXY_URL + CAPTCHA_VERIFY_URL + query;
+    return this.http.post(captcha_url, event)
+      .map((response: any) => (response._body === 'Ok'));//.subscribe( resp => console.log(resp));
   }
 }

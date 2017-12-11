@@ -1,4 +1,5 @@
-import { Component, OnChanges, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, OnInit, Input, ViewChild } from '@angular/core';
+import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/http';
 
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
@@ -11,6 +12,7 @@ import { JumbleService } from 'app/services/jumble.service';
 import { VideoService }   from 'app/services/video.service';
 
 import { TabPage } from 'app/app.component';
+import { ReCaptchaComponent } from 'angular2-recaptcha';
 
 const _SLIDER_DISABLED_COLOR = '#78909C'; // Blue Gray 200
 const _SLIDER_ENABLED_COLOR = '#BF360C';
@@ -30,8 +32,11 @@ const VOTE_TIMER_LENGTH = 5; // in seconds
 export class PlayerComponent implements OnInit {
   @Input() tab = TabPage.HOME;
   
+  @ViewChild(ReCaptchaComponent)captcha: ReCaptchaComponent; 
+
   currentTrack:   Observable<Track>;
   disableSlider:  boolean;
+  isHuman         = false;
   isJumble:       boolean;
   // TODO: 'firstClick' and 'forceVideo' are unnecessary once
   // I can figure out why the videoplayer 'onLoad' is immediately 
@@ -46,6 +51,7 @@ export class PlayerComponent implements OnInit {
   // TODO: switch these booleans to an enum
   // need to wait until I can use a switch in the template...
   _showJumbleInit = false;
+  _cachedVote     = null;
   showLoad        = false;
   showLoading     = false;
   showPaused      = false;
@@ -57,6 +63,7 @@ export class PlayerComponent implements OnInit {
   constructor(private jumbleService: JumbleService,
               private audioService: AudioService,
               private audioStoreService: AudioStoreService,
+              private http: Http,
               private videoService: VideoService) {
     this.currentTrack = this.audioStoreService.currentTrack;
     this.disableSlider = true;
@@ -100,6 +107,23 @@ export class PlayerComponent implements OnInit {
     const isNavToHome = this.tab === TabPage.HOME;
     this.playerMode = isNavToHome ? PlayerMode.Jumble : PlayerMode.Normal;
     // // use the es6 setter/getter...
+  }
+
+  verifyCaptcha(token) {
+    // used to get CORS ok
+    // const proxy_addr = 'https://cors-anywhere.herokuapp.com/'
+    // // api for checking captcha result
+    // const captcha_addr = 'https://us-central1-darenkeck-adb27.cloudfunctions.net/checkRecaptcha'
+    // const query = '?response=' + event;
+    // const captcha_url = proxy_addr + captcha_addr + query;
+    // this.http.post(captcha_url, event).subscribe( resp => console.log(resp));
+    this.jumbleService.verifyCaptcha(token).subscribe( isHuman => {
+      this.isHuman = isHuman;
+      if (this._cachedVote !== null) {
+        this.onVote(this._cachedVote);
+        this._cachedVote = null;        
+      }
+    });
   }
 
   ngOnInit() { }
@@ -152,8 +176,20 @@ export class PlayerComponent implements OnInit {
     }
   }
 
-  onVote(good: boolean) {
-    this.jumbleService.onVote(good);
+  /**
+   * Thumbs up == true, down == false
+   */
+  onVote(vote: boolean) {
+    if (this.isHuman) {
+      this.jumbleService.onVote(vote);      
+    } else {
+      // initiate a captcha check if it has not been done yet
+      // a token will eventually be returned to the method 'verifyCaptcha'
+      // that will then validate the token
+      this.captcha.execute();
+      // cache vote to eventually submit on captcha success
+      this._cachedVote = vote;
+    }
   }
 
   onVolumeChange(volume: number) {

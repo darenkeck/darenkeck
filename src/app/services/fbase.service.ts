@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { Observable } from 'rxjs/Observable'
+import * as firebase from 'firebase';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class FbaseService {
-
   constructor(private af: AngularFire) { }
 
   fetchList(itemType: string): Observable<any> {
@@ -33,4 +33,4 @@ export class FbaseService {
     const listRef = this.af.database.list(path);
     listRef.push(value);
   }
-}
+ }

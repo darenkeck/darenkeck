@@ -4,6 +4,7 @@ import { FormsModule }        from '@angular/forms';
 import { HttpModule }         from '@angular/http';
 import { MaterialModule }     from '@angular/material';
 import { AngularFireModule }  from 'angularfire2';
+import { ReCaptchaModule }    from 'angular2-recaptcha';
 
 import { AudioService }       from 'app/services/audio.service';
 import { AudioStoreService }  from 'app/services/audio-store.service';
@@ -56,6 +57,7 @@ export const firebaseConfig = {
     FormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     MaterialModule.forRoot(),
+    ReCaptchaModule,
     HttpModule
   ],
   providers: [
