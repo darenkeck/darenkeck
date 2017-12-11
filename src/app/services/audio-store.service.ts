@@ -12,6 +12,7 @@ export interface Album {
   title: string;
   image_url: string;
   track_list: Track[];
+  purchase_url: string;
 }
 
 export interface Track {
@@ -26,6 +27,7 @@ interface _Album {
   title: string;
   image_url: string;
   track_list: number[];
+  purchase_url: string;
 }
 
 /**
@@ -98,7 +100,8 @@ export class AudioStoreService {
       const newAlbum: Album = {
         title: album.title,
         image_url: album.image_url,
-        track_list: newTrackList
+        track_list: newTrackList,
+        purchase_url: album.purchase_url
       }
 
       newAlbumList.push(newAlbum);

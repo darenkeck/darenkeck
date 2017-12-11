@@ -1,5 +1,5 @@
-<div>
-  {{album?.title}}
+<div align="center" class="album-title">
+  <a title="Click to go to CD Baby" [href]="album?.purchase_url">{{album?.title | uppercase}}</a>      
 </div>
 <div class="center-multiple">
   <div class="column-left">

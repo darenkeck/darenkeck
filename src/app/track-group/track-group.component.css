@@ -4,7 +4,6 @@
     cursor: pointer;
 }
 
-
 .track-item:hover {
     transition: background-color 1s;
     -webkit-transition: background-color 1s;
