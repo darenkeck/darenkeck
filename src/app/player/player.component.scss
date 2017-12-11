@@ -4,6 +4,8 @@ $opacity: 0.7;
     opacity: $opacity;
     font-size: 4em;
     cursor:  pointer;
+    animation-name: play_button_show;
+    animation-duration: 0.5s;
 }
 
 .track-title {
@@ -15,11 +17,22 @@ $opacity: 0.7;
     margin: 0 auto;
 }
 
+@keyframes play_button_show {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: $opacity;
+    }
+}
+
 .player-button {
     background-color: #211;
-    opacity: 0.6;
+    opacity: $opacity;
     height: 4em;
     width: 4em;
+    animation-name: play_button_show;
+    animation-duration: 0.5s;
 }
 
 .play-row {
@@ -47,8 +60,44 @@ $opacity: 0.7;
     align-self: center;
 }
 
+@keyframes thumb_expand {
+    0% {
+        font-size: 0em;
+        margin-top: 2em;
+        opacity: 0;
+    }
+    100% {
+        font-size: 2em;
+        opacity: $opacity;
+    }
+}
+
 .thumb {
     opacity: $opacity;
     font-size: 2em;
+    display: block;
     cursor:  pointer;
+    animation-name: thumb_expand;
+    animation-duration: 0.5s;
+}
+
+@keyframes check_expand {
+    0% {
+        font-size: 0em;
+        margin-top: 2em;
+        opacity: 0;
+    }
+    100% {
+        font-size: 4em;
+        margin-top: auto;
+        opacity: $opacity;
+    }
+}
+
+.check {
+    opacity: $opacity;
+    font-size: 4em;
+    display: block;
+    animation-name: check_expand;
+    animation-duration: 0.5s;
 }

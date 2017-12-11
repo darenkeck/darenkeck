@@ -22,8 +22,6 @@ export enum PlayerMode {
   'Normal'
 }
 
-const VOTE_TIMER_LENGTH = 5; // in seconds
-
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
@@ -34,6 +32,7 @@ export class PlayerComponent implements OnInit {
   
   @ViewChild(ReCaptchaComponent)captcha: ReCaptchaComponent; 
 
+  allowVote:      boolean; // flag to show the thumbs up/down
   currentTrack:   Observable<Track>;
   disableSlider:  boolean;
   isHuman         = false;
@@ -51,12 +50,14 @@ export class PlayerComponent implements OnInit {
   // TODO: switch these booleans to an enum
   // need to wait until I can use a switch in the template...
   _showJumbleInit = false;
+  // only needed when a recaptcha round trip is required
   _cachedVote     = null;
+  hasVoted        = false; // indicates if a current jumble has been voted on
   showLoad        = false;
   showLoading     = false;
   showPaused      = false;
   showPlaying     = false;
-  _showVoting     = false;
+  showCheck       = false;
   sliderColor     = _SLIDER_DISABLED_COLOR;
   voteTimer: number;
 
@@ -100,23 +101,25 @@ export class PlayerComponent implements OnInit {
     // by default, jumble is true for the player. This allows a first click
     // of the player to set a jumble
     this.isJumble = true;
+
+    // set up subscription to keep allow vote up to date
+    this.jumbleService.allowVote.subscribe( allow => {
+      // only set allow vote if in jumble mode
+      this.allowVote = (this.playerMode === PlayerMode.Jumble) ? allow : false;
+    })
   }
 
   ngOnChanges() {
     // player mode is based on last set active track
     const isNavToHome = this.tab === TabPage.HOME;
     this.playerMode = isNavToHome ? PlayerMode.Jumble : PlayerMode.Normal;
-    // // use the es6 setter/getter...
+    // make sure we immediate set allow vote to false
+    if (this.playerMode === PlayerMode.Normal) {
+      this.allowVote = false;
+    }
   }
 
   verifyCaptcha(token) {
-    // used to get CORS ok
-    // const proxy_addr = 'https://cors-anywhere.herokuapp.com/'
-    // // api for checking captcha result
-    // const captcha_addr = 'https://us-central1-darenkeck-adb27.cloudfunctions.net/checkRecaptcha'
-    // const query = '?response=' + event;
-    // const captcha_url = proxy_addr + captcha_addr + query;
-    // this.http.post(captcha_url, event).subscribe( resp => console.log(resp));
     this.jumbleService.verifyCaptcha(token).subscribe( isHuman => {
       this.isHuman = isHuman;
       if (this._cachedVote !== null) {
@@ -139,12 +142,10 @@ export class PlayerComponent implements OnInit {
       case PlayerState.INIT:
         this.disableSlider = true;
         this.showLoad = true;
-        this.showVoting = false;
         break;
       case PlayerState.LOADING:
         this.disableSlider = true;
         this.showLoading = true;
-        this.showVoting = false;
         break;
       case PlayerState.PAUSED:
         this.disableSlider = false;
@@ -153,7 +154,6 @@ export class PlayerComponent implements OnInit {
       case PlayerState.PLAYING:
         this.disableSlider = false;
         this.showPlaying = true;
-        this.startVoteTimer();
         break;
       case PlayerState.ENDED:
         this.disableSlider = false;
@@ -181,7 +181,11 @@ export class PlayerComponent implements OnInit {
    */
   onVote(vote: boolean) {
     if (this.isHuman) {
-      this.jumbleService.onVote(vote);      
+      this.jumbleService.onVote(vote);
+      this.showCheck = vote;
+      setTimeout(() => {
+        this.showCheck = false;
+      }, 2000);  
     } else {
       // initiate a captcha check if it has not been done yet
       // a token will eventually be returned to the method 'verifyCaptcha'
@@ -208,29 +212,6 @@ export class PlayerComponent implements OnInit {
 
   set showJumbleInit(show: boolean) {
     this._showJumbleInit = (this.playerMode === PlayerMode.Jumble) ? show : false;
-  }
-
-  get showVoting() {
-    return this._showVoting;
-  }
-
-  set showVoting(show: boolean) {
-    this._showVoting = (this.playerMode === PlayerMode.Jumble) ? show : false;      
-  }
-
-  /**
-   * Small timer to wait a certain amount of time and then
-   * make voting visible.
-   */
-  startVoteTimer() {
-    if (!this.voteTimer) {
-      this.voteTimer = window.setTimeout(() => {
-        if (this.isJumble) {
-          this.showVoting = true;          
-        }
-        this.voteTimer  = null;
-      }, VOTE_TIMER_LENGTH  * 1000); // in milliseconds
-    }
   }
 }
 

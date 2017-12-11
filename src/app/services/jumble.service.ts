@@ -24,6 +24,7 @@ const BASE_VIDEO_URL = 'assets/video/loop';
 const BASE_AUDIO_URL = 'assets/audio/loop';
 const CORS_PROXY_URL = 'https://cors-anywhere.herokuapp.com/'
 const CAPTCHA_VERIFY_URL = 'https://us-central1-darenkeck-adb27.cloudfunctions.net/checkRecaptcha'
+const VOTE_TIMER_LENGTH = 5; // in seconds
 
 // This class is designed to coordinate the video and audio player
 // and help load random tracks for each
@@ -36,9 +37,10 @@ export class JumbleService {
   _jumbleInitiated: boolean;
   _isJumble: BehaviorSubject<boolean>;
   isJumble: Observable<boolean>;
-  allowVote: boolean;
+  _allowVote: BehaviorSubject<boolean>;
   audioLoopList: AudioLoop[] = [];
   videoLoopList: VideoLoop[] = [];
+  voteTimer: number;  
   currentJumble: Jumble;
   // buffers to attempt to not play the same thing...
   _prevVideo: number[] = [];
@@ -52,7 +54,7 @@ export class JumbleService {
               private videoService: VideoService) {
     // only emit event when a _isJumble event is emitted
     this._isJumble = new BehaviorSubject(false);
-
+    this._allowVote = new BehaviorSubject(false);
     // set up how PlayerState is generated from audio and video service
     this.state = combineLatest(
       this.audioService.state,
@@ -77,8 +79,11 @@ export class JumbleService {
     // trigger
     this.isJumble = this._isJumble.asObservable().withLatestFrom(
       this.state,
-      (jumbleReady, state) => {
-        return jumbleReady
+      (isJumble, state) => {
+        if (!isJumble) {
+          this._allowVote.next(false);
+        }
+        return isJumble
       }
     );
 
@@ -157,13 +162,13 @@ export class JumbleService {
   }
 
   onVote(good: boolean) {
-    if (this.allowVote) {
+    if (this._allowVote.value) {
       this.currentJumble.score = (good) ? 1 : -1;
       console.log(this.currentJumble);
       this.jumbleStoreService.updateJumble(this.currentJumble);
       
       // this gets set to true when setJumble is called
-      this.allowVote = false;
+      this._allowVote.next(false);
     }
     // TODO: prevent voting until new jumble
   }
@@ -197,16 +202,31 @@ export class JumbleService {
         if (didFinish) {
           this.videoService.initMedia().subscribe( (didFinish) => {
               this.audioService.play();
-              this.videoService.play();        
+              this.videoService.play();    
+              this.startVoteTimer();    
             }
           );
         }
       });
       this._jumbleInitiated = true;    
       this.currentJumble = this.initJumble(audioLoop, videoLoop);
-      this.allowVote = true;
     } else {
       // error condition! invalid index lookup or something else
+    }
+  }
+
+  get allowVote() {
+    return this._allowVote.asObservable();
+  }
+
+  startVoteTimer() {
+    if (!this.voteTimer) {
+      this.voteTimer = window.setTimeout(() => {
+        if (this.isJumble) {
+          this._allowVote.next(true);          
+        }
+        this.voteTimer  = null;
+      }, VOTE_TIMER_LENGTH  * 1000); // in milliseconds
     }
   }
 
