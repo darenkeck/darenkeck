@@ -27,6 +27,6 @@ export class AppComponent {
   }
 
   newJumble() {
-    this.jumbleService.setJumble();
+    this.jumbleService.setRandomJumble();
   }
 }

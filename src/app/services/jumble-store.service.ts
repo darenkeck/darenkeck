@@ -68,6 +68,10 @@ export class JumbleStoreService {
     return this._audioLoopList$.asObservable();
   }
 
+  get jumbleList() {
+    return this._jumbleList$.asObservable();
+  }
+
   get videoLoopList() {
     return this._videoLoopList$.asObservable();
   }

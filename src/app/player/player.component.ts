@@ -182,7 +182,7 @@ export class PlayerComponent implements OnInit {
   onVote(vote: boolean) {
     if (this.isHuman) {
       this.jumbleService.onVote(vote);
-      this.showCheck = vote;
+      this.showCheck = true;
       setTimeout(() => {
         this.showCheck = false;
       }, 2000);  

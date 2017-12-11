@@ -124,7 +124,6 @@ export class JumbleService {
     // update previous buffer
     this._prevVideo.pop();
     this._prevVideo.push(videoLoopIndex);
-
     videoLoop = this.videoLoopList[videoLoopIndex];
 
     return videoLoop;
@@ -189,21 +188,32 @@ export class JumbleService {
   /**
    * Sets a random track number and starts download for both video and audio
    */
-  setJumble() {
+  setRandomJumble() {
     const videoLoop  = this.getRandomVideoLoop();
     const audioLoop  = this.getRandomAudioLoop();
 
+    this._setJumble(videoLoop, audioLoop);
+  }
+
+  setJumble(jumble: Jumble) {
+    const videoLoop = this.videoLoopList.find( vLoop => vLoop.$key === jumble.video_loop_key);
+    const audioLoop = this.audioLoopList.find( vLoop => vLoop.$key === jumble.video_loop_key);
+    this._setJumble(videoLoop, audioLoop);
+  }
+
+  _setJumble(videoLoop: VideoLoop, audioLoop: AudioLoop) {
     if (videoLoop && audioLoop) {
-        // set urls for both video and audio
-      this.audioService.url = audioLoop.url;
-      this.videoService.url = videoLoop.url;
-      // start load, after audio finishes load video
-      this.audioService.initMedia().subscribe( didFinish => {
-        if (didFinish) {
-          this.videoService.initMedia().subscribe( (didFinish) => {
-              this.audioService.play();
-              this.videoService.play();    
-              this.startVoteTimer();    
+      // set urls for both video and audio
+    this.audioService.url = audioLoop.url;
+    this.videoService.url = videoLoop.url;
+    this._allowVote.next(false);
+    // start load, after audio finishes load video
+    this.audioService.initMedia().subscribe( didFinish => {
+      if (didFinish) {
+        this.videoService.initMedia().subscribe( (didFinish) => {
+            this.audioService.play();
+            this.videoService.play();    
+            this.startVoteTimer();    
             }
           );
         }
@@ -251,7 +261,7 @@ export class JumbleService {
     switch(this._state) {
       case PlayerState.INIT:
         // set random track url and start load
-        this.setJumble();
+        this.setRandomJumble();
         // on load of a new track make sure vote is hidden
         break;
       case PlayerState.LOADING:
@@ -265,7 +275,7 @@ export class JumbleService {
         break;
       case PlayerState.ENDED:
         if (this._isJumble) {
-          this.setJumble();          
+          this.setRandomJumble();          
         }
         break;
       default:
