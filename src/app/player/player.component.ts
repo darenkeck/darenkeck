@@ -1,5 +1,6 @@
 import { Component, OnChanges, OnInit, Input, ViewChild } from '@angular/core';
 import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/http';
+import { ReCaptchaComponent } from 'angular2-recaptcha';
 
 import { Observable }   from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
@@ -11,25 +12,15 @@ import { AudioStoreService, Track } from 'app/services/audio-store.service';
 import { JumbleService } from 'app/services/jumble.service';
 import { VideoService }   from 'app/services/video.service';
 
-import { TabPage } from 'app/app.component';
-import { ReCaptchaComponent } from 'angular2-recaptcha';
-
 const _SLIDER_DISABLED_COLOR = '#78909C'; // Blue Gray 200
 const _SLIDER_ENABLED_COLOR = '#BF360C';
-
-export enum PlayerMode {
-  'Jumble',
-  'Normal'
-}
 
 @Component({
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss']
 })
-export class PlayerComponent implements OnInit {
-  @Input() tab = TabPage.HOME;
-  
+export class PlayerComponent implements OnInit {  
   @ViewChild(ReCaptchaComponent)captcha: ReCaptchaComponent; 
 
   allowVote:      boolean; // flag to show the thumbs up/down
@@ -43,8 +34,6 @@ export class PlayerComponent implements OnInit {
   firstClick      = true;
   // flag to indicate we should force a video playing (not inited by jumble)
   forceVideo      = false;
-  // used to indicate if jumble voting should show
-  playerMode:     PlayerMode;
   playerState:    Observable<PlayerState>;
   playerSub:      Subscription;
   // TODO: switch these booleans to an enum
@@ -105,18 +94,8 @@ export class PlayerComponent implements OnInit {
     // set up subscription to keep allow vote up to date
     this.jumbleService.allowVote.subscribe( allow => {
       // only set allow vote if in jumble mode
-      this.allowVote = (this.playerMode === PlayerMode.Jumble) ? allow : false;
+      this.allowVote = (this.isJumble) ? allow : false;
     })
-  }
-
-  ngOnChanges() {
-    // player mode is based on last set active track
-    const isNavToHome = this.tab === TabPage.HOME;
-    this.playerMode = isNavToHome ? PlayerMode.Jumble : PlayerMode.Normal;
-    // make sure we immediate set allow vote to false
-    if (this.playerMode === PlayerMode.Normal) {
-      this.allowVote = false;
-    }
   }
 
   verifyCaptcha(token) {
@@ -132,7 +111,6 @@ export class PlayerComponent implements OnInit {
   ngOnInit() { }
 
   onPlayerStateChange(state: PlayerState) {
-    this.showJumbleInit = false;
     this.showLoad       = false;
     this.showLoading    = false;
     this.showPaused     = false;
@@ -204,14 +182,6 @@ export class PlayerComponent implements OnInit {
     if (this.playerSub) {
       this.playerSub.unsubscribe();
     }
-  }
-
-  get showJumbleInit() {
-    return this._showJumbleInit;
-  }
-
-  set showJumbleInit(show: boolean) {
-    this._showJumbleInit = (this.playerMode === PlayerMode.Jumble) ? show : false;
   }
 }
 

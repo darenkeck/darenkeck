@@ -11,6 +11,7 @@ import { AudioStoreService }  from 'app/services/audio-store.service';
 import { FbaseService }       from 'app/services/fbase.service';
 import { JumbleService }      from 'app/services/jumble.service';
 import { JumbleStoreService } from 'app/services/jumble-store.service';
+import { TabStateService }    from 'app/services/tab-state.service';
 import { VideoService }       from 'app/services/video.service';
 
 import { AppComponent }           from './app.component';
@@ -67,6 +68,7 @@ export const firebaseConfig = {
     JumbleStoreService,
     JumbleService,
     AudioStoreService,
+    TabStateService,
   ],
   bootstrap: [AppComponent]
 })

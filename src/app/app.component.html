@@ -1,5 +1,5 @@
 <app-header></app-header>
-<md-tab-group class="main-container" style="z-index: 0;">
+<md-tab-group (selectedIndexChange)="setTab($event)"class="main-container" style="z-index: 0;">
   <md-tab label="HOME">
     <app-home></app-home>
   </md-tab>
@@ -13,7 +13,7 @@
 </md-tab-group>
 <div class="footer">
   <div class="jumble-content">
-      <app-player [tab]="tab" class="jumble center"></app-player>
+      <app-player class="jumble center"></app-player>
       <div class="new-jumble" (click)="newJumble()">New Jumble!</div>
   </div>
   <app-footer>

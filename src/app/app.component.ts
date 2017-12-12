@@ -2,15 +2,9 @@ import { Component } from '@angular/core';
 import { Http }      from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { FbaseService } from 'app/services/fbase.service';
-import { JumbleService } from './services/jumble.service';
-
-// enum to help track current tab
-export const TabPage = {
-  HOME: 'Home',
-  MUSIC: 'Music',
-  BIO: 'Bio'
-}
+import { FbaseService }    from 'app/services/fbase.service';
+import { JumbleService }   from 'app/services/jumble.service';
+import { TabStateService } from 'app/services/tab-state.service';
 
 @Component({
   selector: 'app-root',
@@ -20,13 +14,18 @@ export const TabPage = {
 export class AppComponent {
   entryList: Observable<string[]>;
   title = 'Daren Keck';
-  tab = TabPage.HOME;
 
-  constructor(private fbase: FbaseService, private jumbleService: JumbleService) {
+  constructor(private fbase: FbaseService, 
+              private jumbleService: JumbleService,
+              private tabStateService: TabStateService) {
     this.entryList = this.fbase.fetchList('blog-entries');
   }
 
   newJumble() {
     this.jumbleService.setRandomJumble();
+  }
+
+  setTab(tabIndex: number) {
+    this.tabStateService.setTab(tabIndex);
   }
 }
