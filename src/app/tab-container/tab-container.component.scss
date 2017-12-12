@@ -10,9 +10,13 @@
     background: linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ 
 }
 
-.outer-container {
+// .outer-container {
+//     max-height: 300px;
+// }
+
+.inner-container {
     height: 330px;
-    max-height: 330px;
+    overflow-y: auto;
 }
 
 .accordion-content{
@@ -26,9 +30,9 @@
 
 .expand-icon {
     background: #121;
-    opacity: 0.6;
+    opacity: 0.7;
     float: right;
-    margin-top: -1.8em;
+    // margin-top: -1.8em;
 }
 
 .expand {
@@ -37,6 +41,6 @@
 }
 
 .collapse {
-    max-height: 0.8em;
+    max-height: 0em;
     opacity: 0;
 }

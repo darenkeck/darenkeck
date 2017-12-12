@@ -13,6 +13,7 @@ import { TabStateService } from 'app/services/tab-state.service';
 })
 export class AppComponent {
   entryList: Observable<string[]>;
+  show = true;
   title = 'Daren Keck';
 
   constructor(private fbase: FbaseService, 
@@ -27,5 +28,9 @@ export class AppComponent {
 
   setTab(tabIndex: number) {
     this.tabStateService.setTab(tabIndex);
+  }
+
+  onExpand(expand: boolean) {
+    
   }
 }
