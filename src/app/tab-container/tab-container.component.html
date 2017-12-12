@@ -1,5 +1,11 @@
 <div class="outer-container">
-  <div class="container">
-    <ng-content></ng-content>
+  <div class="container accordion-content" [ngClass]="{'expand': show, 'collapse': !show}">
+    <div class="container-inner">
+        <ng-content></ng-content>        
+    </div>
+  </div>
+  <div class="expand-icon" (click)="onExpand(!show)">
+    <i class="material-icons" *ngIf="show">expand_less</i>      
+    <i class="material-icons" *ngIf="!show">expand_more</i>          
   </div>
 </div>

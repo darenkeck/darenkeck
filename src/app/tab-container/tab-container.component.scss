@@ -2,6 +2,7 @@
  // http://www.colorzilla.com/gradient-editor/
 
 .container {
+    overflow: hidden;
     padding: $gl_padding;
     background: -webkit-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
     background: -moz-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
@@ -12,4 +13,30 @@
 .outer-container {
     height: 330px;
     max-height: 330px;
+}
+
+.accordion-content{
+    -webkit-transition: all 0.5s; 
+    -moz-transition: all 0.5s; 
+    -ms-transition: all 0.5s; 
+    -o-transition: all 0.5s; 
+    transition: all 0.5s;
+    // "height: 0" not work with css transitions
+  }
+
+.expand-icon {
+    background: #121;
+    opacity: 0.6;
+    float: right;
+    margin-top: -1.8em;
+}
+
+.expand {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.collapse {
+    max-height: 0.8em;
+    opacity: 0;
 }
