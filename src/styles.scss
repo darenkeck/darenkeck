@@ -61,3 +61,14 @@ a:hover {
     padding-top: 10px;
     padding-bottom: 10x;
 }
+
+.dk-sub-header {
+    letter-spacing: 0.5em;
+    font-size: 2em;
+}
+
+.highlight:hover {
+    transition: background-color 1s;
+    -webkit-transition: background-color 1s;
+    background-color: #000;
+}

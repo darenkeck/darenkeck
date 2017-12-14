@@ -1,12 +1,15 @@
 <app-tab-container>    
   <app-track-group *ngFor="let album of (albumList | async)"
     [album]="album"
+    [currentTrack]="currentTrack"
     (trackSelected)="onTrackSelected($event)">
   </app-track-group>
   <div>
-    <h3>Top Jumbles</h3>
+    <div align="center" class="dk-sub-header">TOP JUMBLES</div>
     <div *ngFor="let jumble of (topJumbleList | async); let i = index"
          (click)="onJumbleSelected(jumble)"
+         class="highlight"
+         [ngClass]="{'selected': currentJumble === jumble}"
          align=center>
       {{"Jumble " + (i + 1)}}
     </div>

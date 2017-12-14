@@ -8,8 +8,9 @@ import { AudioStoreService,
 import { JumbleStoreService,
          Jumble }            from 'app/services/jumble-store.service';
 
-import { JumbleService }     from 'app/services/jumble.service';       
-// for now, hardcode tracks. This should be added
+import { JumbleService }     from 'app/services/jumble.service';  
+import { VideoService }      from 'app/services/video.service';     
+import { PlayerState }       from 'app/services/media-player.service';
 
 const BASE_AUDIO_URL = 'assets/audio/loop';
 
@@ -28,13 +29,27 @@ export class MusicComponent implements OnInit {
   testTrackList = TEST_TRACK_LIST;
   topJumbleList: Observable<Jumble[]>;
   albumList: Observable<Album[]>;
+  currentJumble: Jumble;
+  currentTrack: Track;
   constructor( private audioService: AudioService,
                private audioStoreService: AudioStoreService,
                private jumbleService: JumbleService,
-               private jumbleStoreService: JumbleStoreService ) 
+               private jumbleStoreService: JumbleStoreService,
+               private videoService: VideoService ) 
   {
     this.albumList     = this.audioStoreService.albumList$;
     this.topJumbleList = this.jumbleStoreService.topJumbleList;
+
+    this.jumbleService.state.subscribe( state => {
+      // help set the current playing track or jumble (or both!)
+      if (state >= PlayerState.PAUSED) {
+        this.currentJumble = 
+          this.jumbleStoreService.
+            getJumbleWithUrls(this.videoService.url, this.audioService.url);
+        
+        this.currentTrack = this.audioStoreService.getAudioWithUrl(this.audioService.url)
+      }
+    });
   }
 
   ngOnInit() {

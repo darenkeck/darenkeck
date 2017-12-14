@@ -6,7 +6,7 @@
     <img width="140px" src="{{album?.image_url}}">            
   </div>
   <div class="column-right">
-    <div *ngFor="let track of album?.track_list" class="dk-row track-item" (click)="onTrackSelect(track)">
+    <div *ngFor="let track of album?.track_list" class="dk-row track-item highlight" (click)="onTrackSelect(track)">
       {{track?.name}}
     </div>
   </div>

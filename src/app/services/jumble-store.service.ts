@@ -65,6 +65,27 @@ export class JumbleStoreService {
    return highestJumble.$key + 1;
   }
 
+  /**
+   * Two URLs is enough to uniquely identify a jumble
+   * 
+   * This will return the jumble if it can be found
+   */
+  getJumbleWithUrls(audioUrl: string, videoUrl: string) {
+    const audioLoop = this._audioLoopList$.value.find(aLoop => aLoop.url === audioLoop);
+    const videoLoop = this._videoLoopList$.value.find(vLoop => vLoop.url === videoUrl);
+    let foundJumble = null;
+    if (audioLoop && videoLoop) {
+      const potentialJumble = {
+        audio_loop_key: audioLoop.$key,
+        video_loop_key: videoLoop.$key,
+        score: 0
+      }
+      foundJumble = this.lookupJumble(potentialJumble);   
+    }
+
+    return foundJumble;
+  }
+
   get audioLoopList() {
     return this._audioLoopList$.asObservable();
   }

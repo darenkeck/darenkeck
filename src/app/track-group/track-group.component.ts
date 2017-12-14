@@ -14,6 +14,7 @@ interface TrackItem {
 })
 export class TrackGroupComponent {
   @Input() album: Album;
+  @Input() currentTrack: Track;
   @Output() trackSelected = new EventEmitter<Track>();
 
   constructor() { }

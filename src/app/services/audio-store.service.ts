@@ -116,4 +116,13 @@ export class AudioStoreService {
     const track = this._trackList.find(t => t.url === url);
     this._currentTrack$.next(track);
   }
+
+    /**
+   * A url is enough to uniquely identify a track
+   * 
+   * Returns null if not found, or the track
+   */
+  getAudioWithUrl(url: string) {
+    return this._trackList.find( t => t.url === url);
+  }
 }
