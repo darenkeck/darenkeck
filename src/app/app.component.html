@@ -1,15 +1,17 @@
 <app-header></app-header>
-<md-tab-group (selectedIndexChange)="setTab($event)" class="main-container" style="z-index: 0;">
-  <md-tab label="HOME">
-    <app-home></app-home>
-  </md-tab>
-  <md-tab label="MUSIC">
-    <app-music></app-music>
-  </md-tab>
-  <md-tab label="BIO">
-    <app-bio></app-bio>
-  </md-tab>
-</md-tab-group>
+<div (click)="expandTabContainer()">
+  <md-tab-group class="main-container" style="z-index: 0;">
+    <md-tab label="HOME">
+      <app-home></app-home>
+    </md-tab>
+    <md-tab label="MUSIC">
+      <app-music></app-music>
+    </md-tab>
+    <md-tab label="BIO">
+      <app-bio></app-bio>
+    </md-tab>
+  </md-tab-group>
+</div>
 <div class="main-container">
   <div class="expand-icon" (click)="onExpand(!show)">
       <i class="material-icons" *ngIf="show">expand_less</i>      

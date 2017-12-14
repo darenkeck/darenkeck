@@ -25,6 +25,13 @@ export class AppComponent {
     )
   }
 
+  /**
+   * Method to guarentee when run we expand the container
+   */
+  expandTabContainer() {
+    this.onExpand(true);
+  }
+
   newJumble() {
     this.jumbleService.setRandomJumble();
   }

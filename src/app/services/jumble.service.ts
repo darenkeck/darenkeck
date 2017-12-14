@@ -19,6 +19,7 @@ import { PlayerState }  from 'app/services/media-player.service';
 
 import { VideoController } from 'app/classes/video-controller';
 
+const MAX_PREVBUFFER_LENGTH = 5;
 const MAX_RANDOM_ATTEMPTS = 3;
 const BASE_VIDEO_URL = 'assets/video/loop';
 const BASE_AUDIO_URL = 'assets/audio/loop';
@@ -43,8 +44,8 @@ export class JumbleService {
   topJumbleList: Jumble[];
   voteTimer: number;  
   currentJumble: Jumble;
-  // buffers to attempt to not play the same thing...
-  _prevGoodJumble: Jumble[];
+  // buffers to attempt to not play the same thing
+  _prevGoodJumble: number[] = [];
   _prevVideo: number[] = [];
   _prevAudio: number[] = [];
   _voteTimer: number;
@@ -113,6 +114,30 @@ export class JumbleService {
     this.audioService.pause();
   }
 
+  /** attempts to avoid duplicate selections
+   * on random indexs. You have to provide the cached
+   * list of previous selections
+   */
+  avoidDupRandom(length: number, prevIdxBuffer: number[]): number {
+    let idx = null;
+
+    for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
+      idx = Math.floor(Math.random() * length);
+
+      if (prevIdxBuffer.indexOf(idx) < 0) {
+        break;
+      }
+    }
+
+    prevIdxBuffer.push(idx);
+    // clean up prev buffer
+    while (prevIdxBuffer.length > MAX_PREVBUFFER_LENGTH) {
+      prevIdxBuffer.shift();
+    }
+
+    return idx;
+  }
+
   /**
    * Make a weak attempt to not play the same thing
    * 
@@ -120,17 +145,7 @@ export class JumbleService {
    */
   getRandomVideoLoop() {
     let videoLoop = null;
-    let videoLoopIndex = 0;
-    for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
-      videoLoopIndex = Math.floor(Math.random() * this.videoLoopList.length);
-
-      if(this._prevVideo.indexOf(videoLoopIndex) < 0) {
-        break;
-      }
-    }
-    // update previous buffer
-    this._prevVideo.pop();
-    this._prevVideo.push(videoLoopIndex);
+    let videoLoopIndex = this.avoidDupRandom(this.videoLoopList.length, this._prevVideo);
     videoLoop = this.videoLoopList[videoLoopIndex];
 
     return videoLoop;
@@ -143,28 +158,10 @@ export class JumbleService {
    */
   getRandomAudioLoop() {
     let audioLoop = null;
-    let audioLoopIndex = 0;
-    for(let i = 0; i < MAX_RANDOM_ATTEMPTS; ++i) {
-      audioLoopIndex = Math.floor(Math.random() * this.audioLoopList.length);
-
-      if(this._prevAudio.indexOf(audioLoopIndex) < 0) {
-        break;
-      }
-    }
-    this.updatePrevBuffer(this._prevAudio, audioLoopIndex);
-
+    let audioLoopIndex = this.avoidDupRandom(this.audioLoopList.length, this._prevAudio);
     audioLoop = this.audioLoopList[audioLoopIndex];
-    return audioLoop;
-  }
 
-  /**
-   * Maintain correct length and add new value to buffer holding prev values
-   */
-  updatePrevBuffer(buffer: number[], newVal: number) {
-    if (buffer.length > 3) {
-      buffer.shift();
-    }
-    buffer.push(newVal);
+    return audioLoop;
   }
 
   onVote(good: boolean) {
@@ -197,7 +194,7 @@ export class JumbleService {
    */
   getGoodJumble() {
     const length = this.topJumbleList.length;
-    const index  = Math.floor(Math.random() * length);
+    const index  = this.avoidDupRandom(this.topJumbleList.length, this._prevGoodJumble);
     
     return this.topJumbleList[index];
   }
@@ -270,6 +267,7 @@ export class JumbleService {
     // make sure vote timer is restarted
     if (this.voteTimer) {
       window.clearTimeout(this.voteTimer);
+      this.voteTimer = null;
     }
     if (!this.voteTimer) {
       this.voteTimer = window.setTimeout(() => {
