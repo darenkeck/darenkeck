@@ -5,16 +5,25 @@
 }
 
 .sig {
-    height: 70px;
+    width: 200px;
     position: absolute;
     left: 855px;
     right: auto;
     z-index: 101;
 }
 
+@media only screen and (max-width: 500px) {
+    .sig {
+        padding-top: 10px;
+        width: 140px;
+        position: absolute;
+        right: 20px;
+        z-index: 101;
+    }
+}
+
 @media only screen and (max-width: 1080px) {
     .sig {
-        height: 70px;
         position: absolute;
         left: auto;
         right: 20px;
