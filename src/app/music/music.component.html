@@ -5,7 +5,7 @@
   </app-track-group>
   <div>
     <h3>Top Jumbles</h3>
-    <div *ngFor="let jumble of (topJumbleList | async) | slice:0:10; let i = index"
+    <div *ngFor="let jumble of (topJumbleList | async); let i = index"
          (click)="onJumbleSelected(jumble)"
          align=center>
       {{"Jumble " + (i + 1)}}

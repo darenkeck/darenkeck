@@ -30,6 +30,7 @@ const FB_JUMBLE_PATH = 'jumble';
 const FB_VIDEO_LIST  = 'video';
 const FB_AUDIO_LOOPS = 'audio_loop';
 const FB_VIDEO_LOOPS = 'video_loop';
+const TOP_JUMBLE_LENGTH = 10;
 
 @Injectable()
 export class JumbleStoreService {
@@ -70,6 +71,18 @@ export class JumbleStoreService {
 
   get jumbleList() {
     return this._jumbleList$.asObservable();
+  }
+
+    /**
+     * Return the top ten jumbles
+     */
+  get topJumbleList() {
+    return this.jumbleList.map( jumbleList => {
+      return jumbleList.sort( (j1, j2) => {
+        // if j1 has a higher score, give it a lower index so it is first
+        return (j1.score > j2.score) ? -1 : 1;
+      }).slice(0, TOP_JUMBLE_LENGTH);
+    });
   }
 
   get videoLoopList() {

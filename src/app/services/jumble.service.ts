@@ -40,9 +40,11 @@ export class JumbleService {
   _allowVote: BehaviorSubject<boolean>;
   audioLoopList: AudioLoop[] = [];
   videoLoopList: VideoLoop[] = [];
+  topJumbleList: Jumble[];
   voteTimer: number;  
   currentJumble: Jumble;
   // buffers to attempt to not play the same thing...
+  _prevGoodJumble: Jumble[];
   _prevVideo: number[] = [];
   _prevAudio: number[] = [];
   _voteTimer: number;
@@ -93,6 +95,11 @@ export class JumbleService {
     );
     this.jumbleStoreService.videoLoopList.subscribe(
       videoLoopList => this.videoLoopList = videoLoopList
+    );
+
+    // keep a list of the top jumbles
+    this.jumbleStoreService.topJumbleList.subscribe(
+      topList => this.topJumbleList = topList
     );
   }
 
@@ -186,13 +193,40 @@ export class JumbleService {
   }
 
   /**
+   * Selects from the top ten jumble list
+   */
+  getGoodJumble() {
+    const length = this.topJumbleList.length;
+    const index  = Math.floor(Math.random() * length);
+    
+    return this.topJumbleList[index];
+  }
+
+  /**
+   * Gives 1 in 3 odds of picking one of the top 10 jumbles
+   */
+  pickGoodJumble() {
+    // 1 out of 3
+    const val = Math.floor(Math.random() * 3);
+
+    return val < 1;
+  }
+
+  /**
    * Sets a random track number and starts download for both video and audio
    */
   setRandomJumble() {
-    const videoLoop  = this.getRandomVideoLoop();
-    const audioLoop  = this.getRandomAudioLoop();
+    let videoLoop = null;
+    let audioLoop = null;
 
-    this._setJumble(videoLoop, audioLoop);
+    if (this.pickGoodJumble()) {
+      const jumble = this.getGoodJumble();
+      this.setJumble(jumble);
+    } else {
+      videoLoop  = this.getRandomVideoLoop();
+      audioLoop  = this.getRandomAudioLoop();
+      this._setJumble(videoLoop, audioLoop);      
+    }
   }
 
   setJumble(jumble: Jumble) {
@@ -201,6 +235,9 @@ export class JumbleService {
     this._setJumble(videoLoop, audioLoop);
   }
 
+  /**
+   * Starts a jumble using a audioLoop and videoLoop
+   */
   _setJumble(videoLoop: VideoLoop, audioLoop: AudioLoop) {
     if (videoLoop && audioLoop) {
       // set urls for both video and audio
@@ -230,6 +267,10 @@ export class JumbleService {
   }
 
   startVoteTimer() {
+    // make sure vote timer is restarted
+    if (this.voteTimer) {
+      window.clearTimeout(this.voteTimer);
+    }
     if (!this.voteTimer) {
       this.voteTimer = window.setTimeout(() => {
         if (this.isJumble) {

@@ -33,14 +33,8 @@ export class MusicComponent implements OnInit {
                private jumbleService: JumbleService,
                private jumbleStoreService: JumbleStoreService ) 
   {
-    this.albumList = this.audioStoreService.albumList$;
-    this.topJumbleList = this.jumbleStoreService.jumbleList.map( (jumbleList: Jumble[]) => {
-        return jumbleList.sort( (j1, j2) => {
-          // if j1 has a higher score, give it a lower index so it is first
-          return (j1.score > j2.score) ? -1 : 1;
-        });
-      }
-    )
+    this.albumList     = this.audioStoreService.albumList$;
+    this.topJumbleList = this.jumbleStoreService.topJumbleList;
   }
 
   ngOnInit() {
