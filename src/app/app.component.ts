@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { FbaseService }    from 'app/services/fbase.service';
 import { JumbleService }   from 'app/services/jumble.service';
-import { TabStateService } from 'app/services/tab-state.service';
+import { TabStateService, Tab } from 'app/services/tab-state.service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +20,9 @@ export class AppComponent {
               private jumbleService: JumbleService,
               private tabStateService: TabStateService) {
     this.entryList = this.fbase.fetchList('blog-entries');
+    this.tabStateService.currentTab.subscribe(
+      (tab: Tab) => this.show = (tab !== null)
+    )
   }
 
   newJumble() {
@@ -30,7 +33,8 @@ export class AppComponent {
     this.tabStateService.setTab(tabIndex);
   }
 
-  onExpand(expand: boolean) {
-    
+  onExpand(show: boolean) {
+    this.show = show;
+    this.tabStateService.expandTabContainer(show);
   }
 }

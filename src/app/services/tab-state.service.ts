@@ -12,6 +12,7 @@ export enum Tab {
 @Injectable()
 export class TabStateService {
   _currentTab: BehaviorSubject<Tab>;
+  _previousTab: Tab = Tab.HOME;
   constructor() {
     this._currentTab = new BehaviorSubject<Tab>(Tab.HOME);
   }
@@ -21,6 +22,15 @@ export class TabStateService {
   }
 
   setTab(tab: Tab) {
+    if (tab) {
+      // keep a cache of the previous tab so I can show hide by setting null
+      this._previousTab = tab;
+    }
     this._currentTab.next(tab);
+  }
+
+  expandTabContainer(show: boolean) {
+    const newTab = (show) ? this._previousTab : null;
+    this.setTab(newTab);
   }
 }

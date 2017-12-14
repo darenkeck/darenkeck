@@ -17,8 +17,10 @@ export class TabContainerComponent implements OnInit {
   constructor(private tabStateService: TabStateService) {
     // if we get a tab change event, go ahead and set show to true
     this.tabStateService.currentTab
-      .debounceTime(1000).subscribe(
-      () => this.show = true
+      .subscribe(
+      tab => {
+        this.show = (tab !== null);
+      }
     )
   }
 
