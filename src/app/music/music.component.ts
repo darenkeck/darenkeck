@@ -23,7 +23,7 @@ const TEST_TRACK_LIST = [
 @Component({
   selector: 'app-music',
   templateUrl: './music.component.html',
-  styleUrls: ['./music.component.css']
+  styleUrls: ['./music.component.scss']
 })
 export class MusicComponent implements OnInit {
   testTrackList = TEST_TRACK_LIST;
@@ -45,7 +45,7 @@ export class MusicComponent implements OnInit {
       if (state >= PlayerState.PAUSED) {
         this.currentJumble = 
           this.jumbleStoreService.
-            lookupJumbleWithUrls(this.videoService.url, this.audioService.url);
+            lookupJumbleWithUrls(this.audioService.url, this.videoService.url);
         
         this.currentTrack = this.audioStoreService.getAudioWithUrl(this.audioService.url)
       }

@@ -174,7 +174,7 @@ export class JumbleService {
       const videoUrl = this.videoService.url;
       // We really should have a url if we are allowing votes... but just in case
       if (audioUrl && videoUrl) {
-        const currentJumble = this.jumbleStoreService.lookupJumbleWithUrls(
+        const currentJumble = this.jumbleStoreService.initJumble(
           audioUrl,
           videoUrl
         );

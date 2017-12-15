@@ -82,14 +82,6 @@ export class JumbleStoreService {
         }
       }
     }
-    // if not found, just return a new one
-    if (!jumble) {
-      jumble = {
-        audio_url: audioUrl,
-        video_url: videoUrl,
-        score: 0,
-      }
-    }
 
     return jumble;
   }
@@ -124,6 +116,16 @@ export class JumbleStoreService {
    */
   initJumble(audioUrl: string, videoUrl: string) {
     let jumble = this.lookupJumbleWithUrls(audioUrl, videoUrl);
+    // if not found, just return a new one
+    if (!jumble) {
+      jumble = {
+        audio_url: audioUrl,
+        video_url: videoUrl,
+        score: 0,
+      }
+    }
+
+    return jumble;
   }
 
   // add a lookup by video and audio key

@@ -1,0 +1,34 @@
+@import '../../global';
+
+.selected {
+    outline: $primary 2px solid;
+}
+
+.jumble-node {
+    width: 4em;
+    padding: 1em;
+    margin-bottom: 2px;
+}
+
+.jumble-container {
+    padding: 10px 10px 20px 10px;
+    margin-bottom: 20px;
+}
+
+.jumble-rows {
+    align-items: center;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+// .player-container {
+//     width: 6em;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: flex-start;
+// }
+
+
