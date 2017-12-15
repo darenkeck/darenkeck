@@ -1,11 +1,14 @@
 @import '../../global';
 
 .track-item {
-    left-padding: 4px;
+    padding: 4px;
     size: 1.5em;
     cursor: pointer;
 }
 
 .selected {
-    outline: 2px solid $primary;
+    border-left: solid 2px $primary;
+    border-top: solid 2px $primary;
+    margin-left: -2px;
+    margin-top: -2px;
 }

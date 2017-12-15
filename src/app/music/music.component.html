@@ -1,4 +1,6 @@
-<app-tab-container>    
+<app-tab-container>
+  <div align="center" class="dk-sub-header">ALBUMS</div>
+  <hr>
   <app-track-group *ngFor="let album of (albumList | async)"
     [album]="album"
     [currentTrack]="currentTrack"
@@ -6,6 +8,7 @@
   </app-track-group>
   <div class="jumble-container">
     <div align="center" class="dk-sub-header">TOP JUMBLES</div>
+    <hr>    
     <div class="jumble-rows">
       <div *ngFor="let jumble of (topJumbleList | async); let i = index"
         (click)="onJumbleSelected(jumble)"
