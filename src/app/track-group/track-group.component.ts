@@ -10,7 +10,7 @@ interface TrackItem {
 @Component({
   selector: 'app-track-group',
   templateUrl: './track-group.component.html',
-  styleUrls: ['./track-group.component.css']
+  styleUrls: ['./track-group.component.scss']
 })
 export class TrackGroupComponent {
   @Input() album: Album;

@@ -1,5 +1,11 @@
+@import '../../global';
+
 .track-item {
     left-padding: 4px;
     size: 1.5em;
     cursor: pointer;
+}
+
+.selected {
+    outline: 2px solid $primary;
 }

@@ -8,6 +8,7 @@
     width: 4em;
     padding: 1em;
     margin-bottom: 2px;
+    cursor: pointer;
 }
 
 .jumble-container {
@@ -23,12 +24,5 @@
     flex-wrap: wrap;
     justify-content: space-around;
 }
-
-// .player-container {
-//     width: 6em;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: flex-start;
-// }
 
 
