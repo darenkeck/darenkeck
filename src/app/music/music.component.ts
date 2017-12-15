@@ -45,7 +45,7 @@ export class MusicComponent implements OnInit {
       if (state >= PlayerState.PAUSED) {
         this.currentJumble = 
           this.jumbleStoreService.
-            getJumbleWithUrls(this.videoService.url, this.audioService.url);
+            lookupJumbleWithUrls(this.videoService.url, this.audioService.url);
         
         this.currentTrack = this.audioStoreService.getAudioWithUrl(this.audioService.url)
       }

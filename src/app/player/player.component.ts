@@ -94,7 +94,7 @@ export class PlayerComponent implements OnInit {
     // set up subscription to keep allow vote up to date
     this.jumbleService.allowVote.subscribe( allow => {
       // only set allow vote if in jumble mode
-      this.allowVote = (this.isJumble) ? allow : false;
+      this.allowVote = allow;
     })
   }
 

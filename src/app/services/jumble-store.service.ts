@@ -11,8 +11,8 @@ import { FbaseService } from 'app/services/fbase.service';
  // score can be a negative or positive
 export interface Jumble {
   score: number;
-  video_loop_key: string;
-  audio_loop_key: string;
+  video_url: string;
+  audio_url: string;
   $key?: string;
 }
 
@@ -68,19 +68,19 @@ export class JumbleStoreService {
   /**
    * Two URLs is enough to uniquely identify a jumble
    * 
-   * This will return the jumble if it can be found
+   * This will return the jumble if it can be found or null
    */
-  getJumbleWithUrls(audioUrl: string, videoUrl: string) {
-    const audioLoop = this._audioLoopList$.value.find(aLoop => aLoop.url === audioLoop);
-    const videoLoop = this._videoLoopList$.value.find(vLoop => vLoop.url === videoUrl);
+  lookupJumbleWithUrls(audioUrl: string, videoUrl: string) {
     let foundJumble = null;
-    if (audioLoop && videoLoop) {
-      const potentialJumble = {
-        audio_loop_key: audioLoop.$key,
-        video_loop_key: videoLoop.$key,
-        score: 0
+
+    for (const jKey in this._jumbleList$.value) {
+      const jumble = this._jumbleList$.value[jKey]
+      if (jumble.audio_url === audioUrl) {
+        if (jumble.video_url === videoUrl) {
+          foundJumble = jumble;
+          break;
+        }
       }
-      foundJumble = this.lookupJumble(potentialJumble);   
     }
 
     return foundJumble;
@@ -94,9 +94,9 @@ export class JumbleStoreService {
     return this._jumbleList$.asObservable();
   }
 
-    /**
-     * Return the top ten jumbles
-     */
+  /**
+   * Return the top ten jumbles
+   */
   get topJumbleList() {
     return this.jumbleList.map( jumbleList => {
       return jumbleList.sort( (j1, j2) => {
@@ -110,17 +110,29 @@ export class JumbleStoreService {
     return this._videoLoopList$.asObservable();
   }
 
+  /**
+   * Returns either a new jumble (without a key) or finds
+   * the previous one and returns it
+   */
+  initJumble(audioUrl: string, videoUrl: string) {
+    let jumble = this.lookupJumbleWithUrls(audioUrl, videoUrl);
+
+    // if not found, just return a new one
+    if (!jumble) {
+      jumble = {
+        audio_url: audioUrl,
+        video_url: videoUrl,
+        score: 0
+      }
+    }
+
+    return jumble;
+  }
+
   // add a lookup by video and audio key
   // returns either the jumble or null if not found
   lookupJumble(jumbleVote: Jumble) {
-    let jumble = null;
-
-    this._jumbleList$.value.map(j => {
-      if (j.audio_loop_key === jumbleVote.audio_loop_key &&
-          j.video_loop_key === jumbleVote.video_loop_key) {
-            jumble = j;
-          }
-    });
+    let jumble = this.lookupJumbleWithUrls(jumbleVote.audio_url, jumbleVote.video_url);
 
     return jumble;
   }

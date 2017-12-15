@@ -36,7 +36,7 @@ export class JumbleService {
   state: Observable<PlayerState>;
   _state: PlayerState;
   _jumbleInitiated: boolean;
-  _isJumble: BehaviorSubject<boolean>;
+  _isRandomJumble: BehaviorSubject<boolean>;
   isJumble: Observable<boolean>;
   _allowVote: BehaviorSubject<boolean>;
   audioLoopList: AudioLoop[] = [];
@@ -56,7 +56,7 @@ export class JumbleService {
               private jumbleStoreService: JumbleStoreService,
               private videoService: VideoService) {
     // only emit event when a _isJumble event is emitted
-    this._isJumble = new BehaviorSubject(false);
+    this._isRandomJumble = new BehaviorSubject(false);
     this._allowVote = new BehaviorSubject(false);
     // set up how PlayerState is generated from audio and video service
     this.state = combineLatest(
@@ -67,7 +67,7 @@ export class JumbleService {
         // audio state is more important and takes precedence in a few situations
         // on audio initialization, see if the _jumbleInitiated flag is set
         if (aState === PlayerState.LOADING) {
-          this._isJumble.next(this._jumbleInitiated);
+          this._isRandomJumble.next(this._jumbleInitiated);
           this._jumbleInitiated = false;
         }
         // if audio state finishes, set state as finished.
@@ -80,7 +80,7 @@ export class JumbleService {
     );
     // A combined observable that uses _jumbleReady as the primary
     // trigger
-    this.isJumble = this._isJumble.asObservable().withLatestFrom(
+    this.isJumble = this._isRandomJumble.asObservable().withLatestFrom(
       this.state,
       (isJumble, state) => {
         if (!isJumble) {
@@ -167,7 +167,6 @@ export class JumbleService {
   onVote(good: boolean) {
     if (this._allowVote.value) {
       this.currentJumble.score = (good) ? 1 : -1;
-      console.log(this.currentJumble);
       this.jumbleStoreService.updateJumble(this.currentJumble);
       
       // this gets set to true when setJumble is called
@@ -222,24 +221,22 @@ export class JumbleService {
     } else {
       videoLoop  = this.getRandomVideoLoop();
       audioLoop  = this.getRandomAudioLoop();
-      this._setJumble(videoLoop, audioLoop);      
+      this._setJumble(audioLoop.url, videoLoop.url);      
     }
   }
 
   setJumble(jumble: Jumble) {
-    const videoLoop = this.videoLoopList.find( vLoop => vLoop.$key === jumble.video_loop_key);
-    const audioLoop = this.audioLoopList.find( vLoop => vLoop.$key === jumble.video_loop_key);
-    this._setJumble(videoLoop, audioLoop);
+    this._setJumble(jumble.audio_url, jumble.video_url);
   }
 
   /**
    * Starts a jumble using a audioLoop and videoLoop
    */
-  _setJumble(videoLoop: VideoLoop, audioLoop: AudioLoop) {
-    if (videoLoop && audioLoop) {
+  _setJumble(audioUrl: string, videoUrl: string) {
+    if (videoUrl && audioUrl) {
       // set urls for both video and audio
-    this.audioService.url = audioLoop.url;
-    this.videoService.url = videoLoop.url;
+    this.audioService.url = audioUrl;
+    this.videoService.url = videoUrl;
     this._allowVote.next(false);
     // start load, after audio finishes load video
     this.audioService.initMedia().subscribe( didFinish => {
@@ -247,13 +244,13 @@ export class JumbleService {
         this.videoService.initMedia().subscribe( (didFinish) => {
             this.audioService.play();
             this.videoService.play();    
+            this._jumbleInitiated = true;            
             this.startVoteTimer();    
             }
           );
         }
       });
-      this._jumbleInitiated = true;    
-      this.currentJumble = this.initJumble(audioLoop, videoLoop);
+      this.currentJumble = this.jumbleStoreService.initJumble(audioUrl, videoUrl);
     } else {
       // error condition! invalid index lookup or something else
     }
@@ -271,7 +268,7 @@ export class JumbleService {
     }
     if (!this.voteTimer) {
       this.voteTimer = window.setTimeout(() => {
-        if (this.isJumble) {
+        if (this._jumbleInitiated) {
           this._allowVote.next(true);          
         }
         this.voteTimer  = null;
@@ -313,7 +310,7 @@ export class JumbleService {
         this.pause();
         break;
       case PlayerState.ENDED:
-        if (this._isJumble) {
+        if (this._isRandomJumble) {
           this.setRandomJumble();          
         }
         break;
