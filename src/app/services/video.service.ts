@@ -79,6 +79,9 @@ export class VideoService {
   get state() {
     return this._state.asObservable();
   }
+  get url() {
+    return this._vc.url;
+  }
 
   set url(url: string) {
     this._vc.url = url;

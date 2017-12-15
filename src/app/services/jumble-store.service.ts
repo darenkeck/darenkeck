@@ -71,19 +71,27 @@ export class JumbleStoreService {
    * This will return the jumble if it can be found or null
    */
   lookupJumbleWithUrls(audioUrl: string, videoUrl: string) {
-    let foundJumble = null;
+    let jumble = null;
 
     for (const jKey in this._jumbleList$.value) {
-      const jumble = this._jumbleList$.value[jKey]
-      if (jumble.audio_url === audioUrl) {
-        if (jumble.video_url === videoUrl) {
-          foundJumble = jumble;
+      const j = this._jumbleList$.value[jKey]
+      if (j.audio_url === audioUrl) {
+        if (j.video_url === videoUrl) {
+          jumble = j;
           break;
         }
       }
     }
+    // if not found, just return a new one
+    if (!jumble) {
+      jumble = {
+        audio_url: audioUrl,
+        video_url: videoUrl,
+        score: 0,
+      }
+    }
 
-    return foundJumble;
+    return jumble;
   }
 
   get audioLoopList() {
@@ -116,17 +124,6 @@ export class JumbleStoreService {
    */
   initJumble(audioUrl: string, videoUrl: string) {
     let jumble = this.lookupJumbleWithUrls(audioUrl, videoUrl);
-
-    // if not found, just return a new one
-    if (!jumble) {
-      jumble = {
-        audio_url: audioUrl,
-        video_url: videoUrl,
-        score: 0
-      }
-    }
-
-    return jumble;
   }
 
   // add a lookup by video and audio key
@@ -138,14 +135,12 @@ export class JumbleStoreService {
   }
 
   // method to increment/decrement jumble combo
-  updateJumble(jumbleVote: Jumble) {
-    const foundJumble = this.lookupJumble(jumbleVote);
+  updateJumble(jumble: Jumble) {
     // if we have a previous jumble, update score, otherwise create new jumble
-    if (foundJumble) {
-      foundJumble.score += jumbleVote.score;
-      this.fb.updateItem(FB_JUMBLE_PATH, foundJumble.$key, foundJumble);
+    if ('$key' in jumble) {
+      this.fb.updateItem(FB_JUMBLE_PATH, jumble.$key, jumble);
     } else {
-      this.fb.createItem(FB_JUMBLE_PATH, jumbleVote);
+      this.fb.createItem(FB_JUMBLE_PATH, jumble);
     }
   }
 }

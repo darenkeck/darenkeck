@@ -35,7 +35,7 @@ const VOTE_TIMER_LENGTH = 5; // in seconds
 export class JumbleService {
   state: Observable<PlayerState>;
   _state: PlayerState;
-  _jumbleInitiated: boolean;
+  _randomJumbleInitiated: boolean;
   _isRandomJumble: BehaviorSubject<boolean>;
   isJumble: Observable<boolean>;
   _allowVote: BehaviorSubject<boolean>;
@@ -43,7 +43,7 @@ export class JumbleService {
   videoLoopList: VideoLoop[] = [];
   topJumbleList: Jumble[];
   voteTimer: number;  
-  currentJumble: Jumble;
+
   // buffers to attempt to not play the same thing
   _prevGoodJumble: number[] = [];
   _prevVideo: number[] = [];
@@ -67,13 +67,17 @@ export class JumbleService {
         // audio state is more important and takes precedence in a few situations
         // on audio initialization, see if the _jumbleInitiated flag is set
         if (aState === PlayerState.LOADING) {
-          this._isRandomJumble.next(this._jumbleInitiated);
-          this._jumbleInitiated = false;
+          this._isRandomJumble.next(this._randomJumbleInitiated);
+          this._randomJumbleInitiated = false;
+          this._allowVote.next(false);          
         }
         // if audio state finishes, set state as finished.
         // video loops and will never emit a 'finish' event
         state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
         this._state = state;
+        if (state > PlayerState.LOADING) {
+          this.startVoteTimer();
+        }
         
         return state
       }
@@ -83,8 +87,8 @@ export class JumbleService {
     this.isJumble = this._isRandomJumble.asObservable().withLatestFrom(
       this.state,
       (isJumble, state) => {
-        if (!isJumble) {
-          this._allowVote.next(false);
+        if (state > PlayerState.LOADING) {
+          this.startVoteTimer();
         }
         return isJumble
       }
@@ -166,13 +170,21 @@ export class JumbleService {
 
   onVote(good: boolean) {
     if (this._allowVote.value) {
-      this.currentJumble.score = (good) ? 1 : -1;
-      this.jumbleStoreService.updateJumble(this.currentJumble);
-      
-      // this gets set to true when setJumble is called
-      this._allowVote.next(false);
+      const audioUrl = this.audioService.url;
+      const videoUrl = this.videoService.url;
+      // We really should have a url if we are allowing votes... but just in case
+      if (audioUrl && videoUrl) {
+        const currentJumble = this.jumbleStoreService.lookupJumbleWithUrls(
+          audioUrl,
+          videoUrl
+        );
+        currentJumble.score = (good) ? 1 : -1;
+        this.jumbleStoreService.updateJumble(currentJumble);
+        
+        // this gets set to true when setJumble is called
+        this._allowVote.next(false);
+      }
     }
-    // TODO: prevent voting until new jumble
   }
 
   /**
@@ -237,20 +249,18 @@ export class JumbleService {
       // set urls for both video and audio
     this.audioService.url = audioUrl;
     this.videoService.url = videoUrl;
-    this._allowVote.next(false);
     // start load, after audio finishes load video
     this.audioService.initMedia().subscribe( didFinish => {
       if (didFinish) {
         this.videoService.initMedia().subscribe( (didFinish) => {
             this.audioService.play();
             this.videoService.play();    
-            this._jumbleInitiated = true;            
+            this._randomJumbleInitiated = true;            
             this.startVoteTimer();    
             }
           );
         }
       });
-      this.currentJumble = this.jumbleStoreService.initJumble(audioUrl, videoUrl);
     } else {
       // error condition! invalid index lookup or something else
     }
@@ -268,9 +278,7 @@ export class JumbleService {
     }
     if (!this.voteTimer) {
       this.voteTimer = window.setTimeout(() => {
-        if (this._jumbleInitiated) {
-          this._allowVote.next(true);          
-        }
+        this._allowVote.next(true);          
         this.voteTimer  = null;
       }, VOTE_TIMER_LENGTH  * 1000); // in milliseconds
     }
