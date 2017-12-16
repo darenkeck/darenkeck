@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable }        from 'rxjs/observable';
-
+import { combineLatest }     from 'rxjs/observable/combinelatest';
+import { Subscription }      from 'rxjs/subscription';
 import { AudioService }      from '../services/audio.service';
 import { AudioStoreService,
          Album, Track }      from '../services/audio-store.service';
@@ -25,12 +26,13 @@ const TEST_TRACK_LIST = [
   templateUrl: './music.component.html',
   styleUrls: ['./music.component.scss']
 })
-export class MusicComponent implements OnInit {
+export class MusicComponent implements OnDestroy, OnInit {
   testTrackList = TEST_TRACK_LIST;
   topJumbleList: Observable<Jumble[]>;
   albumList: Observable<Album[]>;
   currentJumble: Jumble;
   currentTrack: Track;
+  subscriptions: Subscription;
   constructor( private audioService: AudioService,
                private audioStoreService: AudioStoreService,
                private jumbleService: JumbleService,
@@ -40,7 +42,10 @@ export class MusicComponent implements OnInit {
     this.albumList     = this.audioStoreService.albumList$;
     this.topJumbleList = this.jumbleStoreService.topJumbleList;
 
-    this.jumbleService.state.subscribe( state => {
+    this.subscriptions = combineLatest(
+      this.topJumbleList,
+      this.jumbleService.state
+    ).subscribe( ([topJumbleList, state]: [Jumble[], PlayerState]) => {
       // help set the current playing track or jumble (or both!)
       if (state >= PlayerState.PAUSED) {
         this.currentJumble = 
@@ -52,11 +57,19 @@ export class MusicComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
   ngOnInit() {
   }
 
   onTrackSelected(track: Track) {
-    this.audioService.initMedia(track.url).subscribe( didFinish => this.audioService.play() );
+    this.audioService.initMedia(track.url).subscribe( didFinish => {
+      this.audioService.play();
+      // allowing voting on select audio as well
+      this.jumbleService.startVoteTimer();
+    });
   }
 
   onJumbleSelected(jumble: Jumble) {

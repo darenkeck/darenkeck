@@ -75,9 +75,6 @@ export class JumbleService {
         // video loops and will never emit a 'finish' event
         state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
         this._state = state;
-        if (state > PlayerState.LOADING) {
-          this.startVoteTimer();
-        }
         
         return state
       }
@@ -86,12 +83,7 @@ export class JumbleService {
     // trigger
     this.isJumble = this._isRandomJumble.asObservable().withLatestFrom(
       this.state,
-      (isJumble, state) => {
-        if (state > PlayerState.LOADING) {
-          this.startVoteTimer();
-        }
-        return isJumble
-      }
+      (isJumble, state) => isJumble
     );
 
     // fetch audioLoopList and videoLoopList
@@ -178,7 +170,7 @@ export class JumbleService {
           audioUrl,
           videoUrl
         );
-        currentJumble.score = (good) ? 1 : -1;
+        currentJumble.score += (good) ? 1 : -1;
         this.jumbleStoreService.updateJumble(currentJumble);
         
         // this gets set to true when setJumble is called

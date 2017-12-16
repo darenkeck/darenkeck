@@ -151,6 +151,7 @@ export class PlayerComponent implements OnInit {
       this.jumbleService.toggleState();
       this.firstClick = false;     
     } else {
+      this.videoService.toggleState();
       this.audioService.toggleState();
     }
   }
