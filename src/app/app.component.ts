@@ -14,6 +14,7 @@ import { TabStateService, Tab } from 'app/services/tab-state.service';
 export class AppComponent {
   entryList: Observable<string[]>;
   show = true;
+  showHelp = false;
   title = 'Daren Keck';
 
   constructor(private fbase: FbaseService, 
@@ -34,6 +35,10 @@ export class AppComponent {
 
   newJumble() {
     this.jumbleService.setRandomJumble();
+  }
+
+  onShowHelp(show: boolean) {
+    this.showHelp = show;
   }
 
   setTab(tabIndex: number) {
