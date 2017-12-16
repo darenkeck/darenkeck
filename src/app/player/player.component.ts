@@ -70,11 +70,12 @@ export class PlayerComponent implements OnInit {
           // even though this is not a jumble, go ahead an load a random
           // video
           // Only do this once by checking if the vStat is init
-          if (vState === PlayerState.LOADING) {
+          if (vState === PlayerState.LOADING && !this.videoService.url) {
             this.forceVideo = true;
           }
         }
 
+        // 
         if (aState === PlayerState.PAUSED && this.forceVideo) {
           this.jumbleService.initRandomVideo();
           this.forceVideo = false;

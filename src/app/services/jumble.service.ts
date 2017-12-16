@@ -214,7 +214,6 @@ export class JumbleService {
    * Gives 1 in 3 odds of picking one of the top 10 jumbles
    */
   pickGoodJumble() {
-    // 1 out of 3
     const val = Math.floor(Math.random() * 3);
 
     return val < 1;

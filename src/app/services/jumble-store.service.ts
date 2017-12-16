@@ -75,11 +75,9 @@ export class JumbleStoreService {
 
     for (const jKey in this._jumbleList$.value) {
       const j = this._jumbleList$.value[jKey]
-      if (j.audio_url === audioUrl) {
-        if (j.video_url === videoUrl) {
-          jumble = j;
-          break;
-        }
+      if (j.audio_url === audioUrl && j.video_url === videoUrl) {
+        jumble = j;
+        break;
       }
     }
 
