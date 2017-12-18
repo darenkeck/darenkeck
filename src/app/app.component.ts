@@ -26,9 +26,6 @@ export class AppComponent {
     )
   }
 
-  /**
-   * Method to guarentee when run we expand the container
-   */
   expandTabContainer() {
     this.onExpand(true);
   }
