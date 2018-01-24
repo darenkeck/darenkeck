@@ -43,11 +43,13 @@ const FB_TRACK_PATH = 'track';
 export class AudioStoreService {
   _albumList$: BehaviorSubject<Album[]>;
   _currentTrack$: BehaviorSubject<Track>;
+  _trackList$: BehaviorSubject<Track[]>;
   _trackList: Track[] = [];
 
   constructor(private fb: FbaseService, private audioService: AudioService) {
     this._albumList$ = new BehaviorSubject<Album[]>([]);
     this._currentTrack$ = new BehaviorSubject<Track>(null);
+    this._trackList$ = new BehaviorSubject<Track[]>([]);
 
     // constructs the albums
     const sub = combineLatest(
@@ -57,6 +59,8 @@ export class AudioStoreService {
       const newAlbumList = this.createAlbumList(albumList, trackList);
       // keep a local reference for convenience
       this._trackList = trackList;
+      // do emit the tracklist as well
+      this._trackList$.next(trackList);
       this._albumList$.next(newAlbumList);
     });
 
@@ -74,6 +78,10 @@ export class AudioStoreService {
 
   get currentTrack() {
     return this._currentTrack$.asObservable();
+  }
+
+  get trackList() {
+    return this._trackList$.asObservable();
   }
 
   /**

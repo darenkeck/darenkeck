@@ -87,7 +87,7 @@ export class JumbleService {
     );
 
     // fetch audioLoopList and videoLoopList
-    this.jumbleStoreService.audioLoopList.subscribe( 
+    this.jumbleStoreService.audioSourceList.subscribe( 
       audioLoopList => this.audioLoopList = audioLoopList
     );
     this.jumbleStoreService.videoLoopList.subscribe(
@@ -152,7 +152,7 @@ export class JumbleService {
    * 
    * returns an audioLoop
    */
-  getRandomAudioLoop() {
+  getRandomAudio() {
     let audioLoop = null;
     let audioLoopIndex = this.avoidDupRandom(this.audioLoopList.length, this._prevAudio);
     audioLoop = this.audioLoopList[audioLoopIndex];
@@ -223,7 +223,7 @@ export class JumbleService {
       this.setJumble(jumble);
     } else {
       videoLoop  = this.getRandomVideoLoop();
-      audioLoop  = this.getRandomAudioLoop();
+      audioLoop  = this.getRandomAudio();
       this._setJumble(audioLoop.url, videoLoop.url);      
     }
   }

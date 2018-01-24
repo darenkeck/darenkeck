@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/observable';
 import { BehaviorSubject } from 'rxjs/behaviorsubject';
+import { combineLatest } from 'rxjs/observable/combinelatest';
 
 import { FbaseService } from 'app/services/fbase.service';
+import { AudioStoreService,
+         Track } from 'app/services/audio-store.service';
 /**
  * This service is responsible for fetching reads from video, reads/writes 
  * for jumbles, providing the current list
@@ -26,6 +29,8 @@ export interface AudioLoop {
   $key: string;
 }
 
+export type AudioSource = AudioLoop | Track;
+
 const FB_JUMBLE_PATH = 'jumble';
 const FB_VIDEO_LIST  = 'video';
 const FB_AUDIO_LOOPS = 'audio_loop';
@@ -36,12 +41,15 @@ const TOP_JUMBLE_LENGTH = 10;
 export class JumbleStoreService {
   _jumbleList$: BehaviorSubject<Jumble[]>;
   _audioLoopList$: BehaviorSubject<AudioLoop[]>;
+  _audioSourceList$: BehaviorSubject<AudioSource[]>;
   _videoLoopList$: BehaviorSubject<VideoLoop[]>;
 
-  constructor(private fb: FbaseService) {
+  constructor(private fb: FbaseService,
+              private audioStoreService: AudioStoreService ) {
     this._jumbleList$ = new BehaviorSubject<Jumble[]>([]);
     this._videoLoopList$ = new BehaviorSubject<VideoLoop[]>([]);
     this._audioLoopList$ = new BehaviorSubject<AudioLoop[]>([]);
+    this._audioSourceList$ = new BehaviorSubject<AudioSource[]>([]);
 
     this.fb.fetchFBList(FB_JUMBLE_PATH).subscribe( (jumbleList: Jumble[]) => {
       this._jumbleList$.next(jumbleList);
@@ -53,6 +61,13 @@ export class JumbleStoreService {
 
     this.fb.fetchFBList(FB_AUDIO_LOOPS).subscribe( (audioLoopList: AudioLoop[]) => {
       this._audioLoopList$.next(audioLoopList)
+    });
+
+    combineLatest(
+      this._audioLoopList$,
+      this.audioStoreService.trackList
+    ).subscribe( ([audioLoopList, trackList]) => {
+      this._audioSourceList$.next([...audioLoopList, ...trackList])
     });
   }
 
@@ -86,6 +101,10 @@ export class JumbleStoreService {
 
   get audioLoopList() {
     return this._audioLoopList$.asObservable();
+  }
+
+  get audioSourceList() {
+    return this._audioSourceList$.asObservable();
   }
 
   get jumbleList() {
