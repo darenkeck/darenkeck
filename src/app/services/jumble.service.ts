@@ -72,7 +72,7 @@ export class JumbleService {
           this._allowVote.next(false);          
         }
         // if audio state finishes, set state as finished.
-        // video loops and will never emit a 'finish' event
+        // video loops will never emit a 'finish' event
         state = (aState === PlayerState.ENDED) ? PlayerState.ENDED : state;
         this._state = state;
         
