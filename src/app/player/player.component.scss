@@ -1,0 +1,96 @@
+$opacity: 0.7;
+
+.player-control {
+    opacity: $opacity;
+    font-size: 4em;
+    cursor:  pointer;
+    animation-name: play_button_show;
+    animation-duration: 0.5s;
+}
+
+.track-title {
+    text-align: center;
+}
+
+.slider {
+    width: 100%;
+    margin: 0 auto;
+}
+
+@keyframes play_button_show {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: $opacity;
+    }
+}
+
+.player-button {
+    background-color: #211;
+    opacity: $opacity;
+    height: 4em;
+    width: 4em;
+    animation-name: play_button_show;
+    animation-duration: 0.5s;
+}
+
+.play-row {
+    align-items: center;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 12em;
+}
+
+.player-container {
+    width: 6em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.spinner {
+    height: 4em;
+    width: 4em;
+}
+
+.slider {
+    align-self: center;
+}
+
+@keyframes thumb_expand {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: $opacity;
+    }
+}
+
+.thumb {
+    opacity: $opacity;
+    font-size: 2em;
+    display: block;
+    cursor:  pointer;
+    animation-name: thumb_expand;
+    animation-duration: 0.5s;
+}
+
+@keyframes check_expand {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: $opacity;
+    }
+}
+
+.check {
+    opacity: $opacity;
+    font-size: 4em;
+    display: block;
+    animation-name: check_expand;
+    animation-duration: 0.5s;
+}

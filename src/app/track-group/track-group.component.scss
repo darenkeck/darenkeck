@@ -1,0 +1,12 @@
+@import '../../global';
+
+.track-item {
+    padding: 4px;
+    size: 1.5em;
+    cursor: pointer;
+}
+
+.selected {
+    border-left: solid 2px $primary;
+    margin-left: -2px;
+}

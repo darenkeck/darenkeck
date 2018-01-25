@@ -1,0 +1,16 @@
+<div align="center" class="album-title">
+  <a title="Click to go to CD Baby" [href]="album?.purchase_url">{{album?.title | uppercase}}</a>      
+</div>
+<div class="center-multiple">
+  <div class="column-left">
+    <img width="140px" src="{{album?.image_url}}">            
+  </div>
+  <div class="column-right">
+    <div *ngFor="let track of album?.track_list" 
+         class="dk-row track-item highlight"
+         [ngClass]="{'selected': currentTrack === track}"         
+         (click)="onTrackSelect(track)">
+      {{track?.name}}
+    </div>
+  </div>
+</div>

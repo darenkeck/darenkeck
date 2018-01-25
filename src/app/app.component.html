@@ -1,12 +1,37 @@
 <app-header></app-header>
-<md-tab-group class="main-container" style="z-index: 0;">
-  <md-tab label="Home">
-    <app-home></app-home>
-  </md-tab>
-  <md-tab label="Bio">
-    <app-bio>
-    </app-bio>
-  </md-tab>
-</md-tab-group>
-<app-footer class="footer">
-</app-footer>
+<div (click)="expandTabContainer()">
+  <md-tab-group class="main-container" style="z-index: 0;">
+    <md-tab label="HOME">
+      <app-home></app-home>
+    </md-tab>
+    <md-tab label="MUSIC">
+      <app-music></app-music>
+    </md-tab>
+    <md-tab label="BIO">
+      <app-bio></app-bio>
+    </md-tab>
+  </md-tab-group>
+</div>
+<div class="main-container">
+  <div class="expand-icon" (click)="onExpand(!show)">
+      <i class="material-icons" *ngIf="show">expand_less</i>      
+      <i class="material-icons" *ngIf="!show">expand_more</i>          
+    </div>
+</div>
+<div class="footer">
+  <div class="jumble-content">
+      <app-player class="jumble center"></app-player>
+      <div class="jumble-help-container accordion-content" [ngClass]="{'show-help': showHelp, 'hide-help': !showHelp}">
+          <div class="jumble-help" (click)="onShowHelp(false)">A jumble is a random combination of audio and video. 
+            Press 'New Jumble!' to get a new combination, or select a track in the music tab. 
+            If it is a good combination vote thumbs up. If not, vote down.
+          </div>          
+      </div>
+      <div class="new-jumble"><span (click)="newJumble()">New Jumble!</span>
+        <i class="material-icons info-icon" (click)="onShowHelp(true)" *ngIf="!showHelp">help_outline</i>
+        <i class="material-icons info-icon" (click)="onShowHelp(false)" *ngIf="showHelp">help</i>
+      </div>
+  </div>
+  <app-footer>
+  </app-footer>
+</div>

@@ -2,14 +2,45 @@
  // http://www.colorzilla.com/gradient-editor/
 
 .container {
+    overflow: hidden;
     padding: $gl_padding;
-    background: -webkit-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
-    background: -moz-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
-    background: -o-linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%);
-    background: linear-gradient(rgba(32,16,16,0.4) 0%, rgba(16,32,16,0.2) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ 
+    background: -webkit-linear-gradient(rgba(32,16,16,0.6) 0%, rgba(16,32,16,0.4) 100%);
+    background: -moz-linear-gradient(rgba(32,16,16,0.6) 0%, rgba(16,32,16,0.4) 100%);
+    background: -o-linear-gradient(rgba(32,16,16,0.6) 0%, rgba(16,32,16,0.4) 100%);
+    background: linear-gradient(rgba(32,16,16,0.6) 0%, rgba(16,32,16,0.4) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ 
 }
 
-.outer-container {
+// .outer-container {
+//     max-height: 300px;
+// }
+
+.inner-container {
     height: 330px;
-    max-height: 330px;
+    overflow-y: auto;
+}
+
+.accordion-content{
+    -webkit-transition: all 0.5s; 
+    -moz-transition: all 0.5s; 
+    -ms-transition: all 0.5s; 
+    -o-transition: all 0.5s; 
+    transition: all 0.5s;
+    // "height: 0" not work with css transitions
+  }
+
+.expand-icon {
+    background: #121;
+    opacity: 0.7;
+    float: right;
+    // margin-top: -1.8em;
+}
+
+.expand {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.collapse {
+    max-height: 0px;
+    opacity: 0;
 }
