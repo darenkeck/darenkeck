@@ -24,6 +24,8 @@ export class AudioService {
   player: HTMLMediaElement;
   _state: BehaviorSubject<PlayerState>;
   _loadFinished: Subject<boolean>;
+  // relative path to current audio track
+  _url: string;
 
   // ---- end generic members ---
 
@@ -57,7 +59,12 @@ export class AudioService {
     this._state.next(PlayerState.ENDED);
   }
 
-  initMedia() {
+  initMedia(url = null) {
+    if (url) {
+      // if a url is provided, set it
+      this.url = url;
+    }
+
     if (this.player && this.player.src) {
       this.player.load();
 
@@ -123,7 +130,17 @@ export class AudioService {
   }
   // -------- end generic methods -----------
 
+    /**
+     * Returns the relative path to the current set url
+     * 
+     * Does not use player.src as that is an absolute path
+     */
+  get url() {
+    return this._url;
+  }
+
   set url(path: string) {
+    this._url = path;
     this.player.src = path;
   }
 }
