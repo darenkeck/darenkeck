@@ -65,11 +65,11 @@ export class VideoController {
     }
 
     pause() {
-    if (this._state.value === PlayerState.PLAYING
-        || this._state.value === PlayerState.ENDED) {
-        this.player.pause();
-        this._state.next(PlayerState.PAUSED);
-    }
+        if (this._state.value === PlayerState.PLAYING
+            || this._state.value === PlayerState.ENDED) {
+               this.player.pause();
+               this._state.next(PlayerState.PAUSED);
+        }
     }
 
     get state() {

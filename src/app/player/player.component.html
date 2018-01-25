@@ -1,0 +1,18 @@
+<app-video-player>
+</app-video-player>
+<div>
+    <div class="track-title">{{(currentTrack | async)?.name}}</div>           
+    <re-captcha theme="dark" data-badge="bottomleft" style="bottom: 100px;" size="invisible" site_key="6LdtdTwUAAAAAO14kJkE9-RpGTG4RsyL62KNSRWK" (captchaResponse)="verifyCaptcha($event)"></re-captcha>    
+    <div class="play-row">  
+        <i class ="material-icons thumb" *ngIf="allowVote" (click)="onVote(false)">thumb_down</i>
+        <i class="material-icons check" *ngIf="showCheck" (click)="onVote(true)">check_circle</i>        
+        <div class="player-button" *ngIf="!showCheck" (click)="onClick()">
+            <i class="material-icons player-control" mode="indeterminate" style="opacity: 0.2;" *ngIf="showLoad">play_arrow</i>    
+            <md-progress-spinner mode="indeterminate" class="spinner" *ngIf="showLoading"></md-progress-spinner>
+            <i class="material-icons player-control" *ngIf="showPaused">play_arrow</i>
+            <i class="material-icons player-control" *ngIf="showPlaying">pause</i>
+        </div>
+        <i class="material-icons thumb" *ngIf="allowVote" (click)="onVote(true)">thumb_up</i>
+    </div>
+    <md-slider class="slider" min="0" max="100" value="100" class="slider" (change)="onVolumeChange($event.value)"></md-slider>
+</div>

@@ -60,6 +60,31 @@ export class VideoService {
   }
 
   /**
+   * Given a previous media player state, move to the next logical one
+   */
+  toggleState() {
+    switch(this._state.value) {
+      case PlayerState.INIT:
+        break;
+      case PlayerState.LOADING:
+        // set random track url and start load
+        this.initMedia();        
+        break;
+      case PlayerState.PAUSED:
+        this.play();
+        break;
+      case PlayerState.PLAYING:
+        this.pause();
+        break;
+      case PlayerState.ENDED:
+        this.play();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
    * Resets the video subscription
    */
   updateStateObservable() {
@@ -78,6 +103,9 @@ export class VideoService {
 
   get state() {
     return this._state.asObservable();
+  }
+  get url() {
+    return this._vc.url;
   }
 
   set url(url: string) {

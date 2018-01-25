@@ -4,10 +4,6 @@ a {
     font: arial;
 }
 
-.jumble {
-    z-index: 0;
-}
-
 .jumble-description {
     color: #fff;
     background-color: #000;

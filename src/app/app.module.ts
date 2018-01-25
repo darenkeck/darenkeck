@@ -4,14 +4,18 @@ import { FormsModule }        from '@angular/forms';
 import { HttpModule }         from '@angular/http';
 import { MaterialModule }     from '@angular/material';
 import { AngularFireModule }  from 'angularfire2';
+import { ReCaptchaModule }    from 'angular2-recaptcha';
 
 import { AudioService }       from 'app/services/audio.service';
+import { AudioStoreService }  from 'app/services/audio-store.service';
 import { FbaseService }       from 'app/services/fbase.service';
 import { JumbleService }      from 'app/services/jumble.service';
+import { JumbleStoreService } from 'app/services/jumble-store.service';
+import { TabStateService }    from 'app/services/tab-state.service';
 import { VideoService }       from 'app/services/video.service';
 
 import { AppComponent }           from './app.component';
-import { JumbleComponent }        from './jumble/jumble.component';
+import { PlayerComponent }        from './player/player.component';
 import { FooterPlayerComponent }  from './footer-player/footer-player.component';
 import { HeaderComponent }        from './header/header.component';
 import { BlogEntryListComponent } from './blog-entry-list/blog-entry-list.component';
@@ -21,6 +25,8 @@ import { BioComponent }       from './bio/bio.component';
 import { FooterComponent }    from './footer/footer.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { TabContainerComponent } from './tab-container/tab-container.component';
+import { MusicComponent } from './music/music.component';
+import { TrackGroupComponent } from './track-group/track-group.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -34,7 +40,6 @@ export const firebaseConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    JumbleComponent,
     FooterPlayerComponent,
     HeaderComponent,
     BlogEntryListComponent,
@@ -42,21 +47,28 @@ export const firebaseConfig = {
     HomeComponent,
     BioComponent,
     FooterComponent,
+    PlayerComponent,
     VideoPlayerComponent,
-    TabContainerComponent
+    TabContainerComponent,
+    MusicComponent,
+    TrackGroupComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     MaterialModule.forRoot(),
+    ReCaptchaModule,
     HttpModule
   ],
   providers: [
     FbaseService,
     AudioService,
     VideoService,
-    JumbleService
+    JumbleStoreService,
+    JumbleService,
+    AudioStoreService,
+    TabStateService,
   ],
   bootstrap: [AppComponent]
 })
