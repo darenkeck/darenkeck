@@ -21,7 +21,7 @@
 <div class="footer">
   <div class="jumble-content">
       <app-player class="jumble center"></app-player>
-      <div class="jumble-help-container accordion-content" [ngClass]="{'show-help': showHelp, 'hide-help': !showHelp}">
+      <div class="jumble-help-container accordion-content" *ngIf="showHelp" class="show-help">
           <div class="jumble-help" (click)="onShowHelp(false)">A jumble is a random combination of audio and video. 
             Press 'New Jumble!' to get a new combination, or select a track in the music tab. 
             If it is a good combination vote thumbs up. If not, vote down.
