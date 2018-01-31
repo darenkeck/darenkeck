@@ -14,6 +14,7 @@ import { AudioStoreService,
  // score can be a negative or positive
 export interface Jumble {
   score: number;
+  total_votes: number;
   video_url: string;
   audio_url: string;
   $key?: string;
@@ -43,6 +44,7 @@ export class JumbleStoreService {
   _audioLoopList$: BehaviorSubject<AudioLoop[]>;
   _audioSourceList$: BehaviorSubject<AudioSource[]>;
   _videoLoopList$: BehaviorSubject<VideoLoop[]>;
+  highestTotalVotes = 1;
 
   constructor(private fb: FbaseService,
               private audioStoreService: AudioStoreService ) {
@@ -53,6 +55,12 @@ export class JumbleStoreService {
 
     this.fb.fetchFBList(FB_JUMBLE_PATH).subscribe( (jumbleList: Jumble[]) => {
       this._jumbleList$.next(jumbleList);
+      // set highest total votes
+      jumbleList.map(jumble => {
+        if (jumble.total_votes > this.highestTotalVotes) {
+          this.highestTotalVotes = jumble.total_votes;
+        }
+      })
     });
 
     this.fb.fetchFBList(FB_VIDEO_LOOPS).subscribe( (videoList: VideoLoop[]) => {
@@ -112,13 +120,29 @@ export class JumbleStoreService {
   }
 
   /**
+   * Algorithm for generating a jumble score
+   * 
+   * 80% of weight: the upvote percentage
+   * 20%: the number of votes
+   */
+  jumbleScore(jumble: Jumble) {
+    const ratio = jumble.score / jumble.total_votes;
+    const score_total_ratio = jumble.total_votes / this.highestTotalVotes;
+    const score = (0.8 * ratio) + (0.2 * score_total_ratio);
+
+    return score;
+  }
+
+  /**
    * Return the top ten jumbles
    */
   get topJumbleList() {
     return this.jumbleList.map( jumbleList => {
       return jumbleList.sort( (j1, j2) => {
+        const j1_score = this.jumbleScore(j1);
+        const j2_score = this.jumbleScore(j2);
         // if j1 has a higher score, give it a lower index so it is first
-        return (j1.score > j2.score) ? -1 : 1;
+        return (j1_score > j2_score) ? -1 : 1;
       }).slice(0, TOP_JUMBLE_LENGTH);
     });
   }
@@ -139,6 +163,7 @@ export class JumbleStoreService {
         audio_url: audioUrl,
         video_url: videoUrl,
         score: 0,
+        total_votes: 0,
       }
     }
 

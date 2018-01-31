@@ -24,6 +24,7 @@ export class PlayerComponent implements OnInit {
   @ViewChild(ReCaptchaComponent)captcha: ReCaptchaComponent; 
 
   allowVote:      boolean; // flag to show the thumbs up/down
+  captchaFailed   = false;
   currentTrack:   Observable<Track>;
   disableSlider:  boolean;
   isHuman         = false;
@@ -102,9 +103,12 @@ export class PlayerComponent implements OnInit {
   verifyCaptcha(token) {
     this.jumbleService.verifyCaptcha(token).subscribe( isHuman => {
       this.isHuman = isHuman;
-      if (this._cachedVote !== null) {
+      if (isHuman && this._cachedVote !== null) {
         this.onVote(this._cachedVote);
         this._cachedVote = null;        
+      } else {
+        this.captchaFailed = true;
+        this.allowVote = false;
       }
     });
   }
@@ -161,6 +165,8 @@ export class PlayerComponent implements OnInit {
       setTimeout(() => {
         this.showCheck = false;
       }, 2000);  
+    } else if (this.captchaFailed) {
+      this.allowVote = false;
     } else {
       // initiate a captcha check if it has not been done yet
       // a token will eventually be returned to the method 'verifyCaptcha'

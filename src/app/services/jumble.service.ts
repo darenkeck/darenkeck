@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/subscription';
 import { combineLatest } from 'rxjs/observable/combinelatest';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/withLatestFrom';
 
 import { AudioService } from 'app/services/audio.service';
@@ -170,7 +171,8 @@ export class JumbleService {
           audioUrl,
           videoUrl
         );
-        currentJumble.score += (good) ? 1 : -1;
+        currentJumble.score += (good) ? 1 : 0;
+        currentJumble.total_votes += 1;
         this.jumbleStoreService.updateJumble(currentJumble);
         
         // this gets set to true when setJumble is called
@@ -196,10 +198,15 @@ export class JumbleService {
    * Selects from the top ten jumble list
    */
   getGoodJumble() {
-    const length = this.topJumbleList.length;
-    const index  = this.avoidDupRandom(this.topJumbleList.length, this._prevGoodJumble);
+    let   goodJumble = null;
+    const length     = this.topJumbleList.length;
+    const index      = this.avoidDupRandom(this.topJumbleList.length, this._prevGoodJumble);
     
-    return this.topJumbleList[index];
+    if (length) {
+      goodJumble = this.topJumbleList[index];
+    }
+
+    return goodJumble;
   }
 
   /**
@@ -215,13 +222,19 @@ export class JumbleService {
    * Sets a random track number and starts download for both video and audio
    */
   setRandomJumble() {
-    let videoLoop = null;
-    let audioLoop = null;
+    let videoLoop  = null;
+    let audioLoop  = null;
+    let goodJumble = null;
 
     if (this.pickGoodJumble()) {
       const jumble = this.getGoodJumble();
-      this.setJumble(jumble);
-    } else {
+      if (jumble) {
+        this.setJumble(jumble);
+      }
+    }
+
+    // if we did not get a good jumble, pick a random one
+    if (goodJumble === null) {
       videoLoop  = this.getRandomVideoLoop();
       audioLoop  = this.getRandomAudio();
       this._setJumble(audioLoop.url, videoLoop.url);      
