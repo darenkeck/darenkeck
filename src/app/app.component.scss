@@ -15,38 +15,12 @@
    z-index: -100;
 }
 
-.info-icon {
-    color: whitesmoke;
-    padding-left: 0.5em;
-    opacity: 0.6;
-    font-size: 1em;
-    cursor: default;
-}
-
 .jumble {
     z-index: 0;
 }
 
 .jumble-content {
     position: relative;
-}
-
-.new-jumble {
-    position: absolute;
-    cursor: pointer;
-    right: 1em;
-    bottom: 2.5em;
-    color: $alert-color;
-}
-
-.jumble-help {
-    position: absolute;
-    padding: 1em;
-    cursor: default;
-    right: 0em;
-    background-color: black;
-    bottom: 10em;
-    color: $primary;
 }
 
 .jumble-help-container {
@@ -63,14 +37,6 @@
     width: 0em;
     max-width: 0em;
     opacity: 0;
-}
-
-.accordion-content {
-    -webkit-transition: all 0.5s; 
-    -moz-transition: all 0.5s; 
-    -ms-transition: all 0.5s; 
-    -o-transition: all 0.5s; 
-    transition: all 0.5s;
 }
 
 .expand-icon {
