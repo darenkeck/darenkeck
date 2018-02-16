@@ -1,16 +1,14 @@
-<div class="center-multiple">
-  <!-- <a href="https://soundcloud.com/darenkeck">soundcloud</a>
-  <a href="http://wayfarerrecords.com">wayfarer records</a>
-  <a href="http://www.linkedin.com/in/darenkeck/">linkedin</a> -->
-  <!--<a href="">resume</a>-->
-  <div class="jumble-help-container accordion-content" *ngIf="showHelp" class="show-help">
-    <div class="jumble-help" (click)="onShowHelp(false)">A jumble is a random combination of audio and video. 
-      Press 'New Jumble!' to get a new combination, or select a track in the music tab. 
-      If it is a good combination vote thumbs up. If not, vote down.
-    </div>          
-  </div>
-  <div class="new-jumble"><span (click)="newJumble()">New Jumble!</span>
-    <i class="material-icons info-icon" (click)="onShowHelp(true)" *ngIf="!showHelp">help_outline</i>
-    <i class="material-icons info-icon" (click)="onShowHelp(false)" *ngIf="showHelp">help</i>
-  </div>
+<!-- <a href="https://soundcloud.com/darenkeck">soundcloud</a>
+<a href="http://wayfarerrecords.com">wayfarer records</a>
+<a href="http://www.linkedin.com/in/darenkeck/">linkedin</a> -->
+<!--<a href="">resume</a>-->
+<div class="jumble-help-container accordion-content" *ngIf="showHelp" class="show-help">
+  <div class="jumble-help" (click)="onShowHelp(false)">A jumble is a random combination of audio and video. 
+    Press 'New Jumble!' to get a new combination, or select a track in the music tab. 
+    If it is a good combination vote thumbs up. If not, vote down.
+  </div>          
+</div>
+<div class="new-jumble"><span (click)="newJumble()">New Jumble!</span>
+  <i class="material-icons info-icon" (click)="onShowHelp(true)" *ngIf="!showHelp">help_outline</i>
+  <i class="material-icons info-icon" (click)="onShowHelp(false)" *ngIf="showHelp">help</i>
 </div>

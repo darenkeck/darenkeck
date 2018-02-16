@@ -39,6 +39,8 @@ a {
 .new-jumble {
     cursor: pointer;
     color: $alert-color;
+    float: right;
+    padding: 0em 0.5em 0.5em 0.5em;
 }
 
 .info-icon {
