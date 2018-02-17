@@ -1,5 +1,5 @@
 <div class="outer-container">
-  <div class="container accordion-content" [ngClass]="{'expand': show, 'collapse': !show}">
+  <div class="container accordion-content collapse" [ngClass]="{'collapse': !show, 'expand': show}">
     <div class="inner-container">
         <ng-content></ng-content>        
     </div>

@@ -12,9 +12,9 @@ export enum Tab {
 @Injectable()
 export class TabStateService {
   _currentTab: BehaviorSubject<Tab>;
-  _previousTab: Tab = Tab.HOME;
+  _previousTab: Tab = Tab.MUSIC;
   constructor() {
-    this._currentTab = new BehaviorSubject<Tab>(Tab.HOME);
+    this._currentTab = new BehaviorSubject<Tab>(null);
   }
 
   get currentTab() {

@@ -12,7 +12,7 @@ let _global_show_container = true;
   styleUrls: ['./tab-container.component.scss']
 })
 export class TabContainerComponent implements OnInit {
-  show: boolean = true;
+  show: boolean = false;
   height        = 'auto';
   constructor(private tabStateService: TabStateService) {
     // if we get a tab change event, go ahead and set show to true
@@ -25,7 +25,6 @@ export class TabContainerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.show = true;
   }
 
   onExpand(show) {
