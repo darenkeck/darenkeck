@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { JumbleService } from 'app/services/jumble.service';
-
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
@@ -9,20 +7,8 @@ import { JumbleService } from 'app/services/jumble.service';
 })
 export class FooterComponent implements OnInit {
   showHelp = false;
-  helpVisible = false;
-  constructor(private jumbleService: JumbleService,) { }
+
+  constructor() { }
 
   ngOnInit() { }
-
-  hideHelp() {
-    this.helpVisible = false;
-  }
-
-  newJumble() {
-    this.jumbleService.setRandomJumble();
-  }
-
-  onShowHelp(show: boolean) {
-    this.showHelp = show;
-  }
 }

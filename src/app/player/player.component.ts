@@ -43,6 +43,7 @@ export class PlayerComponent implements OnInit {
   // only needed when a recaptcha round trip is required
   _cachedVote     = null;
   hasVoted        = false; // indicates if a current jumble has been voted on
+  showHelp        = false;
   showLoad        = false;
   showLoading     = false;
   showPaused      = false;
@@ -153,6 +154,14 @@ export class PlayerComponent implements OnInit {
   onClick() {
     this.jumbleService.toggleState();
     this.firstClick = false; 
+  }
+
+  newJumble() {
+    this.jumbleService.setRandomJumble();
+  }
+
+  onShowHelp(show: boolean) {
+    this.showHelp = show;
   }
 
   /**
