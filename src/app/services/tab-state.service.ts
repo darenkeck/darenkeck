@@ -4,8 +4,8 @@ import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { Observable }      from 'rxjs/observable';
 
 export enum Tab {
-  'HOME',
   'MUSIC',
+  'TOP JUMBLES',
   'BIO'
 }
 

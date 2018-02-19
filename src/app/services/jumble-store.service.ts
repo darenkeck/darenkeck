@@ -36,7 +36,7 @@ const FB_JUMBLE_PATH = 'jumble';
 const FB_VIDEO_LIST  = 'video';
 const FB_AUDIO_LOOPS = 'audio_loop';
 const FB_VIDEO_LOOPS = 'video_loop';
-const TOP_JUMBLE_LENGTH = 10;
+const TOP_JUMBLE_LENGTH = 40;
 
 @Injectable()
 export class JumbleStoreService {

@@ -1,0 +1,13 @@
+<div class="jumble-container">
+  <div align="center" class="dk-sub-header">TOP JUMBLES</div>
+  <hr>    
+  <div class="jumble-rows">
+    <div *ngFor="let jumble of (topJumbleList | async); let i = index"
+      (click)="onJumbleSelected(jumble)"
+      class="center-multiple jumble-node highlight"
+      [ngClass]="{'selected': currentJumble === jumble}"
+      align=center>
+      {{"Jumble " + (i + 1)}}
+    </div>
+  </div>
+</div>

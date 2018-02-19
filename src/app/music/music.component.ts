@@ -13,21 +13,12 @@ import { JumbleService }     from 'app/services/jumble.service';
 import { VideoService }      from 'app/services/video.service';     
 import { PlayerState }       from 'app/services/media-player.service';
 
-const BASE_AUDIO_URL = 'assets/audio/loop';
-
-const TEST_TRACK_LIST = [
-  { title: '0', url: BASE_AUDIO_URL + '/0.mp3'},
-  { title: '1', url: BASE_AUDIO_URL + '/1.mp3'},
-  { title: '2', url: BASE_AUDIO_URL + '/2.mp3'},
-];
-
 @Component({
   selector: 'app-music',
   templateUrl: './music.component.html',
   styleUrls: ['./music.component.scss']
 })
 export class MusicComponent implements OnDestroy, OnInit {
-  testTrackList = TEST_TRACK_LIST;
   topJumbleList: Observable<Jumble[]>;
   albumList: Observable<Album[]>;
   currentJumble: Jumble;
@@ -70,9 +61,5 @@ export class MusicComponent implements OnDestroy, OnInit {
       // allowing voting on select audio as well
       this.jumbleService.startVoteTimer();
     });
-  }
-
-  onJumbleSelected(jumble: Jumble) {
-    this.jumbleService.setJumble(jumble)
   }
 }

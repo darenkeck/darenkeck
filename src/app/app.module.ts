@@ -27,6 +27,7 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { TabContainerComponent } from './tab-container/tab-container.component';
 import { MusicComponent } from './music/music.component';
 import { TrackGroupComponent } from './track-group/track-group.component';
+import { TopJumblesComponent } from './top-jumbles/top-jumbles.component';
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -52,6 +53,7 @@ export const firebaseConfig = {
     TabContainerComponent,
     MusicComponent,
     TrackGroupComponent,
+    TopJumblesComponent,
   ],
   imports: [
     BrowserModule,
