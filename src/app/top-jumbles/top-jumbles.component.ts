@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AudioService }      from '../services/audio.service';
 import { AudioStoreService,
-         Album, Track }      from '../services/audio-store.service';
+         Album }             from '../services/audio-store.service';
 import { VideoService }      from 'app/services/video.service';     
 import { JumbleService }     from 'app/services/jumble.service';  
 import { JumbleStoreService,
@@ -14,10 +14,9 @@ import { Subscription }      from 'rxjs/subscription';
 @Component({
   selector: 'app-top-jumbles',
   templateUrl: './top-jumbles.component.html',
-  styleUrls: ['./top-jumbles.component.css']
+  styleUrls: ['./top-jumbles.component.scss']
 })
 export class TopJumblesComponent implements OnInit {
-  currentTrack: Track = null; 
   currentJumble: Jumble;
   subscription: Subscription;
   topJumbleList: Observable<Jumble[]>;
@@ -36,9 +35,7 @@ export class TopJumblesComponent implements OnInit {
       if (state >= PlayerState.PAUSED) {
         this.currentJumble = 
           this.jumbleStoreService.
-            lookupJumbleWithUrls(this.audioService.url, this.videoService.url);
-        
-        this.currentTrack = this.audioStoreService.getAudioWithUrl(this.audioService.url)
+            lookupJumbleWithUrls(this.audioService.url, this.videoService.url);        
       }
     });
   }

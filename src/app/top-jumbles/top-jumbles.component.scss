@@ -1,3 +1,4 @@
+@import '../../global';
 
 .jumble-node {
     width: 4em;
@@ -18,4 +19,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+}
+
+.selected {
+    outline: $primary 2px solid;
 }
