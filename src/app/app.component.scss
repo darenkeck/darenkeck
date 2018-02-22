@@ -7,12 +7,11 @@
 }
 
 .footer {
-   position:auto;
-   width: 100%;
-   max-width: 1070px;
-   left:0px;
-   bottom:0px;
-   z-index: -100;
+    position:fixed;
+    width: 100%;
+    left:0px;
+    bottom:0px;
+    z-index: -100;
 }
 
 .jumble {
@@ -43,18 +42,8 @@
     background-color: #121;
     opacity: 0.7;
     float: right;
-    margin-top: -0.2em;
+    margin-top: -0.7em;
     cursor: pointer;
     height: 1.5em;
-}
-
-
-@media only screen and (min-height: 550px) {
-    .footer {
-        position:fixed;
-        width: 100%;
-        left:0px;
-        bottom:0px;
-        z-index: -100;
-    }
+    z-index: 100;
 }
