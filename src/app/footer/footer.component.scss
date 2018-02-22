@@ -1,0 +1,51 @@
+@import '../../global';
+
+a {
+    text-decoration: none;
+    color: white;
+    font: arial;
+}
+
+
+.accordion-content {
+    -webkit-transition: all 0.5s; 
+    -moz-transition: all 0.5s; 
+    -ms-transition: all 0.5s; 
+    -o-transition: all 0.5s; 
+    transition: all 0.5s;
+}
+
+.jumble-help {
+    position: absolute;
+    padding: 1em;
+    cursor: default;
+    right: 0em;
+    background-color: black;
+    bottom: 10em;
+    color: $primary;
+}
+
+.jumble-help-container {
+    overflow: hidden;
+}
+
+.jumble-description {
+    color: #fff;
+    background-color: #000;
+    text-align: center;
+    font-size: 12px;
+}
+
+.new-jumble {
+    cursor: pointer;
+    color: $alert-color;
+    float: right;
+    padding: 0em 0.5em 0.5em 0.5em;
+}
+
+.info-icon {
+    color: whitesmoke;
+    padding-left: 0.5em;
+    opacity: 0.6;
+    cursor: default;
+}

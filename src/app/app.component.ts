@@ -30,10 +30,6 @@ export class AppComponent {
     this.onExpand(true);
   }
 
-  newJumble() {
-    this.jumbleService.setRandomJumble();
-  }
-
   onShowHelp(show: boolean) {
     this.showHelp = show;
   }

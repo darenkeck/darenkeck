@@ -7,20 +7,11 @@
 }
 
 .footer {
-   position:auto;
-   width: 100%;
-   max-width: 1070px;
-   left:0px;
-   bottom:0px;
-   z-index: -100;
-}
-
-.info-icon {
-    color: whitesmoke;
-    padding-left: 0.5em;
-    opacity: 0.6;
-    font-size: 1em;
-    cursor: default;
+    position:fixed;
+    width: 100%;
+    left:0px;
+    bottom:0px;
+    z-index: -100;
 }
 
 .jumble {
@@ -29,24 +20,6 @@
 
 .jumble-content {
     position: relative;
-}
-
-.new-jumble {
-    position: absolute;
-    cursor: pointer;
-    right: 1em;
-    bottom: 2.5em;
-    color: $alert-color;
-}
-
-.jumble-help {
-    position: absolute;
-    padding: 1em;
-    cursor: default;
-    right: 0em;
-    background-color: black;
-    bottom: 10em;
-    color: $primary;
 }
 
 .jumble-help-container {
@@ -65,30 +38,12 @@
     opacity: 0;
 }
 
-.accordion-content {
-    -webkit-transition: all 0.5s; 
-    -moz-transition: all 0.5s; 
-    -ms-transition: all 0.5s; 
-    -o-transition: all 0.5s; 
-    transition: all 0.5s;
-}
-
 .expand-icon {
     background-color: #121;
     opacity: 0.7;
     float: right;
-    margin-top: -0.2em;
+    margin-top: -0.7em;
     cursor: pointer;
     height: 1.5em;
-}
-
-
-@media only screen and (min-height: 550px) {
-    .footer {
-        position:fixed;
-        width: 100%;
-        left:0px;
-        bottom:0px;
-        z-index: -100;
-    }
+    z-index: 100;
 }

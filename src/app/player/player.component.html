@@ -4,7 +4,7 @@
     <div class="track-title">{{(currentTrack | async)?.name}}</div>           
     <re-captcha theme="dark" data-badge="bottomleft" style="bottom: 100px;" size="invisible" site_key="6LdtdTwUAAAAAO14kJkE9-RpGTG4RsyL62KNSRWK" (captchaResponse)="verifyCaptcha($event)"></re-captcha>    
     <div class="play-row">  
-        <i class ="material-icons thumb" *ngIf="allowVote" (click)="onVote(false)">thumb_down</i>
+        <i class ="material-icons thumb" *ngIf="allowVote && !captchaFailed" (click)="onVote(false)">thumb_down</i>
         <i class="material-icons check" *ngIf="showCheck" (click)="onVote(true)">check_circle</i>        
         <div class="player-button" *ngIf="!showCheck" (click)="onClick()">
             <i class="material-icons player-control" mode="indeterminate" style="opacity: 0.2;" *ngIf="showLoad">play_arrow</i>    
@@ -12,7 +12,16 @@
             <i class="material-icons player-control" *ngIf="showPaused">play_arrow</i>
             <i class="material-icons player-control" *ngIf="showPlaying">pause</i>
         </div>
-        <i class="material-icons thumb" *ngIf="allowVote" (click)="onVote(true)">thumb_up</i>
+        <i class="material-icons thumb" *ngIf="allowVote && !captchaFailed" (click)="onVote(true)">thumb_up</i>
     </div>
-    <md-slider class="slider" min="0" max="100" value="100" class="slider" (change)="onVolumeChange($event.value)"></md-slider>
+    <div class="jumble-help-container accordion-content" *ngIf="showHelp" class="show-help">
+        <div class="jumble-help" (click)="onShowHelp(false)">A jumble is a random combination of audio and video. 
+          Press 'New Jumble!' to get a new combination, or select a track in the music tab. 
+          If it is a good combination vote thumbs up. If not, vote down.
+        </div>          
+      </div>
+      <div class="new-jumble"><span (click)="newJumble()">New Jumble!</span>
+        <i class="material-icons info-icon" (click)="onShowHelp(true)" *ngIf="!showHelp">help_outline</i>
+        <i class="material-icons info-icon" (click)="onShowHelp(false)" *ngIf="showHelp">help</i>
+    </div>
 </div>

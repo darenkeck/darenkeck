@@ -4,17 +4,17 @@ import { BehaviorSubject } from 'rxjs/behaviorsubject';
 import { Observable }      from 'rxjs/observable';
 
 export enum Tab {
-  'HOME',
   'MUSIC',
+  'TOP JUMBLES',
   'BIO'
 }
 
 @Injectable()
 export class TabStateService {
   _currentTab: BehaviorSubject<Tab>;
-  _previousTab: Tab = Tab.HOME;
+  _previousTab: Tab = Tab.MUSIC;
   constructor() {
-    this._currentTab = new BehaviorSubject<Tab>(Tab.HOME);
+    this._currentTab = new BehaviorSubject<Tab>(null);
   }
 
   get currentTab() {
