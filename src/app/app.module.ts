@@ -1,7 +1,7 @@
 import { BrowserModule }      from '@angular/platform-browser';
 import { NgModule }           from '@angular/core';
 import { FormsModule }        from '@angular/forms';
-import { MaterialModule }     from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireModule }  from 'angularfire2';
 import { ReCaptchaModule }    from 'angular2-recaptcha';
 
@@ -58,7 +58,6 @@ export const firebaseConfig = {
     BrowserModule,
     FormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    MaterialModule.forRoot(),
     ReCaptchaModule
   ],
   providers: [
