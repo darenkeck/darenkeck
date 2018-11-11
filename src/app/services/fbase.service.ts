@@ -1,23 +1,21 @@
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
-import { Observable } from 'rxjs'
+import { pipe, Observable } from 'rxjs'
 import * as firebase from 'firebase';
-import 'rxjs/add/operator/map';
+import { map }        from 'rxjs/operators';
+
+const valueMap = pipe(map(itemList => itemList.map(item => item.$value)));
 
 @Injectable()
 export class FbaseService {
   constructor(private af: AngularFire) { }
 
   fetchList(itemType: string): Observable<any> {
-    return this.af.database.list(`/${itemType}`).map(itemList => {
-      return itemList.map(item => item.$value)
-    }); 
+    return valueMap(this.af.database.list(`/${itemType}`));
   }
 
   fetchItem(itemType: string): Observable<any> {
-    return this.af.database.object(`/${itemType}`).map(item => {
-      return item.$value;
-    });
+    return valueMap(this.af.database.object(`/${itemType}`));
   }
 
   fetchFBList(itemType: string): FirebaseListObservable<any> {

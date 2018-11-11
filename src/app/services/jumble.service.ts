@@ -5,9 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { combineLatest } from 'rxjs';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/timeout';
-import 'rxjs/add/operator/withLatestFrom';
+import { withLatestFrom } from 'rxjs/operators';
 
 import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
@@ -82,9 +80,11 @@ export class JumbleService {
     );
     // A combined observable that uses _jumbleReady as the primary
     // trigger
-    this.isJumble = this._isRandomJumble.asObservable().withLatestFrom(
-      this.state,
-      (isJumble, state) => isJumble
+    this.isJumble = this._isRandomJumble.asObservable().pipe(
+      withLatestFrom(
+        this.state,
+        (isJumble, state) => isJumble
+      )
     );
 
     // fetch audioLoopList and videoLoopList

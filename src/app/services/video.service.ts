@@ -4,8 +4,6 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Subject }      from 'rxjs';
-import 'rxjs/add/operator/reduce';
-import 'rxjs/add/operator/mergemap';
 
 import { FbaseService } from 'app/services/fbase.service';
 import { PlayerState } from 'app/services/media-player.service';

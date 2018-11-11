@@ -2,8 +2,8 @@ import { ElementRef }       from '@angular/core';
 
 import { BehaviorSubject }  from 'rxjs';
 import { PlayerState }      from 'app/services/media-player.service';
-import { Subject }          from 'rxjs';
-import 'rxjs/add/operator/take';
+import { pipe, Subject }          from 'rxjs';
+import { take }             from 'rxjs/operators';
 
 export class VideoController {
     static vcID = 0;
@@ -51,7 +51,8 @@ export class VideoController {
     initMedia() {
         this.player.load();
         // return a one shot observable
-        return this._loadFinished.asObservable().take(1);
+        const takeOne = pipe(take(1));
+        return takeOne(this._loadFinished.asObservable());
     }
 
 

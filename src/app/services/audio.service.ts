@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
-import { Subject }      from 'rxjs';
-import 'rxjs/add/operator/take';
+import { pipe, Subject }   from 'rxjs';
+import { take }            from 'rxjs/operators';
 
 
 import { FbaseService } from 'app/services/fbase.service';
@@ -67,8 +67,8 @@ export class AudioService {
 
     if (this.player && this.player.src) {
       this.player.load();
-
-      return this._loadFinished.asObservable().take(1);
+      const takeOne = pipe(take(1));
+      return takeOne(this._loadFinished.asObservable());
     } else {
       throw Error('Player or player src not set')
     }
