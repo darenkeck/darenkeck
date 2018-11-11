@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http }       from '@angular/http';
 
 import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
-import { combineLatest } from 'rxjs';
-import { withLatestFrom } from 'rxjs/operators';
+import { combineLatest, 
+         Observable  } from 'rxjs';
+import { map,
+        withLatestFrom } from 'rxjs/operators';
 
 import { AudioService } from 'app/services/audio.service';
 import { FbaseService } from 'app/services/fbase.service';
@@ -339,6 +339,6 @@ export class JumbleService {
     const query = '?response=' + token;
     const captcha_url = CORS_PROXY_URL + CAPTCHA_VERIFY_URL + query;
     return this.http.post(captcha_url, event)
-      .map((response: any) => (response._body === 'Ok'));//.subscribe( resp => console.log(resp));
+      .pipe(map((response: any) => (response._body === 'Ok')));//.subscribe( resp => console.log(resp));
   }
 }

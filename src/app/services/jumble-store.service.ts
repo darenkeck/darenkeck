@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
-import { combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { FbaseService } from 'app/services/fbase.service';
 import { AudioStoreService,
@@ -137,14 +136,14 @@ export class JumbleStoreService {
    * Return the top ten jumbles
    */
   get topJumbleList() {
-    return this.jumbleList.map( jumbleList => {
-      return jumbleList.sort( (j1, j2) => {
-        const j1_score = this.jumbleScore(j1);
-        const j2_score = this.jumbleScore(j2);
-        // if j1 has a higher score, give it a lower index so it is first
-        return (j1_score > j2_score) ? -1 : 1;
-      }).slice(0, TOP_JUMBLE_LENGTH);
-    });
+    return this.jumbleList.pipe(
+      map( jumbleList => {
+        // sort and cut the list to the correct length
+        return jumbleList
+          .sort((j1, j2) =>  this.jumbleScore(j1) > this.jumbleScore(j2) ? -1 : 1)
+          .slice(0, TOP_JUMBLE_LENGTH)
+      })
+    )
   }
 
   get videoLoopList() {
