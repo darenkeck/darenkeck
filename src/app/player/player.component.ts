@@ -2,10 +2,10 @@ import { Component, OnChanges, OnInit, Input, ViewChild } from '@angular/core';
 import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/http';
 import { ReCaptchaComponent } from 'angular2-recaptcha';
 
-import { Observable }   from 'rxjs/observable';
-import { Subscription } from 'rxjs/subscription';
+import { Observable }   from 'rxjs';
+import { Subscription } from 'rxjs';
 
-import { combineLatest } from 'rxjs/observable/combinelatest';
+import { combineLatest } from 'rxjs';
 import { PlayerState }  from 'app/services/media-player.service';
 import { AudioService } from 'app/services/audio.service';
 import { AudioStoreService, Track } from 'app/services/audio-store.service';

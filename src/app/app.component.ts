@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Http }      from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { FbaseService }    from 'app/services/fbase.service';
 import { JumbleService }   from 'app/services/jumble.service';

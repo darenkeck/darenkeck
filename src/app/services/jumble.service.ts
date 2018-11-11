@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Http }       from '@angular/http';
 
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
-import { Observable } from 'rxjs/observable';
-import { Subscription } from 'rxjs/subscription';
-import { combineLatest } from 'rxjs/observable/combinelatest';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/withLatestFrom';

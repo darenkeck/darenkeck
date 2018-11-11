@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/observable';
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
-import { combineLatest } from 'rxjs/observable/combinelatest';
+import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 import { PlayerState } from 'app/services/media-player.service';
 import { AudioService } from 'app/services/audio.service';

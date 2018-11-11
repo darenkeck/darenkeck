@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
-import { Subject }      from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs';
+import { Subject }      from 'rxjs';
 import 'rxjs/add/operator/take';
 
 

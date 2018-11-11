@@ -1,8 +1,8 @@
 import { ElementRef }       from '@angular/core';
 
-import { BehaviorSubject }  from 'rxjs/behaviorsubject';
+import { BehaviorSubject }  from 'rxjs';
 import { PlayerState }      from 'app/services/media-player.service';
-import { Subject }          from 'rxjs/Subject';
+import { Subject }          from 'rxjs';
 import 'rxjs/add/operator/take';
 
 export class VideoController {

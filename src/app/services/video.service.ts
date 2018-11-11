@@ -1,10 +1,9 @@
 import { ElementRef, Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
-import { Observable } from 'rxjs/observable';
-import { Subscription } from 'rxjs/subscription';
-import { Subject }      from 'rxjs/subject';
-import { combineLatest }   from 'rxjs/observable/combinelatest';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { Subject }      from 'rxjs';
 import 'rxjs/add/operator/reduce';
 import 'rxjs/add/operator/mergemap';
 

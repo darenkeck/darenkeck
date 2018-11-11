@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Observable }        from 'rxjs/observable';
-import { combineLatest }     from 'rxjs/observable/combinelatest';
-import { Subscription }      from 'rxjs/subscription';
+import { Observable }        from 'rxjs';
+import { combineLatest }     from 'rxjs';
+import { Subscription }      from 'rxjs';
 import { AudioService }      from '../services/audio.service';
 import { AudioStoreService,
          Album, Track }      from '../services/audio-store.service';

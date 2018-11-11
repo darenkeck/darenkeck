@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
+import { BehaviorSubject } from 'rxjs';
 
 export enum PlayerState {
   INIT,
