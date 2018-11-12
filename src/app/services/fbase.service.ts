@@ -13,9 +13,6 @@ export class FbaseService {
   // returns an observable that just containst he list of values
   fetchList(itemType: string): Observable<any> {
     return this.db.list(`/${itemType}`).valueChanges();
-    // return this.db.list(`/${itemType}`)).pipe(
-    //   map(itemList => (itemList.map => item => item.$value));
-    // );
   }
 
   // returns an observable with just a special object
