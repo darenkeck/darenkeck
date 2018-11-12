@@ -1,5 +1,7 @@
 import { Component, OnChanges, OnInit, Input, ViewChild } from '@angular/core';
-import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/http';
+// import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+
 import { ReCaptchaComponent } from 'angular2-recaptcha';
 
 import { Observable }   from 'rxjs';
@@ -55,7 +57,7 @@ export class PlayerComponent implements OnInit {
   constructor(private jumbleService: JumbleService,
               private audioService: AudioService,
               private audioStoreService: AudioStoreService,
-              private http: Http,
+              private http: HttpClient,
               private videoService: VideoService) {
     this.currentTrack = this.audioStoreService.currentTrack;
     this.disableSlider = true;

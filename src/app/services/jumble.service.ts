@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http }       from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { BehaviorSubject } from 'rxjs';
 import { combineLatest, 
@@ -51,7 +51,7 @@ export class JumbleService {
 
   constructor(private audioService: AudioService,
               private fb: FbaseService,
-              private http: Http,
+              private http: HttpClient,
               private jumbleStoreService: JumbleStoreService,
               private videoService: VideoService) {
     // only emit event when a _isJumble event is emitted
