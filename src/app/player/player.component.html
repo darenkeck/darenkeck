@@ -8,7 +8,7 @@
         <i class="material-icons check" *ngIf="showCheck" (click)="onVote(true)">check_circle</i>        
         <div class="player-button" *ngIf="!showCheck" (click)="onClick()">
             <i class="material-icons player-control" mode="indeterminate" style="opacity: 0.2;" *ngIf="showLoad">play_arrow</i>    
-            <md-progress-spinner mode="indeterminate" class="spinner" *ngIf="showLoading"></md-progress-spinner>
+            <mat-progress-spinner mode="indeterminate" class="spinner" *ngIf="showLoading"></mat-progress-spinner>
             <i class="material-icons player-control" *ngIf="showPaused">play_arrow</i>
             <i class="material-icons player-control" *ngIf="showPlaying">pause</i>
         </div>
