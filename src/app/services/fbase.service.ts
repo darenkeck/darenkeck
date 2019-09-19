@@ -8,7 +8,7 @@ import { ChangeDetectorStatus } from '@angular/core/src/change_detection/constan
 // const valueMap = pipe(map(itemList => itemList.map( i => i.$value)));
 
 function mapWithKey(c) {
-  return { key: c.payload.key, ...c.payload.val()});
+  return { key: c.payload.key, ...c.payload.val() };
 }
 
 @Injectable()
