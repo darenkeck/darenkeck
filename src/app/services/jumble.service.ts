@@ -336,7 +336,7 @@ export class JumbleService {
   verifyCaptcha(token): Observable<boolean> {
     const query = '?response=' + token;
     const captcha_url = CORS_PROXY_URL + CAPTCHA_VERIFY_URL + query;
-    return this.http.post(captcha_url, event)
+    return this.http.post(captcha_url, event, { responseType: 'text'})
       .pipe(map((response: any) => (response._body === 'Ok')));//.subscribe( resp => console.log(resp));
   }
 }
