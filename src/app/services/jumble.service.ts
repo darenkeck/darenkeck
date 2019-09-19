@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Http }       from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
-import { Observable } from 'rxjs/observable';
-import { Subscription } from 'rxjs/subscription';
-import { combineLatest } from 'rxjs/observable/combinelatest';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/timeout';
-import 'rxjs/add/operator/withLatestFrom';
+import { BehaviorSubject } from 'rxjs';
+import { combineLatest, 
+         Observable  } from 'rxjs';
+import { map,
+        withLatestFrom } from 'rxjs/operators';
 
 import { AudioService } from 'app/services/audio.service';
-import { FbaseService } from 'app/services/fbase.service';
 import { JumbleStoreService,
          AudioLoop,
          Jumble,
@@ -52,8 +49,7 @@ export class JumbleService {
   _voteTimer: number;
 
   constructor(private audioService: AudioService,
-              private fb: FbaseService,
-              private http: Http,
+              private http: HttpClient,
               private jumbleStoreService: JumbleStoreService,
               private videoService: VideoService) {
     // only emit event when a _isJumble event is emitted
@@ -82,9 +78,11 @@ export class JumbleService {
     );
     // A combined observable that uses _jumbleReady as the primary
     // trigger
-    this.isJumble = this._isRandomJumble.asObservable().withLatestFrom(
-      this.state,
-      (isJumble, state) => isJumble
+    this.isJumble = this._isRandomJumble.asObservable().pipe(
+      withLatestFrom(
+        this.state,
+        (isJumble, state) => isJumble
+      )
     );
 
     // fetch audioLoopList and videoLoopList
@@ -339,6 +337,6 @@ export class JumbleService {
     const query = '?response=' + token;
     const captcha_url = CORS_PROXY_URL + CAPTCHA_VERIFY_URL + query;
     return this.http.post(captcha_url, event)
-      .map((response: any) => (response._body === 'Ok'));//.subscribe( resp => console.log(resp));
+      .pipe(map((response: any) => (response._body === 'Ok')));//.subscribe( resp => console.log(resp));
   }
 }

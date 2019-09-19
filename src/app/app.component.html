@@ -1,19 +1,16 @@
 <app-header></app-header>
 <div (click)="expandTabContainer()">
-  <md-tab-group class="main-container" style="z-index: 0;">
-    <!-- <md-tab label="HOME">
-      <app-home></app-home>
-    </md-tab> -->
-    <md-tab label="MUSIC">
+  <mat-tab-group class="main-container" style="z-index: 0;">
+    <mat-tab label="MUSIC">
       <app-music></app-music>
-    </md-tab>
-    <md-tab label="JUMBLES">
+    </mat-tab>
+    <mat-tab label="JUMBLES">
       <app-top-jumbles></app-top-jumbles>
-    </md-tab>
-    <md-tab label="BIO">
+    </mat-tab>
+    <mat-tab label="BIO">
       <app-bio></app-bio>
-    </md-tab>
-  </md-tab-group>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 <div class="main-container">
   <div class="expand-icon" (click)="onExpand(!show)">

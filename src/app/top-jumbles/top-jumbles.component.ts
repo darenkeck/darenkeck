@@ -6,10 +6,10 @@ import { VideoService }      from 'app/services/video.service';
 import { JumbleService }     from 'app/services/jumble.service';  
 import { JumbleStoreService,
          Jumble }            from 'app/services/jumble-store.service';
-import { Observable }        from 'rxjs/observable';
+import { Observable }        from 'rxjs';
 import { PlayerState }       from 'app/services/media-player.service';
-import { combineLatest }     from 'rxjs/observable/combinelatest';
-import { Subscription }      from 'rxjs/subscription';
+import { combineLatest }     from 'rxjs';
+import { Subscription }      from 'rxjs';
 
 @Component({
   selector: 'app-top-jumbles',

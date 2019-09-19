@@ -1,10 +1,15 @@
 import { BrowserModule }      from '@angular/platform-browser';
 import { NgModule }           from '@angular/core';
 import { FormsModule }        from '@angular/forms';
-import { HttpModule }         from '@angular/http';
-import { MaterialModule }     from '@angular/material';
-import { AngularFireModule }  from 'angularfire2';
+import { HttpClientModule }   from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularFireModule }  from '@angular/fire';
+import { AngularFireDatabaseModule } from  '@angular/fire/database';
 import { ReCaptchaModule }    from 'angular2-recaptcha';
+import { environment }        from '../environments/environment';
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule }            from '@angular/material/tabs';
 
 import { AudioService }       from 'app/services/audio.service';
 import { AudioStoreService }  from 'app/services/audio-store.service';
@@ -29,15 +34,6 @@ import { MusicComponent } from './music/music.component';
 import { TrackGroupComponent } from './track-group/track-group.component';
 import { TopJumblesComponent } from './top-jumbles/top-jumbles.component';
 
-// Initialize Firebase
-export const firebaseConfig = {
-  apiKey: "AIzaSyAbDAyNC9CnwHpKDJDoixWywn1RR37Ib8c",
-  authDomain: "darenkeck-adb27.firebaseapp.com",
-  databaseURL: "https://darenkeck-adb27.firebaseio.com",
-  storageBucket: "darenkeck-adb27.appspot.com",
-  messagingSenderId: "326721354959"
-};
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,10 +54,13 @@ export const firebaseConfig = {
   imports: [
     BrowserModule,
     FormsModule,
-    AngularFireModule.initializeApp(firebaseConfig),
-    MaterialModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    BrowserAnimationsModule,
     ReCaptchaModule,
-    HttpModule
+    MatProgressSpinnerModule,
+    MatTabsModule,
+    HttpClientModule
   ],
   providers: [
     FbaseService,

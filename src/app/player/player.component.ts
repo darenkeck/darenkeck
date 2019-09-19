@@ -1,11 +1,13 @@
 import { Component, OnChanges, OnInit, Input, ViewChild } from '@angular/core';
-import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/http';
+// import { Http, RequestOptionsArgs, URLSearchParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+
 import { ReCaptchaComponent } from 'angular2-recaptcha';
 
-import { Observable }   from 'rxjs/observable';
-import { Subscription } from 'rxjs/subscription';
+import { Observable }   from 'rxjs';
+import { Subscription } from 'rxjs';
 
-import { combineLatest } from 'rxjs/observable/combinelatest';
+import { combineLatest } from 'rxjs';
 import { PlayerState }  from 'app/services/media-player.service';
 import { AudioService } from 'app/services/audio.service';
 import { AudioStoreService, Track } from 'app/services/audio-store.service';
@@ -55,7 +57,7 @@ export class PlayerComponent implements OnInit {
   constructor(private jumbleService: JumbleService,
               private audioService: AudioService,
               private audioStoreService: AudioStoreService,
-              private http: Http,
+              private http: HttpClient,
               private videoService: VideoService) {
     this.currentTrack = this.audioStoreService.currentTrack;
     this.disableSlider = true;

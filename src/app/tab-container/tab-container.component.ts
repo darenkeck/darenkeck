@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import 'rxjs/add/operator/debounceTime';
-
 import { TabStateService }   from 'app/services/tab-state.service';
 
 let _global_show_container = true;

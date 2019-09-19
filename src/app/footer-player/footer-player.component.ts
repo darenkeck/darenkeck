@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit }  from '@angular/core';
 
-import { Observable }   from 'rxjs/observable';
-import { Subscription } from 'rxjs/subscription';
+import { Observable }   from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { PlayerState }  from 'app/services/media-player.service';
 import { AudioService } from 'app/services/audio.service';

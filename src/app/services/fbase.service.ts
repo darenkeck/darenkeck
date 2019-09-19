@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
-import { Observable } from 'rxjs/Observable'
+import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
+import { pipe, Observable } from 'rxjs'
 import * as firebase from 'firebase';
-import 'rxjs/add/operator/map';
+import { map }        from 'rxjs/operators';
+
+// const valueMap = pipe(map(itemList => itemList.map( i => i.$value)));
 
 @Injectable()
 export class FbaseService {
-  constructor(private af: AngularFire) { }
+  constructor(private db: AngularFireDatabase) { }
 
+  // returns an observable that just containst he list of values
   fetchList(itemType: string): Observable<any> {
-    return this.af.database.list(`/${itemType}`).map(itemList => {
-      return itemList.map(item => item.$value)
-    }); 
+    return this.db.list(`/${itemType}`).valueChanges();
   }
 
+  // returns an observable with just a special object
   fetchItem(itemType: string): Observable<any> {
-    return this.af.database.object(`/${itemType}`).map(item => {
-      return item.$value;
-    });
+    return this.db.object(`/${itemType}`).valueChanges();
   }
 
-  fetchFBList(itemType: string): FirebaseListObservable<any> {
-    return this.af.database.list(itemType);
+  fetchFBList(itemType: string): Observable<any> {
+    return this.db.list(itemType).valueChanges();
   }
 
   updateItem<T>(path: string, key: string, value: T) {
-    const listRef = this.af.database.list(path);
+    const listRef = this.db.list(path);
     listRef.update(key, value);
   }
 
   createItem<T>(path: string, value: T) {
-    const listRef = this.af.database.list(path);
+    const listRef = this.db.list(path);
     listRef.push(value);
   }
  }
