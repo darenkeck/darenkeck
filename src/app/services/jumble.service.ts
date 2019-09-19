@@ -293,8 +293,8 @@ export class JumbleService {
    */
   initJumble(audioLoop: AudioLoop, videoLoop: VideoLoop) {
     return {
-      audio_loop_key: audioLoop.$key,
-      video_loop_key: videoLoop.$key,
+      audio_loop_key: audioLoop.key,
+      video_loop_key: videoLoop.key,
       score: 0 
     }
   }
@@ -337,6 +337,6 @@ export class JumbleService {
     const query = '?response=' + token;
     const captcha_url = CORS_PROXY_URL + CAPTCHA_VERIFY_URL + query;
     return this.http.post(captcha_url, event, { responseType: 'text'})
-      .pipe(map((response: any) => (response._body === 'Ok')));//.subscribe( resp => console.log(resp));
+      .pipe(map((response: any) => (response === 'Ok')));//.subscribe( resp => console.log(resp));
   }
 }

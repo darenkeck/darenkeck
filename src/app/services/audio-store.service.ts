@@ -20,7 +20,7 @@ export interface Track {
   name: string;
   track_num: number;
   url: string;
-  $key: string;
+  key: string;
 }
 
 interface _Album {
@@ -98,7 +98,7 @@ export class AudioStoreService {
       if (album.track_list) {
         album.track_list.map( track_id => {
           trackList.map( track => {
-            if (track.$key === track_id.toString()) {
+            if (track.key === track_id.toString()) {
               newTrackList.push(track);
             }
           });
@@ -120,7 +120,6 @@ export class AudioStoreService {
 
   // using the url, finds the Track object with the given url
   setCurrentTrack(url: string) {
-    console.log(url);
     const track = this._trackList.find(t => t.url === url);
     this._currentTrack$.next(track);
   }

@@ -16,17 +16,17 @@ export interface Jumble {
   total_votes: number;
   video_url: string;
   audio_url: string;
-  $key?: string;
+  key?: string;
 }
 
 export interface VideoLoop {
   url: string;
-  $key: string;
+  key: string;
 }
 
 export interface AudioLoop {
   url: string;
-  $key: string;
+  key: string;
 }
 
 export type AudioSource = AudioLoop | Track;
@@ -80,11 +80,11 @@ export class JumbleStoreService {
 
   getNewKey() {
     const highestJumble = this._jumbleList$.value.reduce( (curJ, acc) => {
-      return (curJ.$key > acc.$key) ? curJ : acc;
+      return (curJ.key > acc.key) ? curJ : acc;
     }, null)
 
    // increment by 1 to go one past the greatest value
-   return highestJumble.$key + 1;
+   return highestJumble.key + 1;
   }
 
   /**
@@ -180,8 +180,8 @@ export class JumbleStoreService {
   // method to increment/decrement jumble combo
   updateJumble(jumble: Jumble) {
     // if we have a previous jumble, update score, otherwise create new jumble
-    if ('$key' in jumble) {
-      this.fb.updateItem(FB_JUMBLE_PATH, jumble.$key, jumble);
+    if ('key' in jumble) {
+      this.fb.updateItem(FB_JUMBLE_PATH, jumble.key, jumble);
     } else {
       this.fb.createItem(FB_JUMBLE_PATH, jumble);
     }
