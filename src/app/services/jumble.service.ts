@@ -8,7 +8,6 @@ import { map,
         withLatestFrom } from 'rxjs/operators';
 
 import { AudioService } from 'app/services/audio.service';
-import { FbaseService } from 'app/services/fbase.service';
 import { JumbleStoreService,
          AudioLoop,
          Jumble,
@@ -50,7 +49,6 @@ export class JumbleService {
   _voteTimer: number;
 
   constructor(private audioService: AudioService,
-              private fb: FbaseService,
               private http: HttpClient,
               private jumbleStoreService: JumbleStoreService,
               private videoService: VideoService) {

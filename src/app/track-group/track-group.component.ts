@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Album, Track } from '../services/audio-store.service';
 
@@ -18,12 +18,6 @@ export class TrackGroupComponent {
   @Output() trackSelected = new EventEmitter<Track>();
 
   constructor() { }
-
-  ngOnChanges() {
-    if (this.album) {
-      console.log(this.album);
-    }
-  }
 
   onTrackSelect(track: Track) {
     this.trackSelected.emit(track);
