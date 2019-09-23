@@ -12,12 +12,23 @@
     z-index: 101;
 }
 
-@media only screen and (max-width: 660px) {
+@media only screen and (max-width: 374px) {
     .sig {
+        visibility: hidden;
         padding-top: 10px;
-        width: 140px;
+        width: 80px;
         position: absolute;
-        right: 20px;
+        right: 5px;
+        z-index: 101;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .sig {
+        padding-top: 15px;
+        width: 80px;
+        position: absolute;
+        right: 5px;
         z-index: 101;
     }
 }
