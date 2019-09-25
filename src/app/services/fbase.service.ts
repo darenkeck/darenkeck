@@ -35,6 +35,13 @@ export class FbaseService {
     );
   }
 
+  // special request for jumbles because we don't want to fetch too many
+  fetchTopJumbleList(jumblePath: string, numberToFetch: number): Observable<any> {
+    return this.db.list(jumblePath, ref => ref.orderByChild('score').limitToLast(numberToFetch)).snapshotChanges().pipe(
+      map(changes => changes.map(c => mapWithKey(c)))
+    );
+  }
+
   updateItem<T>(path: string, key: string, value: T) {
     const listRef = this.db.list(path);
     listRef.update(key, value);

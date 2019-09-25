@@ -52,7 +52,7 @@ export class JumbleStoreService {
     this._audioLoopList$ = new BehaviorSubject<AudioLoop[]>([]);
     this._audioSourceList$ = new BehaviorSubject<AudioSource[]>([]);
 
-    this.fb.fetchFBList(FB_JUMBLE_PATH).subscribe( (jumbleList: Jumble[]) => {
+    this.fb.fetchTopJumbleList(FB_JUMBLE_PATH, TOP_JUMBLE_LENGTH).subscribe( (jumbleList: Jumble[]) => {
       this._jumbleList$.next(jumbleList);
       // set highest total votes
       jumbleList.map(jumble => {
