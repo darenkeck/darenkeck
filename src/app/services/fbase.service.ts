@@ -51,4 +51,8 @@ export class FbaseService {
     const listRef = this.db.list(path);
     listRef.push(value);
   }
+
+  createItemAtURL<T>(path: string, value: T) {
+    this.db.database.ref().child(path).set(value);
+  }
  }

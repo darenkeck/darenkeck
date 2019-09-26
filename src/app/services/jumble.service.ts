@@ -160,21 +160,33 @@ export class JumbleService {
   }
 
   onVote(good: boolean) {
+    const voteValue = (good) ? 1 : 0;
     if (this._allowVote.value) {
       const audioUrl = this.audioService.url;
       const videoUrl = this.videoService.url;
       // We really should have a url if we are allowing votes... but just in case
       if (audioUrl && videoUrl) {
-        const currentJumble = this.jumbleStoreService.initJumble(
+        const sub = this.jumbleStoreService.lookupJumble(
           audioUrl,
           videoUrl
+        ).subscribe(
+          (currentJumble: Jumble) => {
+            if (currentJumble.score) {
+              currentJumble.score += voteValue;
+              currentJumble.total_votes += 1;
+            } else {
+              // first time jumble is getting voted on: initialize values
+              currentJumble.audio_url = audioUrl;
+              currentJumble.video_url = videoUrl;
+              currentJumble.score = voteValue;
+              currentJumble.total_votes = 1;
+            }
+            this.jumbleStoreService.updateJumble(currentJumble);
+            // this gets set to true when setJumble is called
+            this._allowVote.next(false);
+            sub.unsubscribe();
+          }
         );
-        currentJumble.score += (good) ? 1 : 0;
-        currentJumble.total_votes += 1;
-        this.jumbleStoreService.updateJumble(currentJumble);
-        
-        // this gets set to true when setJumble is called
-        this._allowVote.next(false);
       }
     }
   }

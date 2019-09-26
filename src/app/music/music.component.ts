@@ -21,7 +21,6 @@ import { PlayerState }       from 'app/services/media-player.service';
 export class MusicComponent implements OnDestroy, OnInit {
   topJumbleList: Observable<Jumble[]>;
   albumList: Observable<Album[]>;
-  currentJumble: Jumble;
   currentTrack: Track;
   subscriptions: Subscription;
   constructor( private audioService: AudioService,
@@ -36,13 +35,9 @@ export class MusicComponent implements OnDestroy, OnInit {
     this.subscriptions = combineLatest(
       this.topJumbleList,
       this.jumbleService.state
-    ).subscribe( ([topJumbleList, state]: [Jumble[], PlayerState]) => {
+    ).subscribe( ([_, state]: [Jumble[], PlayerState]) => {
       // help set the current playing track or jumble (or both!)
       if (state >= PlayerState.PAUSED) {
-        this.currentJumble = 
-          this.jumbleStoreService.
-            lookupJumbleWithUrls(this.audioService.url, this.videoService.url);
-        
         this.currentTrack = this.audioStoreService.getAudioWithUrl(this.audioService.url)
       }
     });

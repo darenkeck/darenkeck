@@ -27,15 +27,15 @@ export class TopJumblesComponent implements OnInit {
               private jumbleService:      JumbleService,
               private jumbleStoreService: JumbleStoreService) {
     this.topJumbleList = this.jumbleStoreService.topJumbleList;
-    this.subscription = combineLatest(
-      this.topJumbleList,
-      this.jumbleService.state
-    ).subscribe( ([topJumbleList, state]: [Jumble[], PlayerState]) => {
+
+      combineLatest(
+        this.topJumbleList,
+        this.jumbleService.state
+    ).subscribe( ([_, state]: [Jumble[], PlayerState]) => {
       // help set the current playing track or jumble (or both!)
       if (state >= PlayerState.PAUSED) {
-        this.currentJumble = 
-          this.jumbleStoreService.
-            lookupJumbleWithUrls(this.audioService.url, this.videoService.url);        
+        this.currentJumble =
+          this.jumbleStoreService.lookupLocalJumbleWithUrl(this.audioService.url, this.videoService.url);
       }
     });
   }
