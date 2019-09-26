@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { FbaseService } from 'app/services/fbase.service';
@@ -16,17 +16,17 @@ export interface Jumble {
   total_votes: number;
   video_url: string;
   audio_url: string;
-  $key?: string;
+  key?: string;
 }
 
 export interface VideoLoop {
   url: string;
-  $key: string;
+  key: string;
 }
 
 export interface AudioLoop {
   url: string;
-  $key: string;
+  key: string;
 }
 
 export type AudioSource = AudioLoop | Track;
@@ -52,7 +52,7 @@ export class JumbleStoreService {
     this._audioLoopList$ = new BehaviorSubject<AudioLoop[]>([]);
     this._audioSourceList$ = new BehaviorSubject<AudioSource[]>([]);
 
-    this.fb.fetchFBList(FB_JUMBLE_PATH).subscribe( (jumbleList: Jumble[]) => {
+    this.fb.fetchTopJumbleList(FB_JUMBLE_PATH, TOP_JUMBLE_LENGTH).subscribe( (jumbleList: Jumble[]) => {
       this._jumbleList$.next(jumbleList);
       // set highest total votes
       jumbleList.map(jumble => {
@@ -78,14 +78,29 @@ export class JumbleStoreService {
     });
   }
 
-  getNewKey() {
-    const highestJumble = this._jumbleList$.value.reduce( (curJ, acc) => {
-      return (curJ.$key > acc.$key) ? curJ : acc;
-    }, null)
-
-   // increment by 1 to go one past the greatest value
-   return highestJumble.$key + 1;
+  getJumbleUrl(audioUrl: string, videoUrl: string) {
+    const _audioUrl = encodeURIComponent(audioUrl).replace('.', '_');
+    const _videoUrl = encodeURIComponent(videoUrl).replace('.', '_');
+    return `${_audioUrl}+${_videoUrl}`;
   }
+
+  /**
+   * Looks up a jumble in local memory (the top jumble list) using the
+   * audio and video urls of the jumble.
+   */
+    lookupLocalJumbleWithUrl(audioUrl: string, videoUrl: string): Jumble {
+      let jumble = null;
+
+      for (const jKey in this._jumbleList$.value) {
+        const j = this._jumbleList$.value[jKey]
+        if (j.audio_url === audioUrl && j.video_url === videoUrl) {
+          jumble = j;
+          break;
+        }
+      }
+
+      return jumble;
+    }
 
   /**
    * Two URLs is enough to uniquely identify a jumble
@@ -93,17 +108,8 @@ export class JumbleStoreService {
    * This will return the jumble if it can be found or null
    */
   lookupJumbleWithUrls(audioUrl: string, videoUrl: string) {
-    let jumble = null;
-
-    for (const jKey in this._jumbleList$.value) {
-      const j = this._jumbleList$.value[jKey]
-      if (j.audio_url === audioUrl && j.video_url === videoUrl) {
-        jumble = j;
-        break;
-      }
-    }
-
-    return jumble;
+    const jumbleUrlID = this.getJumbleUrl(audioUrl, videoUrl);
+    return this.fb.fetchItem(`${FB_JUMBLE_PATH}/${jumbleUrlID}`);
   }
 
   get audioLoopList() {
@@ -150,38 +156,24 @@ export class JumbleStoreService {
     return this._videoLoopList$.asObservable();
   }
 
-  /**
-   * Returns either a new jumble (without a key) or finds
-   * the previous one and returns it
-   */
-  initJumble(audioUrl: string, videoUrl: string) {
-    let jumble = this.lookupJumbleWithUrls(audioUrl, videoUrl);
-    // if not found, just return a new one
-    if (!jumble) {
-      jumble = {
-        audio_url: audioUrl,
-        video_url: videoUrl,
-        score: 0,
-        total_votes: 0,
-      }
-    }
+  createJumble(jumble: Jumble) {
+    const url = this.getJumbleUrl(jumble.audio_url, jumble.video_url);
 
-    return jumble;
+    // post the item
+    this.fb.createItemAtURL<Jumble>(`${FB_JUMBLE_PATH}/${url}`, jumble);
   }
 
   // add a lookup by video and audio key
   // returns either the jumble or null if not found
-  lookupJumble(jumbleVote: Jumble) {
-    let jumble = this.lookupJumbleWithUrls(jumbleVote.audio_url, jumbleVote.video_url);
-
-    return jumble;
+  lookupJumble(audioUrl, videoUrl) {
+    return this.lookupJumbleWithUrls(audioUrl, videoUrl);
   }
 
   // method to increment/decrement jumble combo
   updateJumble(jumble: Jumble) {
     // if we have a previous jumble, update score, otherwise create new jumble
-    if ('$key' in jumble) {
-      this.fb.updateItem(FB_JUMBLE_PATH, jumble.$key, jumble);
+    if ('key' in jumble) {
+      this.fb.updateItem(FB_JUMBLE_PATH, jumble.key, jumble);
     } else {
       this.fb.createItem(FB_JUMBLE_PATH, jumble);
     }
